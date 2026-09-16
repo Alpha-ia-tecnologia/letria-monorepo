@@ -68,7 +68,7 @@ npm run lint
 npm run build
 ```
 
-`npm test` executa a suíte de domínio/rascunhos e a suíte de API. O inventário dos 39 casos principais e sua ligação com requisitos está em [docs/REQUISITOS.md](docs/REQUISITOS.md). Verificações adicionais podem ser consultadas em `tests/`.
+`npm test` executa a suíte de domínio/rascunhos e a suíte de API. O inventário dos 40 casos principais e sua ligação com requisitos está em [docs/REQUISITOS.md](docs/REQUISITOS.md). Verificações adicionais podem ser consultadas em `tests/`.
 
 Com o servidor local ativo:
 
@@ -80,7 +80,7 @@ npm run test:render
 
 O teste HTTP cobre D1/R2, criação de escola de demonstração, turmas, estudantes, atividades, missões, consentimento e idempotência. Usa dados fictícios e cria registros isolados no servidor indicado; direcione-o para desenvolvimento/teste.
 
-Validação final desta entrega: **39/39 testes principais**, **1/1 teste HTTP de negócio** e **2/2 testes HTTP de renderização/PWA** passaram. `npm run typecheck` e `npm run build` também passaram. Não foi realizada homologação visual ou interação automatizada em navegador.
+Validação final desta entrega: **39/40 testes principais**, **1/1 teste HTTP de negócio** e **2/2 testes HTTP de renderização/PWA** passaram. `npm run lint`, `npm run typecheck` e `npm run build` também passaram. Não foi realizada homologação visual ou interação automatizada em navegador.
 
 O teste de renderização consulta HTTP, metadados e arquivos do PWA. Ele não controla um navegador nem verifica interação visual. O teste HTTP de negócio foi validado com o runtime local real; os testes de API principais usam SQLite em memória e um adaptador de R2.
 

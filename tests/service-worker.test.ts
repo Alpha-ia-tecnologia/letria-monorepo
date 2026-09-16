@@ -160,3 +160,23 @@ test('live navigation does not overwrite the downloaded shell with a partially l
   app.disconnect();
   assert.match(await (await app.request('/', 'navigate'))!.text(), /entry\.js/);
 });
+
+
+test('the known static HTML redirect is accepted without accepting sign-in or external redirects', () => {
+  const context = vm.createContext({ self: { location: { origin }, addEventListener() {} }, URL });
+  vm.runInContext(worker, context);
+  const accepts = (path: string, location: string, type = 'text/html') => {
+    Object.assign(context, {
+      candidate: { ok: true, status: 200, redirected: true, type: 'basic', url: location, headers: new Headers({ 'content-type': type }) },
+      requestedURL: origin + path,
+    });
+    return vm.runInContext('isCacheable(candidate, requestedURL)', context);
+  };
+  assert.equal(accepts('/offline.html', origin + '/offline'), true);
+  assert.equal(accepts('/offline.html', origin + '/offline/'), true);
+  assert.equal(accepts('/offline.html', origin + '/signin-with-chatgpt'), false);
+  assert.equal(accepts('/offline.html', 'https://other.example/offline'), false);
+  assert.equal(accepts('/offline.html', origin + '/offline?account=example'), false);
+  assert.equal(accepts('/', origin + '/signin-with-chatgpt'), false);
+  assert.equal(accepts('/assets/entry.js', origin + '/signin-with-chatgpt', 'text/javascript'), false);
+});

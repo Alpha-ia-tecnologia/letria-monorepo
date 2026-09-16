@@ -24,9 +24,15 @@ function publicURL(value, base = self.location.origin) {
 }
 
 function isCacheable(response, url) {
-  if (!response.ok || response.status !== 200 || response.redirected || response.type === 'opaque') return false;
+  if (!response.ok || response.status !== 200 || response.type === 'opaque') return false;
   const type = response.headers.get('content-type') || '';
   const path = new URL(url).pathname;
+  if (response.redirected) {
+    // Cloudflare canonicalizes static HTML files to extensionless URLs.
+    // Accept only this known fallback redirect, never sign-in or remote pages.
+    const finalURL = new URL(response.url);
+    if (path !== '/offline.html' || finalURL.origin !== self.location.origin || finalURL.search || !['/offline', '/offline/'].includes(finalURL.pathname)) return false;
+  }
   if (path === '/' || path === '/offline.html') return type.includes('text/html');
   if (/\.m?js$/.test(path)) return /(?:java|ecma)script/.test(type);
   if (path.endsWith('.css')) return type.includes('text/css');

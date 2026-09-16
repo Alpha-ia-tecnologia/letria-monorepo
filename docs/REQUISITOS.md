@@ -12,7 +12,7 @@ Esta matriz preserva os identificadores RF-001 a RF-140 e RN-001 a RN-010 do doc
 
 Nesta revisão: **35 implementados, 76 parciais e 29 planejados**. Os requisitos são amplos: por exemplo, ter CSV e impressão não equivale a cumprir todos os formatos de exportação, e armazenar áudio não equivale a calcular fluência.
 
-Os rótulos P01–P12, D01–D05, S01–S11, O01–O04 e W01–W07 são referências documentais aos **nomes reais dos 39 testes** listados ao final. Não são identificadores inseridos artificialmente nos arquivos de teste. “Revisão” significa inspeção de implementação, sem caso automatizado específico para toda a abrangência do requisito.
+Os rótulos P01–P12, D01–D05, S01–S11, O01–O04 e W01–W08 são referências documentais aos **nomes reais dos 40 testes** listados ao final. Não são identificadores inseridos artificialmente nos arquivos de teste. “Revisão” significa inspeção de implementação, sem caso automatizado específico para toda a abrangência do requisito.
 
 ## Arquivos de referência
 
@@ -229,7 +229,7 @@ Atividades docentes possuem correção e histórico, mas não entram na evidênc
 | RF | Requisito | Estado | Entrega e limite | Evidência |
 | --- | --- | --- | --- | --- |
 | RF-109 | Instalação como aplicativo | Implementado | Manifesto, ícones, service worker e fluxo de instalação; homologação entre navegadores ainda necessária. | PWA, APP; W06; homologação de navegador pendente |
-| RF-110 | Funcionamento offline | Implementado | Pacote baixado inclui shell e dependências; dados e respostas ficam em IndexedDB. Navegação fria sem rede ainda precisa de homologação em navegador. | PWA, APP, CLIENTE; O01–O04, W01–W07; homologação de navegador pendente |
+| RF-110 | Funcionamento offline | Implementado | Pacote baixado inclui shell e dependências; dados e respostas ficam em IndexedDB. Navegação fria sem rede ainda precisa de homologação em navegador. | PWA, APP, CLIENTE; O01–O04, W01–W08; homologação de navegador pendente |
 | RF-111 | Sincronização automática | Implementado | Fila IndexedDB, envio ao reconectar e idempotência servidor; falta homologar o ciclo completo desconexão/reconexão no navegador. | APP, CLIENTE, AUT; S02 |
 | RF-112 | Conteúdo offline | Parcial | Download do pacote local pelo usuário; sem seleção docente de trilhas/atividades por turma. | APP, PWA; O03, O04, W01–W03 |
 | RF-113 | Estado da conexão | Implementado | Indicadores online, offline, sincronizando e quantidade pendente. | APP; revisão |
@@ -298,7 +298,7 @@ Atividades docentes possuem correção e histórico, mas não entram na evidênc
 
 ## Testes automatizados existentes
 
-Os 17 testes de domínio/rascunhos são complementados por 11 testes de service worker em ambiente simulado. Os 11 testes de API executam os handlers reais com SQLite em memória e um adaptador de R2. A suíte principal soma 39 casos e não substitui homologação em navegador ou infraestrutura remota.
+Os 17 testes de domínio/rascunhos são complementados por 12 testes de service worker em ambiente simulado. Os 11 testes de API executam os handlers reais com SQLite em memória e um adaptador de R2. A suíte principal soma 40 casos e não substitui homologação em navegador ou infraestrutura remota.
 
 | Referência | Nome exato do teste | Arquivo |
 | --- | --- | --- |
@@ -341,6 +341,7 @@ Os 17 testes de domínio/rascunhos são complementados por 11 testes de service 
 | W05 | download messages cannot put private or external URLs into the public cache | [service-worker.test.ts](../tests/service-worker.test.ts) |
 | W06 | the first installation offers offline instructions and updates wait for an explicit choice | [service-worker.test.ts](../tests/service-worker.test.ts) |
 | W07 | live navigation does not overwrite the downloaded shell with a partially loaded version | [service-worker.test.ts](../tests/service-worker.test.ts) |
+| W08 | the known static HTML redirect is accepted without accepting sign-in or external redirects | [service-worker.test.ts](../tests/service-worker.test.ts) |
 
 Execução:
 
@@ -351,16 +352,16 @@ npm run test:unit
 npm run test:api
 ```
 
-Evidência adicional: [tests/api-http-smoke.test.mjs](../tests/api-http-smoke.test.mjs), caso `real HTTP: durable D1, school workflow, private R2, access control, idempotency`, foi executado contra servidor local com D1/R2 emulados e passou. Este é um teste adicional aos 39 acima. Ele cria apenas uma instituição de demonstração isolada com registros fictícios.
+Evidência adicional: [tests/api-http-smoke.test.mjs](../tests/api-http-smoke.test.mjs), caso `real HTTP: durable D1, school workflow, private R2, access control, idempotency`, foi executado contra servidor local com D1/R2 emulados e passou. Este é um teste adicional aos 40 acima. Ele cria apenas uma instituição de demonstração isolada com registros fictícios.
 
 ```powershell
 $env:LETRIA_TEST_URL = 'http://localhost:3001'
 node --test tests/api-http-smoke.test.mjs
 ```
 
-Sem `LETRIA_TEST_URL`, esse teste é ignorado. O arquivo [tests/rendered-html.test.mjs](../tests/rendered-html.test.mjs) acrescenta verificações HTTP do shell, metadados, manifesto, ícones e service worker. Rode `npm run test:render` com o servidor local ativo; esses casos são adicionais aos 39 testes principais e não simulam interação em navegador.
+Sem `LETRIA_TEST_URL`, esses comandos encerram com erro e instruções para informar a origem de teste. O arquivo [tests/rendered-html.test.mjs](../tests/rendered-html.test.mjs) acrescenta verificações HTTP do shell, metadados, manifesto, ícones e service worker. Rode `npm run test:render` com o servidor local ativo; esses casos são adicionais aos 40 testes principais e não simulam interação em navegador.
 
-Validação final em 16/09/2026: **39/39** casos de `npm test`, **1/1** caso de `npm run test:http` e **2/2** casos de `npm run test:render` passaram contra o servidor local apropriado. `npm run typecheck` e `npm run build` passaram. Os testes HTTP usaram a origem local `http://localhost:3000`; não houve QA visual ou interação automatizada em navegador.
+Validação final em 16/09/2026: **40/40** casos de `npm test`, **1/1** caso de `npm run test:http` e **2/2** casos de `npm run test:render` passaram contra o servidor local apropriado. `npm run lint`, `npm run typecheck` e `npm run build` passaram. Os testes HTTP finais usaram a origem local `http://127.0.0.1:3002`; não houve QA visual ou interação automatizada em navegador.
 
 ## Validações ainda necessárias
 
