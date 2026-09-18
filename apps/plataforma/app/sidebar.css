@@ -1,0 +1,137 @@
+/* Keep the navigation and content aligned as the preferred text size grows. */
+.app-shell {
+  --sidebar-width: 18rem;
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+  height: 100vh;
+  height: 100dvh;
+  padding: 1.75rem 1rem 1rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+}
+
+/* Short viewports scroll the complete menu instead of compressing its cards. */
+.sidebar > * {
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+.sidebar .brand {
+  gap: .75rem;
+  padding: .35rem .75rem 1.75rem;
+  font-size: 2.3rem;
+}
+
+.sidebar .brand-mark {
+  flex-shrink: 0;
+}
+
+.sidebar-label {
+  padding: .5rem .75rem 1rem;
+  font-size: .6rem;
+  line-height: 1.6;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.sidebar nav {
+  gap: .5rem;
+}
+
+.sidebar .nav-item {
+  gap: .75rem;
+  min-width: 0;
+  min-height: 3rem;
+  padding: .8rem .75rem;
+  font-size: .9rem;
+  line-height: 1.4;
+}
+
+.sidebar .nav-label {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.sidebar .nav-indicators {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: .5rem;
+  margin-left: auto;
+}
+
+.sidebar .nav-count,
+.sidebar .active-dot {
+  flex-shrink: 0;
+  margin-left: 0;
+}
+
+.sidebar .nav-count {
+  min-width: 1.25rem;
+  padding: .1rem .35rem;
+  text-align: center;
+  font-size: .7rem;
+}
+
+.sidebar-challenge {
+  margin: 1.5rem .35rem 1.25rem;
+  padding: 1.15rem 1rem 5rem;
+  overflow-wrap: anywhere;
+}
+
+.sidebar-challenge .eyebrow {
+  display: block;
+  line-height: 1.5;
+}
+
+.sidebar-challenge .little-star {
+  top: auto;
+  bottom: 1rem;
+  right: 1rem;
+}
+
+.sidebar-bottom .nav-item {
+  font-size: .85rem;
+}
+
+.sidebar .profile-switch {
+  gap: .65rem;
+  padding: .65rem;
+}
+
+.sidebar .profile-switch > .avatar {
+  flex-shrink: 0;
+}
+
+.sidebar .profile-switch > span:nth-child(2) {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+@media screen {
+  .app-body {
+    margin-left: var(--sidebar-width);
+  }
+}
+
+@media (max-width: 900px) {
+  .sidebar {
+    width: min(var(--sidebar-width), calc(100vw - 1rem));
+  }
+
+  .app-body {
+    margin-left: 0;
+  }
+}
+
+@media print {
+  .app-body {
+    margin: 0;
+  }
+}

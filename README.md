@@ -1,63 +1,60 @@
-# Letria
+# Letria — monorepo
 
-Plataforma de alfabetização com experiência de aventura educativa, desenvolvida a partir de [Requisitos_Funcionais_Plataforma_Gamificada_Alfabetizacao.docx](../Requisitos_Funcionais_Plataforma_Gamificada_Alfabetizacao.docx).
+Plataforma de alfabetização e pensamento computacional, com jornadas para estudantes, professores, famílias e administração escolar. Este repositório reúne a aplicação web e os serviços locais de voz da Lumi.
 
-A implementação entrega uma jornada funcional de estudante, professor, responsável e administrador, com conteúdo autoral, persistência no servidor, atividades offline e acompanhamento pedagógico. **Os 140 requisitos do documento abrangem um produto maior que esta entrega.** A cobertura individual, limitações e evidências estão em [docs/REQUISITOS.md](docs/REQUISITOS.md).
+O detalhamento do produto, da arquitetura e das limitações está no [README da aplicação](apps/plataforma/README.md). A [matriz de requisitos](docs/REQUISITOS.md) registra a cobertura e as lacunas; a organização em monorepo não equivale à homologação para produção.
 
-## O que está disponível
+## Estrutura
 
-- Cinco etapas de alfabetização, vinte atividades e cem questões de escolha/ordenação, além de sondagem inicial com dez itens.
-- Mapa de mundos, missões, avatar, conquistas, XP, sequência de participação e recomendações de revisão.
-- Progressão por evidências: dez itens diferentes, duas atividades, pelo menos 80% de acerto e controle de erros recentes. XP não libera mundos sozinho.
-- Prática livre no baú, incluindo atividades de mundos futuros, preservando os pré-requisitos da jornada.
-- Cadastro de escola, turmas e estudantes; contas de professor/responsável e entrada infantil por código.
-- Editor de atividades, prévia, publicação, versões preservadas e atribuição de missões por turma.
-- Painéis, matriz de habilidades, registros de intervenção, relatório individual/turma, CSV e impressão/PDF pelo navegador.
-- Gravação opcional de leitura, consentimento de voz, reprodução autorizada e revogação com exclusão dos arquivos.
-- PWA, pacote para uso sem internet, rascunhos neste dispositivo e fila de resultados com reenvio idempotente.
-- Fonte ajustável, contraste, redução de movimento, controles de teclado e narração quando o navegador oferece síntese de voz.
+| Diretório | Responsabilidade |
+| --- | --- |
+| [apps/plataforma/](apps/plataforma/) | Aplicação React/TypeScript, Vinext/Vite, APIs, conteúdo, testes e scripts Node |
+| [services/lumi-voice/](services/lumi-voice/) | Serviço Python Qwen, referência da Lumi, modelos, cache e scripts de preparação |
+| [services/kokoro/](services/kokoro/) | Serviço Python Kokoro/Dora e seus scripts de preparação |
+| [infra/cloudflare/](infra/cloudflare/) | Configuração local do runtime Cloudflare |
+| [docs/](docs/) | Guias de operação, decisões, currículo e histórias de usuário |
 
-## Executar localmente
+O `package.json`, o `package-lock.json` e o `node_modules/` compartilhados ficam na raiz. Os ambientes Python `.venv-qwen/` e `.venv-kokoro/` também permanecem na raiz; não são dependências do workspace npm.
 
-O projeto usa React/TypeScript com Vinext, Vite e runtime Cloudflare Workers. O pacote declara Node.js **22.15 ou superior**; as verificações desta entrega foram executadas com **Node 24.16.0**.
+Os arquivos privados `.env*` e `.dev.vars` pertencem a `apps/plataforma/`. A saída de compilação, o estado local do Wrangler e os arquivos de trabalho ficam, respectivamente, em `apps/plataforma/dist/`, `apps/plataforma/.wrangler/` e `apps/plataforma/work/`. Modelos, referência, cache de voz, credenciais e dados locais continuam fora do versionamento conforme as regras do projeto.
 
-Na pasta `plataforma`:
+## Executar
+
+Execute os comandos abaixo na **raiz deste repositório**, a pasta que contém este README e o `package-lock.json`. O projeto requer Node.js 22.15 ou superior; os serviços de voz usam Python 3.12.
 
 ```powershell
 npm install
-npx wrangler types --config wrangler.local.jsonc worker-configuration.d.ts
-npm run db:migrate
-npm run dev
+npm run build
+npm run start:qwen
 ```
 
-Abra o endereço informado pelo servidor, normalmente `http://localhost:3000`. A configuração [wrangler.local.jsonc](wrangler.local.jsonc) usa D1 e R2 locais emulados. Dados do desenvolvimento ficam na pasta de estado do Wrangler e não exigem cadastrar credenciais de produção.
+Esse fluxo pressupõe PostgreSQL e Qwen já configurados. Para a primeira instalação, siga [PostgreSQL](docs/POSTGRESQL.md) e [Voz Qwen](docs/VOZ_QWEN.md), incluindo a preparação dos modelos e da referência. A voz Dora permanece como alternativa em [Voz Dora](docs/VOZ_DORA.md).
 
-O comando de migração deve ser executado em um banco novo ou com histórico de migrações consistente. Uma base antiga criada diretamente com `d1 execute --file` precisa de reconciliação do histórico antes de aplicar migrações; não repita a criação das mesmas tabelas nem apague dados para resolver isso.
+A aplicação abre em [http://127.0.0.1:3002](http://127.0.0.1:3002). `npm start` inicia somente a aplicação. `npm run dev` inicia o desenvolvimento com recarga automática; consulte a origem informada no terminal.
 
-Não existe conta de administrador com senha padrão. Uma instalação nova abre uma **demonstração isolada**, com escola e estudantes fictícios. Os nomes e resultados desse cenário estão identificados como demonstração.
+## Comandos da raiz
 
-## Experimentar e cadastrar uma escola
+Os comandos existentes são encaminhados ao workspace da aplicação. Não é necessário entrar em `apps/plataforma/` para usá-los.
 
-1. Na demonstração, abra o seletor de perfil para explorar estudante, professor, responsável e administrador. Essa troca existe somente na demonstração.
-2. Jogue uma atividade, peça uma pista, pause em **Salvar e sair** e reabra a mesma atividade para retomar no mesmo dispositivo.
-3. Em professor, crie uma turma, cadastre um estudante, guarde o código apresentado e proponha uma missão.
-4. Use **Criar minha escola** para cadastrar nome, e-mail, senha e instituição. Isso cria um ambiente próprio vazio e uma conta administradora.
-5. Na administração da escola, cadastre contas de educadores e responsáveis e atribua o educador responsável ao criar/editar cada turma. Professores acessam somente suas turmas. A conta familiar é vinculada a um estudante; o estudante entra pelo código individual.
-6. Um responsável autoriza a gravação no portal da família. Após missões de frases/textos, o estudante pode gravar uma leitura e enviar ao acompanhamento.
+| Comando | Uso |
+| --- | --- |
+| `npm run dev` | Desenvolvimento com Vinext/Vite |
+| `npm run build` | Compilar a aplicação |
+| `npm start` | Executar a aplicação compilada |
+| `npm run start:qwen` | Executar aplicação e voz Qwen local |
+| `npm run start:kokoro` | Executar aplicação e voz Kokoro/Dora local |
+| `npm run typecheck` / `npm run lint` | Verificações TypeScript e ESLint |
+| `npm test` | Suítes de domínio, API e migração |
+| `npm run test:render` | Verificações HTTP de páginas e recursos públicos |
+| `npm run voice:qwen:setup` | Preparar o ambiente e o modelo Qwen VoiceDesign |
+| `npm run voice:qwen:base:setup -- <opções>` | Preparar Qwen Base e a referência original da Lumi |
+| `npm run voice:qwen:test` | Testes Python do serviço Qwen |
+| `npm run voice:setup` / `npm run voice:test` | Preparação e testes do Kokoro |
+| `npm run voice:prepare -- <opções>` | Preparar a biblioteca de falas recorrentes e atividades |
+| `npm run db:migrate -- <opções>` | Simular a estrutura/importação PostgreSQL |
+| `npm run db:apply -- <opções>` | Aplicar a estrutura/importação conforme o guia PostgreSQL |
 
-Credenciais e dados reais devem ser usados somente depois da homologação institucional e dos controles operacionais descritos abaixo.
-
-## Offline e retomada
-
-Entre com conexão e use **Baú de atividades → Baixar**. O service worker guarda o aplicativo e seus recursos públicos; IndexedDB guarda o último contexto disponível, rascunhos e envios pendentes. A API autenticada e os áudios privados não são colocados no cache público do service worker.
-
-O rascunho conserva questão atual, respostas, seleção, feedback, pista, tempo e identificador do envio. É separado por conta e atividade. Uma mudança incompatível no conteúdo descarta o rascunho antigo para evitar aplicar respostas ao gabarito errado.
-
-Ao terminar sem rede, o resultado entra na fila local. A reconexão tenta enviá-lo automaticamente. O servidor recalcula a nota e aceita o mesmo identificador de forma idempotente; repetir uma atividade não duplica a recompensa de XP. A troca de identidade fica bloqueada enquanto existem resultados pendentes.
-
-A gravação de áudio precisa de conexão para envio e não participa da fila offline. Narração offline depende das vozes instaladas no dispositivo. Limpar dados do navegador remove rascunhos e envios ainda não sincronizados.
-
-O pacote contém a implementação desses fluxos e testes de validação/idempotência. A experiência completa de instalação, navegação fria desconectada e atualização entre versões ainda precisa ser homologada nos navegadores/dispositivos do piloto.
+Os caminhos que um comando recebe como argumentos seguem a resolução do script executado no workspace. Para arquivos externos, use caminhos absolutos quando necessário. Os guias de voz e banco detalham os argumentos.
 
 ## Verificar
 
@@ -68,65 +65,35 @@ npm run lint
 npm run build
 ```
 
-`npm test` executa a suíte de domínio/rascunhos e a suíte de API. O inventário dos 40 casos principais e sua ligação com requisitos está em [docs/REQUISITOS.md](docs/REQUISITOS.md). Verificações adicionais podem ser consultadas em `tests/`.
-
-Com o servidor local ativo:
+Com a aplicação local em execução:
 
 ```powershell
-$env:LETRIA_TEST_URL = 'http://localhost:3000'
-npm run test:http
+$env:LETRIA_TEST_URL = 'http://127.0.0.1:3002'
 npm run test:render
 ```
 
-O teste HTTP cobre D1/R2, criação de escola de demonstração, turmas, estudantes, atividades, missões, consentimento e idempotência. Usa dados fictícios e cria registros isolados no servidor indicado; direcione-o para desenvolvimento/teste.
+O teste de renderização faz requisições HTTP; não controla um navegador nem valida a experiência visual. `test:http` realiza operações de negócio com registros fictícios e deve apontar para um ambiente de teste. Os procedimentos de API, banco e migração estão em [PostgreSQL](docs/POSTGRESQL.md).
 
-Validação final desta entrega: **39/40 testes principais**, **1/1 teste HTTP de negócio** e **2/2 testes HTTP de renderização/PWA** passaram. `npm run lint`, `npm run typecheck` e `npm run build` também passaram. Não foi realizada homologação visual ou interação automatizada em navegador.
+## Configurações e guias
 
-O teste de renderização consulta HTTP, metadados e arquivos do PWA. Ele não controla um navegador nem verifica interação visual. O teste HTTP de negócio foi validado com o runtime local real; os testes de API principais usam SQLite em memória e um adaptador de R2.
-
-## Arquitetura
-
-| Caminho | Responsabilidade |
+| Assunto | Referência |
 | --- | --- |
-| [components/Letria.tsx](components/Letria.tsx) | Navegação, painel infantil, autenticação e sincronização |
-| [components/Game.tsx](components/Game.tsx) | Questões, feedback, prática livre, pausa e retomada |
-| [components/Educator.tsx](components/Educator.tsx) | Turmas, autoria, relatórios, família e administração |
-| [lib/content.ts](lib/content.ts) | Catálogo pedagógico autoral |
-| [lib/pedagogy.ts](lib/pedagogy.ts) | Correção, domínio, recomendações e recompensas |
-| [lib/client.ts](lib/client.ts) | IndexedDB, fila offline e cache de rascunhos |
-| [app/api/platform/route.ts](app/api/platform/route.ts) | API autenticada de dados e operações |
-| [lib/server/](lib/server/) | Sessões, autorização, validação, ações e armazenamento |
-| [app/api/audio/route.ts](app/api/audio/route.ts) | Upload e reprodução de áudio autenticados |
-| [db/schema.ts](db/schema.ts), [drizzle/](drizzle/) | Esquema e migrações do D1 |
-| [public/sw.js](public/sw.js) | Cache público e ciclo de atualização do PWA |
-| [.openai/hosting.json](.openai/hosting.json) | Bindings usados pela hospedagem Sites |
+| Produto e limites da implementação | [README da aplicação](apps/plataforma/README.md) |
+| Jornada e histórias de usuário | [Experiência dos usuários](docs/EXPERIENCIA_E_HISTORIAS_DE_USUARIO.md) |
+| Banco e importação de dados | [PostgreSQL](docs/POSTGRESQL.md) |
+| Voz padrão e áudios preparados | [Qwen](docs/VOZ_QWEN.md) |
+| Voz alternativa | [Kokoro/Dora](docs/VOZ_DORA.md) |
+| Personagem, microfone e conversa | [Lumi e DeepSeek](docs/LUMI_3D_DEEPSEEK.md) |
+| Habilidades de pensamento computacional | [Correspondência com a BNCC](docs/BNCC_PENSAMENTO_COMPUTACIONAL.md) |
+| Execução dos programas | [Simulações](docs/SIMULACOES_DE_PROGRAMAS.md) |
 
-## Persistência e implantação
+A configuração local fica em [infra/cloudflare/wrangler.local.jsonc](infra/cloudflare/wrangler.local.jsonc). O fluxo Sites permanece associado à aplicação em [apps/plataforma/.openai/hosting.json](apps/plataforma/.openai/hosting.json), com sua integração de build preservada. Esta reorganização não publica a aplicação nem provisiona bancos ou armazenamento remoto.
 
-D1 mantém instituições, contas, turmas, estudantes, respostas, versões de atividades, recompensas, consentimento e registros administrativos. R2 mantém áudios privados. As configurações exigem os bindings:
+## Repositórios no GitHub
 
-| Binding | Serviço | Uso |
-| --- | --- | --- |
-| `DB` | Cloudflare D1 | Dados persistentes e transações de resultados/XP |
-| `AUDIO` | Cloudflare R2 | Arquivos de voz com acesso somente pela API |
-| `ASSETS` | Assets do Worker | JavaScript, CSS, imagens, fontes e PWA |
+- [letria-monorepo](https://github.com/Alpha-ia-tecnologia/letria-monorepo): fonte principal da plataforma e dos serviços.
+- [letria-voice](https://github.com/Alpha-ia-tecnologia/letria-voice): publicação independente do conteúdo de `services/lumi-voice`.
 
-A configuração de Sites declara `{"d1":"DB","r2":"AUDIO"}`. O build integra [build/sites-vite-plugin.ts](build/sites-vite-plugin.ts) com o Worker. Publicação pelo fluxo Sites deve provisionar os bindings, aplicar as migrações e servir o aplicativo via HTTPS. A configuração local usa identificadores fictícios e não deve ser confundida com os recursos de uma implantação real.
+As alterações da voz são feitas primeiro no monorepositório. Para atualizar o repositório independente após registrar as alterações em um commit, use `git subtree push --prefix=services/lumi-voice voice main`, com o remote `voice` apontando para `git@github.com:Alpha-ia-tecnologia/letria-voice.git`. Um clone novo precisa configurar esse remote com `git remote add voice git@github.com:Alpha-ia-tecnologia/letria-voice.git`.
 
-Para executar a saída de build local, use `npm run build` e `npm run start`. Um build bem-sucedido não confirma que os bancos e buckets de um ambiente remoto tenham sido provisionados ou migrados.
-
-Sessões usam cookie HttpOnly e token opaco armazenado como hash; senhas usam PBKDF2 com salt. O servidor valida origem, perfil e escopo dos registros, recalcula respostas, limita solicitações e restringe os áudios. Esses controles fazem parte da implementação; não equivalem a uma auditoria independente ou garantia de conformidade.
-
-## Escopo restante e preparação do piloto
-
-Ainda não há QR Code, autenticação institucional, importação de planilhas, recuperação de senha por e-mail, papéis próprios de coordenador/gestor/avaliador, rede com múltiplas escolas, grupos pedagógicos, revisão espaçada por calendário, rubricas, produção textual livre, análise automática da fala ou notificações push.
-
-Administração completa de usuários, retenção programada, anonimização de pesquisa, exportação integral de dados, transferência entre escolas e relatórios comparativos por período ainda exigem desenvolvimento. O catálogo e a sondagem precisam de validação pedagógica; não oferecem diagnóstico clínico nem uma avaliação normatizada de alfabetização.
-
-Antes de operar com uma escola, validar: permissões por turma e decisões docentes; PWA e acessibilidade nos dispositivos usados; política de consentimento/retenção; recuperação de contas; backups e restauração; monitoração; capacidade; limpeza de ambientes de demonstração; limites de armazenamento e procedimentos de atendimento. A [matriz de requisitos](docs/REQUISITOS.md) detalha cada lacuna.
-
-## Recursos visuais
-
-A imagem original [public/og.png](public/og.png), usada na abertura/social, foi gerada com ImageGen para a identidade Letria: fundo índigo escuro, destaques em menta, corujinha exploradora em ilha mágica de letras e tipografia da marca “Letria — Uma aventura em cada palavra”.
-
-As famílias Nunito e DM Sans são servidas localmente em [public/fonts/](public/fonts/), com suas licenças OFL no mesmo diretório. A experiência não precisa carregar fontes de um serviço externo a cada acesso.
+O [README da voz](services/lumi-voice/README.md) explica a instalação independente e o provisionamento dos modelos e da referência privada da Lumi.

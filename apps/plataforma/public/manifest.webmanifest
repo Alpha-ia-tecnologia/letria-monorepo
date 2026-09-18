@@ -1,0 +1,36 @@
+{
+  "id": "/",
+  "name": "Letria · Uma aventura em cada palavra",
+  "short_name": "Letria",
+  "description": "Uma aventura de alfabetização com letras, sons, palavras e histórias.",
+  "lang": "pt-BR",
+  "start_url": "/plataforma",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f4f8fc",
+  "theme_color": "#32b9f2",
+  "categories": [
+    "education",
+    "games"
+  ],
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

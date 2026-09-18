@@ -18,21 +18,21 @@ Os rótulos P01–P12, D01–D05, S01–S11, O01–O04 e W01–W08 são referên
 
 | Sigla | Implementação |
 | --- | --- |
-| APP | [components/Letria.tsx](../components/Letria.tsx): navegação, painel infantil, missões, PWA e autenticação |
-| JOGO | [components/Game.tsx](../components/Game.tsx): execução, feedback, pausa e prática livre |
-| ED | [components/Educator.tsx](../components/Educator.tsx): professor, família, administração e relatórios |
-| CAT | [lib/content.ts](../lib/content.ts): 5 etapas, 20 atividades, 100 itens e diagnóstico |
-| PED | [lib/pedagogy.ts](../lib/pedagogy.ts): avaliação, domínio, recomendação, XP e histórico |
-| CLIENTE | [lib/client.ts](../lib/client.ts): IndexedDB, fila offline e validação de rascunhos |
-| AUT | [lib/server/platform.ts](../lib/server/platform.ts), [actions.ts](../lib/server/actions.ts), [security.ts](../lib/server/security.ts), [API](../app/api/platform/route.ts) |
-| DB | [db/schema.ts](../db/schema.ts), [migração SQL](../drizzle/0000_acoustic_mimic.sql) |
-| VOZ | [components/Recorder.tsx](../components/Recorder.tsx): captura e reprodução local |
-| AUDIO | [lib/server/storage.ts](../lib/server/storage.ts), [API de áudio](../app/api/audio/route.ts): consentimento e R2 privado |
-| PWA | [public/sw.js](../public/sw.js), [public/manifest.webmanifest](../public/manifest.webmanifest), [app/layout.tsx](../app/layout.tsx) |
+| APP | [apps/plataforma/components/Letria.tsx](../apps/plataforma/components/Letria.tsx): navegação, painel infantil, missões, PWA e autenticação |
+| JOGO | [apps/plataforma/components/Game.tsx](../apps/plataforma/components/Game.tsx): execução, feedback, pausa e prática livre |
+| ED | [apps/plataforma/components/Educator.tsx](../apps/plataforma/components/Educator.tsx): professor, família, administração e relatórios |
+| CAT | [apps/plataforma/lib/content.ts](../apps/plataforma/lib/content.ts): 5 etapas, 20 atividades, 100 itens e diagnóstico |
+| PED | [apps/plataforma/lib/pedagogy.ts](../apps/plataforma/lib/pedagogy.ts): avaliação, domínio, recomendação, XP e histórico |
+| CLIENTE | [apps/plataforma/lib/client.ts](../apps/plataforma/lib/client.ts): IndexedDB, fila offline e validação de rascunhos |
+| AUT | [apps/plataforma/lib/server/platform.ts](../apps/plataforma/lib/server/platform.ts), [actions.ts](../apps/plataforma/lib/server/actions.ts), [security.ts](../apps/plataforma/lib/server/security.ts), [API](../apps/plataforma/app/api/platform/route.ts) |
+| DB | [apps/plataforma/db/schema.ts](../apps/plataforma/db/schema.ts), [migração SQL](../apps/plataforma/drizzle/0000_acoustic_mimic.sql) |
+| VOZ | [apps/plataforma/components/Recorder.tsx](../apps/plataforma/components/Recorder.tsx): captura e reprodução local |
+| AUDIO | [apps/plataforma/lib/server/storage.ts](../apps/plataforma/lib/server/storage.ts), [API de áudio](../apps/plataforma/app/api/audio/route.ts): consentimento e R2 privado |
+| PWA | [apps/plataforma/public/sw.js](../apps/plataforma/public/sw.js), [apps/plataforma/public/manifest.webmanifest](../apps/plataforma/public/manifest.webmanifest), [apps/plataforma/app/layout.tsx](../apps/plataforma/app/layout.tsx) |
 
 ## Regras aplicadas na versão
 
-O avanço de mundo exige **10 questões distintas em pelo menos 2 atividades**, acerto de pelo menos **80% nas respostas mais recentes de cada questão** e no máximo **1 erro nas últimas 5 tentativas do mundo**. Repetir a mesma questão não aumenta a amostra. Erros recentes recomendam revisão, preservando XP e acesso já conquistados.
+**Atualização da experiência:** o mapa agora avança por 20 territórios sequenciais. Uma tentativa com 80% ou mais conquista um território; quatro territórios abrem o mundo seguinte. Conquistas não são revogadas por erros posteriores. A matriz de domínio do professor continua avaliando 10 questões distintas em duas atividades, 80% de acerto e erros recentes, separadamente da ordem do mapa. Veja [Trilha e Lumi](TRILHA_E_LUMI.md).
 
 XP é concedido uma única vez por estudante/atividade com resultado de pelo menos 80%. Nível de experiência e acesso pedagógico são conceitos separados. O baú permite prática livre explícita de mundos futuros; isso não libera etapas sem cumprir a cadeia de pré-requisitos.
 
@@ -82,7 +82,7 @@ Atividades docentes possuem correção e histórico, mas não entram na evidênc
 | --- | --- | --- | --- | --- |
 | RF-021 | Cadastro da matriz | Parcial | Cinco eixos fixos com pré-requisitos. Sem CRUD de matriz por ano, dificuldade e evidência. | CAT, PED; P01, P05 |
 | RF-022 | Alinhamento curricular | Planejado | Não há códigos BNCC nem mapeamento de currículo institucional. | CAT, DB; revisão |
-| RF-023 | Pré-requisitos | Implementado | Cadeia entre cinco mundos; domínio anterior governa avanço na trilha. | PED, AUT; P03–P05, S03, S10 |
+| RF-023 | Pré-requisitos | Implementado | Cadeia entre cinco mundos; territórios anteriores resolvidos governam o avanço na trilha. | PED, AUT; P03–P05, S03, S10 |
 | RF-024 | Escala de domínio | Parcial | Estados bloqueado, disponível, revisão e consolidado. A escala não é configurável. | PED; P03, P05, P06 |
 | RF-025 | Atualização do domínio | Parcial | Acerto mais recente por item e erros recentes recalculam domínio. Tempo e frequência não ponderam o domínio. | PED; P04–P06 |
 
@@ -96,7 +96,7 @@ Atividades docentes possuem correção e histórico, mas não entram na evidênc
 | RF-029 | Trilhas por grupo | Planejado | Sem grupos pedagógicos ou atribuição por grupo. | DB; revisão |
 | RF-030 | Trilhas individuais | Planejado | Missões são atribuídas por turma; notas individuais não equivalem a atividades exclusivas. | ED, AUT; revisão |
 | RF-031 | Pré-requisitos para avanço | Implementado | Servidor controla trilha; biblioteca usa prática livre explícita sem pular a cadeia de pré-requisitos. | PED, JOGO, AUT; P03–P05, S03, S10 |
-| RF-032 | Desbloqueio progressivo | Implementado | Acesso conquistado por domínio permanece; revisões posteriores não apagam conquistas. | PED; P05, P06 |
+| RF-032 | Desbloqueio progressivo | Implementado | Acesso conquistado por atividades resolvidas permanece; revisões posteriores não apagam conquistas. | PED; P05, P06 |
 | RF-033 | Revisão espaçada | Planejado | Não existe agenda por intervalo ou teste de retenção. | PED; revisão |
 | RF-034 | Recuperação automática | Implementado | Erros recentes priorizam atividade para revisão no primeiro mundo disponível que precisa de apoio. | PED, APP; P06 |
 
@@ -173,7 +173,7 @@ Atividades docentes possuem correção e histórico, mas não entram na evidênc
 | RF | Requisito | Estado | Entrega e limite | Evidência |
 | --- | --- | --- | --- | --- |
 | RF-078 | Perfil pedagógico individual | Parcial | Evidências por mundo e recomendação. Sem perfil completo de ritmo/fluência ou taxonomia de dificuldades. | PED, ED; P05, P06, P10 |
-| RF-079 | Próxima atividade recomendada | Implementado | Escolhe atividade usando domínio, erros, prática e pré-requisitos. | PED, APP; P03, P05, P06, P12 |
+| RF-079 | Próxima atividade recomendada | Implementado | Indica o próximo território da sequência; após toda a trilha, sugere prática/revisão. | PED, APP; P03, P05, P06, P12 |
 | RF-080 | Detecção de dificuldades | Parcial | Identifica itens errados e baixa precisão por mundo; não classifica tipos de troca, omissão ou lentidão. | PED, ED; P06 |
 | RF-081 | Plano de intervenção | Parcial | Sugestão de revisão e notas de intervenção; sem plano completo com frequência/prazo/reavaliação. | PED, ED, AUT; P06 |
 | RF-082 | Controle do professor | Parcial | Docente registra intervenções e escolhe missões, mas não altera/aceita/rejeita recomendação ou domínio formalmente. | ED, PED; revisão |
@@ -279,7 +279,7 @@ Atividades docentes possuem correção e histórico, mas não entram na evidênc
 | RF-137 | Textos graduados | Parcial | Textos fixos nas etapas avançadas; sem seleção automática por vocabulário/extensão. | CAT; P01 |
 | RF-138 | Identificação de padrões | Parcial | Revisão por erro recente e baixa precisão, sem diagnóstico clínico. Falta classificação persistente de padrões específicos. | PED; P06 |
 | RF-139 | Assistente do professor | Planejado | Não há chat ou assistente generativo docente. | ED; revisão |
-| RF-140 | Revisão obrigatória de IA | Planejado | Não há geração por IA em execução. Para futura integração, revisão humana precisa ser etapa obrigatória de publicação. | ED, AUT; revisão |
+| RF-140 | Revisão obrigatória de IA | Planejado | A Lumi tem tutor opcional por IA, sem publicação de conteúdo curricular. Geração e publicação de atividades por IA continuam fora do escopo. | ED, AUT; revisão |
 
 ## Regras de negócio
 
@@ -302,46 +302,46 @@ Os 17 testes de domínio/rascunhos são complementados por 12 testes de service 
 
 | Referência | Nome exato do teste | Arquivo |
 | --- | --- | --- |
-| P01 | RF conteúdo: cinco etapas, vinte atividades e cem desafios com gabaritos válidos | [pedagogy.test.ts](../tests/pedagogy.test.ts) |
-| P02 | RF avaliação: comparação aceita caixa e espaços; ordenação exige sequência completa | [pedagogy.test.ts](../tests/pedagogy.test.ts) |
-| P03 | RN progressão: XP isolado não libera mundos nem recomenda etapas bloqueadas | [pedagogy.test.ts](../tests/pedagogy.test.ts) |
-| P04 | RN evidência mínima: repetir uma questão ou uma atividade não infla a amostra | [pedagogy.test.ts](../tests/pedagogy.test.ts) |
-| P05 | RN domínio: dez itens distintos em duas atividades com 80% liberam a etapa seguinte | [pedagogy.test.ts](../tests/pedagogy.test.ts) |
-| P06 | RN revisão: erros recentes acionam apoio sem apagar XP ou acesso conquistado | [pedagogy.test.ts](../tests/pedagogy.test.ts) |
-| P07 | RN recompensas: atividade incompleta não conclui; corrigir depois recompensa uma única vez | [pedagogy.test.ts](../tests/pedagogy.test.ts) |
-| P08 | RF diagnóstico: dez itens graduais em cinco habilidades não substituem a prática | [pedagogy.test.ts](../tests/pedagogy.test.ts) |
-| P09 | RF avaliação no servidor: respostas ausentes erram e gabaritos adulterados não contam | [pedagogy.test.ts](../tests/pedagogy.test.ts) |
-| P10 | RF histórico: reconstrução ordena evidências e respeita XP oficial, incluindo conteúdo docente | [pedagogy.test.ts](../tests/pedagogy.test.ts) |
-| P11 | RN frequência: dias consecutivos usam horário de São Paulo e não duplicam no mesmo dia | [pedagogy.test.ts](../tests/pedagogy.test.ts) |
-| P12 | RF resumo: diagnóstico não distorce desempenho das missões e progresso inicial é positivo | [pedagogy.test.ts](../tests/pedagogy.test.ts) |
-| D01 | RF114: rascunho retoma resposta parcial, questão e identificador de envio | [client-drafts.test.ts](../tests/client-drafts.test.ts) |
-| D02 | RF114: contas e versões diferentes não recuperam respostas de outro contexto | [client-drafts.test.ts](../tests/client-drafts.test.ts) |
-| D03 | RF114: rascunho corrompido não pula questões nem restaura feedback incoerente | [client-drafts.test.ts](../tests/client-drafts.test.ts) |
-| D04 | RF114: ordenação parcial preserva peças sem aceitar duplicação inválida | [client-drafts.test.ts](../tests/client-drafts.test.ts) |
-| D05 | RF progresso: cliente usa a soma oficial de XP e moedas para atividades docentes | [client-drafts.test.ts](../tests/client-drafts.test.ts) |
-| S01 | demo institutions are isolated and role authorization is server enforced | [api-security.test.mjs](../tests/api-security.test.mjs) |
-| S02 | scores are recomputed; submissions are idempotent and XP cannot be farmed | [api-security.test.mjs](../tests/api-security.test.mjs) |
-| S03 | locked worlds and unauthorized student IDs are rejected | [api-security.test.mjs](../tests/api-security.test.mjs) |
-| S04 | registration is empty, passwords are salted hashes and actual roles cannot switch | [api-security.test.mjs](../tests/api-security.test.mjs) |
-| S05 | student code only grants student access to its own profile | [api-security.test.mjs](../tests/api-security.test.mjs) |
-| S06 | cross-origin writes are rejected | [api-security.test.mjs](../tests/api-security.test.mjs) |
-| S07 | private audio requires guardian consent and revocation removes file | [api-security.test.mjs](../tests/api-security.test.mjs) |
-| S08 | classroom deletion preserves student learning history | [api-security.test.mjs](../tests/api-security.test.mjs) |
-| S09 | published versions remain available during edits and grading uses requested snapshot | [api-security.test.mjs](../tests/api-security.test.mjs) |
-| S10 | explicit free practice is allowed without changing journey prerequisites | [api-security.test.mjs](../tests/api-security.test.mjs) |
-| S11 | teachers can only read and mutate their assigned classrooms; admin can transfer ownership | [api-security.test.mjs](../tests/api-security.test.mjs) |
-| O01 | RF-110/RN-010: service worker nunca armazena API privada ou gravações | [offline.test.ts](../tests/offline.test.ts) |
-| O02 | RF-110: navegação offline recupera shell sem inventar dados | [offline.test.ts](../tests/offline.test.ts) |
-| O03 | RF-112: download explícito inclui dependências de scripts e fontes | [offline.test.ts](../tests/offline.test.ts) |
-| O04 | RF-112: arquivos privados ou download incompleto retornam falha | [offline.test.ts](../tests/offline.test.ts) |
-| W01 | download follows transitive and deferred build assets before making the shell available offline | [service-worker.test.ts](../tests/service-worker.test.ts) |
-| W02 | an incomplete transfer never replaces an existing complete offline package | [service-worker.test.ts](../tests/service-worker.test.ts) |
-| W03 | HTML error documents returned as scripts cannot produce a successful download | [service-worker.test.ts](../tests/service-worker.test.ts) |
-| W04 | API, audio, identity, RSC, authorized, POST, range and external requests bypass the worker | [service-worker.test.ts](../tests/service-worker.test.ts) |
-| W05 | download messages cannot put private or external URLs into the public cache | [service-worker.test.ts](../tests/service-worker.test.ts) |
-| W06 | the first installation offers offline instructions and updates wait for an explicit choice | [service-worker.test.ts](../tests/service-worker.test.ts) |
-| W07 | live navigation does not overwrite the downloaded shell with a partially loaded version | [service-worker.test.ts](../tests/service-worker.test.ts) |
-| W08 | the known static HTML redirect is accepted without accepting sign-in or external redirects | [service-worker.test.ts](../tests/service-worker.test.ts) |
+| P01 | RF conteúdo: cinco etapas, vinte atividades e cem desafios com gabaritos válidos | [pedagogy.test.ts](../apps/plataforma/tests/pedagogy.test.ts) |
+| P02 | RF avaliação: comparação aceita caixa e espaços; ordenação exige sequência completa | [pedagogy.test.ts](../apps/plataforma/tests/pedagogy.test.ts) |
+| P03 | RN progressão: XP isolado não libera mundos nem recomenda etapas bloqueadas | [pedagogy.test.ts](../apps/plataforma/tests/pedagogy.test.ts) |
+| P04 | RN evidência mínima: repetir uma questão ou uma atividade não infla a amostra | [pedagogy.test.ts](../apps/plataforma/tests/pedagogy.test.ts) |
+| P05 | RN domínio: evidência pedagógica não pula territórios ainda não conquistados | [pedagogy.test.ts](../apps/plataforma/tests/pedagogy.test.ts) |
+| P06 | RN revisão: erros recentes acionam apoio sem apagar XP ou acesso conquistado | [pedagogy.test.ts](../apps/plataforma/tests/pedagogy.test.ts) |
+| P07 | RN recompensas: atividade incompleta não conclui; corrigir depois recompensa uma única vez | [pedagogy.test.ts](../apps/plataforma/tests/pedagogy.test.ts) |
+| P08 | RF diagnóstico: dez itens graduais em cinco habilidades não substituem a prática | [pedagogy.test.ts](../apps/plataforma/tests/pedagogy.test.ts) |
+| P09 | RF avaliação no servidor: respostas ausentes erram e gabaritos adulterados não contam | [pedagogy.test.ts](../apps/plataforma/tests/pedagogy.test.ts) |
+| P10 | RF histórico: reconstrução ordena evidências e respeita XP oficial, incluindo conteúdo docente | [pedagogy.test.ts](../apps/plataforma/tests/pedagogy.test.ts) |
+| P11 | RN frequência: dias consecutivos usam horário de São Paulo e não duplicam no mesmo dia | [pedagogy.test.ts](../apps/plataforma/tests/pedagogy.test.ts) |
+| P12 | RF resumo: diagnóstico não distorce desempenho das missões e progresso inicial é positivo | [pedagogy.test.ts](../apps/plataforma/tests/pedagogy.test.ts) |
+| D01 | RF114: rascunho retoma resposta parcial, questão e identificador de envio | [client-drafts.test.ts](../apps/plataforma/tests/client-drafts.test.ts) |
+| D02 | RF114: contas e versões diferentes não recuperam respostas de outro contexto | [client-drafts.test.ts](../apps/plataforma/tests/client-drafts.test.ts) |
+| D03 | RF114: rascunho corrompido não pula questões nem restaura feedback incoerente | [client-drafts.test.ts](../apps/plataforma/tests/client-drafts.test.ts) |
+| D04 | RF114: ordenação parcial preserva peças sem aceitar duplicação inválida | [client-drafts.test.ts](../apps/plataforma/tests/client-drafts.test.ts) |
+| D05 | RF progresso: cliente usa a soma oficial de XP e moedas para atividades docentes | [client-drafts.test.ts](../apps/plataforma/tests/client-drafts.test.ts) |
+| S01 | demo institutions are isolated and role authorization is server enforced | [api-security.test.mjs](../apps/plataforma/tests/api-security.test.mjs) |
+| S02 | scores are recomputed; submissions are idempotent and XP cannot be farmed | [api-security.test.mjs](../apps/plataforma/tests/api-security.test.mjs) |
+| S03 | locked worlds and unauthorized student IDs are rejected | [api-security.test.mjs](../apps/plataforma/tests/api-security.test.mjs) |
+| S04 | registration is empty, passwords are salted hashes and actual roles cannot switch | [api-security.test.mjs](../apps/plataforma/tests/api-security.test.mjs) |
+| S05 | student code only grants student access to its own profile | [api-security.test.mjs](../apps/plataforma/tests/api-security.test.mjs) |
+| S06 | cross-origin writes are rejected | [api-security.test.mjs](../apps/plataforma/tests/api-security.test.mjs) |
+| S07 | private audio requires guardian consent and revocation removes file | [api-security.test.mjs](../apps/plataforma/tests/api-security.test.mjs) |
+| S08 | classroom deletion preserves student learning history | [api-security.test.mjs](../apps/plataforma/tests/api-security.test.mjs) |
+| S09 | published versions remain available during edits and grading uses requested snapshot | [api-security.test.mjs](../apps/plataforma/tests/api-security.test.mjs) |
+| S10 | explicit free practice is allowed without changing journey prerequisites | [api-security.test.mjs](../apps/plataforma/tests/api-security.test.mjs) |
+| S11 | teachers can only read and mutate their assigned classrooms; admin can transfer ownership | [api-security.test.mjs](../apps/plataforma/tests/api-security.test.mjs) |
+| O01 | RF-110/RN-010: service worker nunca armazena API privada ou gravações | [offline.test.ts](../apps/plataforma/tests/offline.test.ts) |
+| O02 | RF-110: navegação offline recupera shell sem inventar dados | [offline.test.ts](../apps/plataforma/tests/offline.test.ts) |
+| O03 | RF-112: download explícito inclui dependências de scripts e fontes | [offline.test.ts](../apps/plataforma/tests/offline.test.ts) |
+| O04 | RF-112: arquivos privados ou download incompleto retornam falha | [offline.test.ts](../apps/plataforma/tests/offline.test.ts) |
+| W01 | download follows transitive and deferred build assets before making the shell available offline | [service-worker.test.ts](../apps/plataforma/tests/service-worker.test.ts) |
+| W02 | an incomplete transfer never replaces an existing complete offline package | [service-worker.test.ts](../apps/plataforma/tests/service-worker.test.ts) |
+| W03 | HTML error documents returned as scripts cannot produce a successful download | [service-worker.test.ts](../apps/plataforma/tests/service-worker.test.ts) |
+| W04 | API, audio, identity, RSC, authorized, POST, range and external requests bypass the worker | [service-worker.test.ts](../apps/plataforma/tests/service-worker.test.ts) |
+| W05 | download messages cannot put private or external URLs into the public cache | [service-worker.test.ts](../apps/plataforma/tests/service-worker.test.ts) |
+| W06 | the first installation offers offline instructions and updates wait for an explicit choice | [service-worker.test.ts](../apps/plataforma/tests/service-worker.test.ts) |
+| W07 | live navigation does not overwrite the downloaded shell with a partially loaded version | [service-worker.test.ts](../apps/plataforma/tests/service-worker.test.ts) |
+| W08 | the known static HTML redirect is accepted without accepting sign-in or external redirects | [service-worker.test.ts](../apps/plataforma/tests/service-worker.test.ts) |
 
 Execução:
 
@@ -352,14 +352,14 @@ npm run test:unit
 npm run test:api
 ```
 
-Evidência adicional: [tests/api-http-smoke.test.mjs](../tests/api-http-smoke.test.mjs), caso `real HTTP: durable D1, school workflow, private R2, access control, idempotency`, foi executado contra servidor local com D1/R2 emulados e passou. Este é um teste adicional aos 40 acima. Ele cria apenas uma instituição de demonstração isolada com registros fictícios.
+Evidência adicional: [apps/plataforma/tests/api-http-smoke.test.mjs](../apps/plataforma/tests/api-http-smoke.test.mjs), caso `real HTTP: durable D1, school workflow, private R2, access control, idempotency`, foi executado contra servidor local com D1/R2 emulados e passou. Este é um teste adicional aos 40 acima. Ele cria apenas uma instituição de demonstração isolada com registros fictícios.
 
 ```powershell
 $env:LETRIA_TEST_URL = 'http://localhost:3001'
-node --test tests/api-http-smoke.test.mjs
+node --test apps/plataforma/tests/api-http-smoke.test.mjs
 ```
 
-Sem `LETRIA_TEST_URL`, esses comandos encerram com erro e instruções para informar a origem de teste. O arquivo [tests/rendered-html.test.mjs](../tests/rendered-html.test.mjs) acrescenta verificações HTTP do shell, metadados, manifesto, ícones e service worker. Rode `npm run test:render` com o servidor local ativo; esses casos são adicionais aos 40 testes principais e não simulam interação em navegador.
+Sem `LETRIA_TEST_URL`, esses comandos encerram com erro e instruções para informar a origem de teste. O arquivo [apps/plataforma/tests/rendered-html.test.mjs](../apps/plataforma/tests/rendered-html.test.mjs) acrescenta verificações HTTP do shell, metadados, manifesto, ícones e service worker. Rode `npm run test:render` com o servidor local ativo; esses casos são adicionais aos 40 testes principais e não simulam interação em navegador.
 
 Validação final em 16/09/2026: **40/40** casos de `npm test`, **1/1** caso de `npm run test:http` e **2/2** casos de `npm run test:render` passaram contra o servidor local apropriado. `npm run lint`, `npm run typecheck` e `npm run build` passaram. Os testes HTTP finais usaram a origem local `http://127.0.0.1:3002`; não houve QA visual ou interação automatizada em navegador.
 

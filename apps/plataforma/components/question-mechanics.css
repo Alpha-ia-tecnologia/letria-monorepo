@@ -1,0 +1,30 @@
+/* Additional challenge mechanics follow the same playful, accessible game cards. */
+.playful-game .mechanic-instruction { display:flex; align-items:flex-start; justify-content:center; gap:9px; color:#455c75; font-size:.88rem; line-height:1.6; margin:20px 0 14px; }
+.playful-game .mechanic-instruction svg { color:#7351c8; flex-shrink:0; margin-top:3px; }
+.playful-game .mechanic-progress { color:#53637b; text-align:center; font-size:.82rem; margin:15px 0 0; }
+.playful-game .multi-options .answer-option { justify-content:flex-start; text-align:left; }
+.playful-game .multi-marker { display:inline-flex; flex-shrink:0; color:#536886; }
+.playful-game .multi-options .selected .multi-marker { color:#6142bd; }
+.playful-game .pair-challenge { margin-top:22px; }
+.playful-game .pair-row { display:grid; grid-template-columns:minmax(0,1fr) 24px minmax(0,1fr); align-items:center; gap:12px; margin-bottom:13px; padding:13px; background:#fff; border:2px solid #e3dcf4; border-radius:17px; box-shadow:0 3px 0 #e6e0f0; }
+.playful-game .pair-label { display:flex; align-items:center; gap:10px; font-weight:800; color:#263f61; font-size:1.03rem; line-height:1.5; overflow-wrap:anywhere; }
+.playful-game .pair-label > span { display:inline-grid; place-items:center; flex-shrink:0; width:27px; height:27px; border-radius:9px; background:#f0eaff; color:#6f50b9; font-size:.78rem; }
+.playful-game .pair-arrow { color:#9d8cbb; }
+.playful-game .pair-row select { min-width:0; width:100%; min-height:50px; padding:10px 28px 10px 12px; color:#293f5d; border:2px solid #d8dfe9; border-radius:12px; background:#f8fbff; font:inherit; font-size:.95rem; text-overflow:ellipsis; }
+.playful-game .pair-row select:focus-visible { outline:3px solid #7151db; outline-offset:3px; }
+.playful-game .pair-row.paired { border-color:#b5a2e5; }
+.playful-game .pair-row.paired select { background:#f3edff; border-color:#baa4ea; font-weight:700; }
+.playful-game .pair-row.pair-correct { border-color:#6aaf66; background:#f3fff0; }
+.playful-game .pair-row.pair-review { border-color:#ddbc72; background:#fff9e8; }
+.playful-game .pair-row select:disabled { opacity:1; color:#293f5d; cursor:default; }
+.high-contrast .playful-game .mechanic-instruction,.high-contrast .playful-game .mechanic-instruction svg,.high-contrast .playful-game .mechanic-progress { color:#fff; }
+.high-contrast .playful-game .pair-row,.high-contrast .playful-game .pair-row select { border-color:#293f5d; }
+.high-contrast .playful-game .pair-label,.high-contrast .playful-game .multi-marker { color:#132841; }
+@media(max-width:540px) {
+  .playful-game .pair-row { grid-template-columns:minmax(0,1fr); gap:10px; padding:13px; }
+  .playful-game .pair-arrow { display:none; }
+  .playful-game .pair-label { font-size:.95rem; }
+  .playful-game .pair-row select { min-height:48px; }
+  .playful-game .multi-options { grid-template-columns:1fr; }
+  .playful-game .mechanic-instruction { text-align:left; font-size:.82rem; }
+}

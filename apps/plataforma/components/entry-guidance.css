@@ -1,0 +1,82 @@
+/* Clear entry paths, shared only by the public home and authentication pages. */
+.landing-page .eg-demo-note { max-width: 470px; margin-top: 19px; font-size: 13px; line-height: 1.7; color: #655976; }
+.landing-page .eg-entry-paths { padding: 36px 0 45px; }
+.landing-page .eg-entry-heading { max-width: 630px; margin-bottom: 25px; }
+.landing-page .eg-entry-heading h2 { margin: 12px 0; font-size: clamp(28px, 3vw, 39px); }
+.landing-page .eg-entry-heading p { font-size: 15px; line-height: 1.8; }
+.landing-page .eg-entry-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.landing-page .eg-entry-card { display: flex; flex-direction: column; align-items: flex-start; min-width: 0; padding: 25px; border: 1px solid #ded3ed; border-radius: 22px; background: #f2ecfc; box-shadow: 0 4px 0 #e4dcee; }
+.landing-page .eg-entry-student { background: #ecf7ed; border-color: #cfe4d1; box-shadow: 0 4px 0 #dceadd; }
+.landing-page .eg-entry-family { background: #fff2e5; border-color: #eadac5; box-shadow: 0 4px 0 #f0e2d0; }
+.landing-page .eg-profile-icon { display: grid; place-items: center; width: 49px; height: 49px; margin-bottom: 20px; color: #67449a; background: #fffdf8; border: 1px solid #e3d9ed; border-radius: 15px; }
+.landing-page .eg-entry-card h3 { font-size: 25px; margin-bottom: 12px; }
+.landing-page .eg-entry-card p { font-size: 14px; line-height: 1.8; flex: 1; }
+.landing-page .eg-credential-label { display: block; margin-top: 19px; color: #5f5270; font-size: 12px; font-weight: 700; line-height: 1.6; }
+.landing-page .eg-entry-card a { display: inline-flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; min-height: 48px; margin-top: 12px; padding: 10px 13px; border: 1px solid #d4c4e9; border-radius: 12px; background: #fffdfb; color: #613f92; font-size: 14px; font-weight: 800; line-height: 1.5; }
+.landing-page .eg-entry-card a:hover { background: #fff; border-color: #8963bf; }
+.landing-page .eg-new-school { display: flex; align-items: center; gap: 18px; margin-top: 28px; padding: 23px 25px; border: 1px solid #e1dce7; border-radius: 18px; background: #fffdfa; }
+.landing-page .eg-new-school > svg { color: #79638c; }
+.landing-page .eg-new-school > div { flex: 1; min-width: 0; }
+.landing-page .eg-new-school h3 { margin-bottom: 7px; font-size: 20px; }
+.landing-page .eg-new-school p { max-width: 600px; font-size: 13px; line-height: 1.7; }
+.landing-page .eg-new-school a { display: inline-flex; align-items: center; gap: 9px; min-height: 44px; color: #654391; font-size: 13px; font-weight: 800; text-decoration: underline; text-underline-offset: 4px; }
+.landing-page .eg-access-support { margin: 18px 0 0; color: #6f617c; font-size: 13px; line-height: 1.7; }
+
+.login-page .lg-form-wrap { max-width: 465px; margin-top: clamp(30px, 4vh, 52px); }
+.login-page .lg-access h2 { max-width: 440px; }
+.login-page .lg-intro { max-width: 440px; }
+.login-page .eg-access-choice { margin: 25px 0 23px; }
+.login-page .eg-access-choice h3, .login-page .eg-form-heading h3 { display: flex; align-items: center; gap: 9px; margin: 0 0 13px; font-size: 17px; line-height: 1.45; letter-spacing: -.02em; }
+.login-page .eg-access-choice h3 > span, .login-page .eg-form-heading h3 > span { display: grid; place-items: center; flex-shrink: 0; width: 27px; height: 27px; border-radius: 50%; background: #ede5f9; color: #65428e; font-size: 14px; }
+.login-page .eg-access-options { display: grid; gap: 10px; }
+.login-page .eg-access-options button { display: flex; align-items: center; gap: 13px; min-width: 0; min-height: 76px; padding: 13px 15px; border: 2px solid #e1d9e9; border-radius: 15px; color: #776288; background: #fff; text-align: left; }
+.login-page .eg-access-options button > svg { flex-shrink: 0; }
+.login-page .eg-access-options button > span { display: grid; gap: 3px; flex: 1; min-width: 0; }
+.login-page .eg-access-options strong { font-size: 15px; font-weight: 800; line-height: 1.45; color: #503b6c; }
+.login-page .eg-access-options small { font-size: 12px; line-height: 1.6; color: #766682; }
+.login-page .eg-access-options button[aria-pressed='true'] { border-color: #9372c2; background: #f1ebfc; box-shadow: 0 3px 0 #ded0f1; }
+.login-page .eg-access-options button:hover:not(:disabled) { border-color: #9e82c5; }
+.login-page .eg-access-options button:disabled { opacity: .65; cursor: wait; }
+.login-page .eg-form-heading { margin: 0 0 17px; }
+.login-page .eg-form-heading h3 { margin-bottom: 8px; }
+.login-page .eg-form-heading p { font-size: 13px; line-height: 1.7; }
+.login-page .eg-register-guidance { display: flex; align-items: flex-start; gap: 12px; margin: 22px 0; padding: 17px; border: 1px solid #e4d8bc; border-radius: 15px; background: #fff8e9; }
+.login-page .eg-register-guidance > svg { color: #947331; flex-shrink: 0; margin-top: 2px; }
+.login-page .eg-register-guidance strong { color: #735a2d; font-size: 14px; line-height: 1.6; }
+.login-page .eg-register-guidance p { margin: 7px 0 3px; color: #7a684b; font-size: 13px; line-height: 1.7; }
+.login-page .eg-register-guidance a { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-size: 13px; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+.login-page .lg-help { margin-top: 24px; padding: 14px 16px; border: 1px solid #e3d9ee; border-radius: 14px; background: #faf7fe; }
+.login-page .lg-help > summary { min-height: 44px; font-size: 13px; font-weight: 750; }
+.login-page .lg-help p { font-size: 13px; line-height: 1.75; }
+.login-page .eg-school-link { gap: 4px; margin-top: 22px; padding-top: 21px; }
+.login-page .eg-school-link > a { min-height: 44px; }
+.login-page .lg-password-toggle { min-width: 44px; min-height: 44px; }
+.login-page .lg-top-nav > a { min-height: 44px; }
+
+@media (max-width: 940px) {
+  .landing-page .eg-entry-grid { gap: 14px; }
+  .landing-page .eg-entry-card { padding: 20px; }
+  .landing-page .eg-new-school { flex-wrap: wrap; }
+  .landing-page .eg-new-school > div { flex-basis: calc(100% - 55px); }
+  .landing-page .eg-new-school a { margin-left: 43px; }
+}
+@media (max-width: 680px) {
+  .landing-page .eg-entry-paths { padding: 20px 0 35px; }
+  .landing-page .eg-entry-grid { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  .landing-page .eg-entry-card { padding: 23px; }
+  .landing-page .eg-entry-heading p { font-size: 14px; }
+  .landing-page .eg-profile-icon { margin-bottom: 14px; }
+  .landing-page .eg-entry-card h3 { font-size: 24px; }
+  .landing-page .eg-new-school { padding: 20px; }
+  .landing-page .eg-new-school a { margin-left: 0; }
+  .landing-page .eg-demo-note { margin-inline: auto; }
+}
+@media (max-width: 380px) {
+  .login-page .eg-access-options button { gap: 10px; padding: 12px; }
+  .login-page .eg-access-options strong { font-size: 14px; }
+  .login-page .eg-access-options small { font-size: 12px; }
+}
+@media (forced-colors: active) {
+  .landing-page :is(.eg-entry-card, .eg-new-school), .login-page :is(.eg-access-options button, .eg-register-guidance, .lg-help) { border-color: ButtonText; }
+  .login-page .eg-access-options button[aria-pressed='true'] { outline: 2px solid Highlight; }
+}

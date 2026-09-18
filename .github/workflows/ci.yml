@@ -1,0 +1,83 @@
+name: Monorepo checks
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      voice_contracts:
+        description: Run voice contract tests without models or GPU
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  platform:
+    name: Platform checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CI: 'true'
+      NEXT_TELEMETRY_DISABLED: '1'
+      WRANGLER_SEND_METRICS: 'false'
+      LETRIA_TEST_DATABASE: sqlite
+      LETRIA_TEST_LIVE_VOICE: '0'
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - name: Install workspace dependencies
+        run: npm ci
+      - name: Check TypeScript
+        run: npm run typecheck
+      - name: Lint application
+        run: npm run lint
+      - name: Run unit tests
+        run: npm run test:unit
+      - name: Test API with an in-memory database and mocked providers
+        run: npm run test:api
+      - name: Test migration planning without a database connection
+        run: npm run test:migration
+      - name: Build application
+        run: npm run build
+
+  voice-contracts:
+    name: Voice contracts (${{ matrix.service }})
+    if: github.event_name != 'workflow_dispatch' || inputs.voice_contracts
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        service: [lumi-voice, kokoro]
+    env:
+      PYTHONUTF8: '1'
+      HF_HUB_OFFLINE: '1'
+      TRANSFORMERS_OFFLINE: '1'
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      # -S excludes site-packages; these contracts only need the standard library.
+      # Keep each service in its own process because their module names overlap.
+      - name: Run contracts without installing ML packages
+        run: python -S -m unittest discover -s services/${{ matrix.service }} -p 'test_*.py'

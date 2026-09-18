@@ -1,0 +1,6 @@
+# Install the CUDA 12.8 PyTorch wheels first; == also accepts their +cu128 local version.
+torch==2.10.0
+torchaudio==2.10.0
+qwen-tts==0.1.1
+transformers==4.57.3
+accelerate==1.12.0

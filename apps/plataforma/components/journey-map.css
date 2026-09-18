@@ -1,0 +1,445 @@
+/* A colorful island map; scoped to avoid changing the game or Lumi. */
+.expedition.island-expedition{container-type:inline-size;container-name:island;--island-ink:#203453;--island-muted:#64728c;--island-purple:#7450d7;display:grid;gap:20px;color:var(--island-ink);min-width:0}
+.island-expedition .island-intro{display:flex;align-items:center;justify-content:space-between;gap:22px}
+.island-expedition .island-eyebrow{display:flex;align-items:center;gap:7px;color:#7b52cf;font-size:.68rem;font-weight:900;letter-spacing:.09em}
+.island-expedition .island-intro h2{margin:8px 0 7px;color:var(--island-ink);font-size:clamp(1.5rem,2.4vw,2rem);font-weight:900}
+.island-expedition .island-intro p{color:var(--island-muted);font-size:.86rem}
+.island-expedition .island-total{display:flex;align-items:center;gap:12px;flex-shrink:0;border-radius:22px;padding:14px 20px;background:#fffdf8;border:2px solid #fff;box-shadow:0 5px 0 #dde3ee}
+.island-expedition .island-total>span{display:grid;place-items:center;width:43px;height:43px;border-radius:15px;background:#fff0af;color:#cc922a}
+.island-expedition .island-total strong{font-family:var(--font-heading);font-size:1.7rem;font-weight:900;line-height:1}
+.island-expedition .island-total strong small{font-size:.95rem;color:#7d89a0}
+.island-expedition .island-total p{margin:3px 0 0;font-size:.62rem;font-weight:700}
+.island-expedition .island-progress-row{display:flex;align-items:center;gap:12px}
+.island-expedition .island-progress-row>span{display:flex;align-items:center;gap:5px;color:#65738b;font-size:.66rem;font-weight:800;white-space:nowrap}
+.island-expedition .island-progress{flex:1;height:12px;border:2px solid #fff;background:#dee8f1;border-radius:20px;overflow:hidden;box-shadow:inset 0 2px 3px #26456a0b}
+.island-expedition .island-progress>span{display:block;height:100%;background:linear-gradient(#a1e665,#65c746);border-radius:inherit;transition:width .5s ease;box-shadow:inset 0 2px 0 #ffffff70}
+.island-expedition .island-worlds{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.island-expedition .island-world{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:10px;padding:14px 6px 12px;border:2px solid #fff;border-radius:20px;background:#fffef9;box-shadow:0 4px 0 #dbe3ed;text-align:center;min-width:0;color:var(--island-ink);transition:transform .18s,box-shadow .18s,border-color .18s}
+.island-expedition .island-world:hover{transform:translateY(-3px);box-shadow:0 7px 0 #dbe3ed}
+.island-expedition .island-world.is-selected{border-color:var(--island-purple);background:#f4edff;box-shadow:0 4px 0 #b19bde}
+.island-expedition .island-world-icon{position:relative;display:grid;place-items:center;width:44px;height:44px;border-radius:15px;color:#fff;background:linear-gradient(145deg,color-mix(in srgb,var(--island-world-color) 70%,#fff),var(--island-world-color));box-shadow:inset 0 2px 1px #ffffff75,0 3px 0 color-mix(in srgb,var(--island-world-color) 70%,#75839b)}
+.island-expedition .island-world-icon>svg:first-child{filter:drop-shadow(0 2px 0 #27446a24)}
+.island-expedition .island-world-state{position:absolute;right:-5px;bottom:-4px;width:18px;height:18px;padding:3px;border-radius:50%;background:#fff;color:#4b596f;box-shadow:0 2px 3px #29426120}
+.island-expedition .island-world-copy{display:block}
+.island-expedition .island-world-copy small{display:block;margin-bottom:4px;font-size:.6rem;font-weight:900;letter-spacing:.09em;color:#77748c}
+.island-expedition .island-world-copy strong{display:block;max-width:130px;font-size:.75rem;line-height:1.25;font-weight:900;font-family:var(--font-heading)}
+.island-expedition .island-board{display:grid;grid-template-columns:minmax(0,540px) minmax(225px,1fr);overflow:hidden;border:4px solid #fff;border-radius:30px;background:#fffdf7;box-shadow:0 7px 0 #d6e0ed,0 14px 30px #314d7d0b;min-width:0}
+.island-expedition .island-scenery{--node-size:76px;position:relative;isolation:isolate;overflow:hidden;min-width:0;padding-top:65px;background:linear-gradient(#35b4f0 0%,#63d2f3 20%,#82d659 70%,#42c1d1)}
+.island-expedition .island-terrain{position:relative;aspect-ratio:2/3;width:100%;isolation:isolate}
+.island-expedition .island-background{position:absolute;inset:0;background:url('/art/trail-island.png') center/cover no-repeat;user-select:none;pointer-events:none;z-index:-1}
+.island-expedition .island-ribbon{position:absolute;top:18px;left:50%;transform:translateX(-50%) rotate(-3deg);width:77%;z-index:4;filter:drop-shadow(0 4px 1px #44238440)}
+.island-expedition .island-ribbon:before,.island-expedition .island-ribbon:after{content:'';position:absolute;width:29px;top:12px;bottom:-7px;background:#8050d1;z-index:-1}
+.island-expedition .island-ribbon:before{left:-15px;clip-path:polygon(0 0,100% 10%,100% 100%,0 90%,26% 49%);transform:rotate(-9deg)}
+.island-expedition .island-ribbon:after{right:-15px;clip-path:polygon(0 10%,100% 0,74% 49%,100% 90%,0 100%);transform:rotate(9deg)}
+.island-expedition .island-ribbon>span{display:flex;align-items:center;justify-content:center;gap:7px;padding:11px 9px;border-radius:42% 42% 13px 13px / 16% 16% 10px 10px;border:2px solid #b59af8;border-bottom-color:#6c3dc2;background:linear-gradient(#b289f8,#8957e2);box-shadow:inset 0 3px 1px #ffffff35,0 4px 0 #5f34b0;font-family:var(--font-heading);font-size:clamp(.83rem,1.6vw,1.3rem);color:#fff;font-weight:900;line-height:1.2;text-align:center;text-shadow:0 2px 1px #6236a3}
+.island-expedition .island-stop{position:absolute;width:var(--node-size);height:var(--node-size);transform:translate(-50%,-50%);z-index:3}
+.island-expedition .island-marker{position:relative;display:grid;place-items:center;width:100%;height:100%;padding:0;border-radius:50%;border:4px solid #fff8d1;outline:none;background:linear-gradient(150deg,var(--marker-light),var(--marker-color) 68%);color:#fff;box-shadow:inset 0 3px 0 #ffffff90,inset 0 -3px 0 #e2942620,0 6px 0 var(--marker-shadow),0 9px 8px #38532633;transition:transform .18s,box-shadow .18s}
+.island-expedition .island-marker:before{content:'';position:absolute;inset:5px;border:1px solid #ffffff75;border-radius:inherit;pointer-events:none}
+.island-expedition .island-marker-number{font-family:var(--font-heading);font-size:calc(var(--node-size) * .46);line-height:1;font-weight:900;text-shadow:0 3px 0 var(--marker-shadow),1px 0 var(--marker-shadow),-1px 0 var(--marker-shadow)}
+.island-expedition .island-marker:not([aria-disabled=true]):hover{transform:translateY(-4px) scale(1.05);box-shadow:inset 0 3px 0 #ffffff90,0 10px 0 var(--marker-shadow),0 14px 12px #38532633}
+.island-expedition .island-marker:not([aria-disabled=true]):active{transform:translateY(3px);box-shadow:inset 0 3px 0 #ffffff90,0 3px 0 var(--marker-shadow)}
+.island-expedition .island-marker:focus-visible{outline:4px solid #342064;outline-offset:7px}
+.island-expedition .island-marker-badge{position:absolute;right:-5px;top:-4px;display:grid;place-items:center;width:24px;height:24px;border:2px solid #fff;border-radius:50%;background:#43b967;color:#fff;box-shadow:0 2px 3px #3c662444}
+.island-expedition .island-stop.is-locked .island-marker{background:linear-gradient(145deg,color-mix(in srgb,var(--marker-light) 68%,#ecf0ee),color-mix(in srgb,var(--marker-color) 65%,#c9d3dc));border-color:#f1f6f4;box-shadow:inset 0 3px 0 #ffffffa0,0 6px 0 color-mix(in srgb,var(--marker-shadow) 60%,#8494a3),0 9px 8px #38532633;cursor:not-allowed}
+.island-expedition .island-stop.is-locked .island-marker-number{color:#fff;text-shadow:0 2px 0 #8b9da9}
+.island-expedition .island-stop.is-locked .island-marker-badge{background:#fffaf0;color:#7d8c99}
+.island-expedition .island-stop.is-current .island-marker{animation:island-beacon 3s ease-in-out infinite}
+.island-expedition .island-portal-crown{position:absolute;top:-17px;left:50%;transform:translateX(-50%);fill:#ffd757;color:#bd821b;filter:drop-shadow(0 1px 0 #fff8b8)}
+.island-expedition .island-current-label{display:flex;align-items:center;justify-content:center;gap:4px;position:absolute;bottom:calc(100% + 11px);left:50%;transform:translateX(-50%);border:2px solid #fff;padding:4px 10px;border-radius:20px;background:#fffdf0;color:#7142bd;box-shadow:0 3px 0 #36592d25;font-size:.66rem;font-weight:900;white-space:nowrap}
+.island-expedition .island-current-label:after{content:'';position:absolute;top:100%;left:calc(50% - 5px);border:5px solid transparent;border-top-color:#fffdf0}
+.island-expedition .island-stop:has(.island-portal-crown) .island-current-label{bottom:auto;top:50%;left:calc(100% + 10px);transform:translateY(-50%)}
+.island-expedition .island-stop:has(.island-portal-crown) .island-current-label:after{top:calc(50% - 5px);left:-11px;border-color:transparent;border-right-color:#fffdf0}
+.island-expedition .island-marker-stars{position:absolute;top:calc(100% - 7px);left:50%;transform:translateX(-50%);display:flex;gap:0;pointer-events:none;filter:drop-shadow(0 2px 0 #9869186b)}
+.island-expedition .island-marker-stars svg{width:22px;height:22px;stroke:#cda152;stroke-width:1.6;fill:#fff5d5}
+.island-expedition .island-marker-stars svg:nth-child(2){width:25px;height:25px;margin-top:3px}
+.island-expedition .island-stop.is-completed .island-marker-stars svg{fill:#ffe066;stroke:#ca8b25}
+.island-expedition .island-stop.is-locked .island-marker-stars svg{fill:#e9eef0;stroke:#a0afbb}
+.island-expedition .island-stop-caption{position:absolute;top:calc(100% + 25px);left:50%;transform:translateX(-50%);padding:3px 9px;border-radius:12px;border:1px solid #fff;background:#fffdf0ef;box-shadow:0 2px 3px #4868351a;font-size:.56rem;line-height:1.3;font-weight:900;color:#4f6244;white-space:nowrap;pointer-events:none}
+.island-expedition .island-stop.is-locked .island-stop-caption{color:#617080}
+.island-expedition .island-map-pill{position:absolute;display:flex;align-items:center;justify-content:center;gap:7px;bottom:3%;left:50%;transform:translateX(-50%);padding:10px 17px;background:#fffcf3;border:2px solid #fff;border-radius:30px;box-shadow:0 4px 0 #416d6930,0 6px 15px #26665b19;color:#6554a4;font-size:.65rem;font-weight:900;white-space:nowrap}
+
+.island-expedition .island-mission-panel{display:flex;flex-direction:column;align-items:flex-start;min-width:0;padding:clamp(20px,2.2vw,34px);background:radial-gradient(ellipse at right top,#fff4c9,transparent 45%),#fffdf7}
+.island-expedition .island-mission-status{display:flex;align-items:center;gap:7px;font-size:.59rem;font-weight:900;letter-spacing:.07em;color:#8b64b6;margin-bottom:23px}
+.island-expedition .island-mission-icon{display:grid;place-items:center;position:relative;width:74px;height:74px;color:#fff;background:linear-gradient(150deg,#a4e67c,#67c848);border:3px solid #e2ffc8;border-radius:25px;box-shadow:inset 0 3px 0 #ffffff50,0 5px 0 #4b9e36;transform:rotate(-5deg);margin-bottom:22px}
+.island-expedition .island-mission-icon>svg:first-child{filter:drop-shadow(0 3px 0 #3e9b4050)}
+.island-expedition .island-mission-icon>svg:last-child:not(:first-child){position:absolute;bottom:-4px;right:-5px;padding:2px;width:26px;height:26px;background:#fff;border-radius:50%;color:#65b747}
+.island-expedition .island-mission-icon.is-locked{background:linear-gradient(145deg,#b7a7dc,#9074c4);border-color:#eee2ff;box-shadow:inset 0 3px 0 #ffffff50,0 5px 0 #70559f}
+.island-expedition .island-mission-panel h3{font-size:clamp(1.24rem,1.9vw,1.65rem);font-weight:900;line-height:1.2;color:var(--island-ink);margin:0 0 12px}
+.island-expedition .island-mission-description{color:var(--island-muted);font-size:.79rem;line-height:1.7;margin:0}
+.island-expedition .island-mission-facts{display:flex;gap:17px;flex-wrap:wrap;margin-top:18px;color:#7b7892;font-size:.68rem;font-weight:700}
+.island-expedition .island-mission-facts>span{display:flex;align-items:center;gap:5px}
+.island-expedition .island-play-button{display:flex;justify-content:center;align-items:center;gap:9px;width:100%;margin-top:22px;border:2px solid #b599f5;border-radius:17px;padding:13px 12px;background:linear-gradient(#9872e6,#774ad1);color:#fff;box-shadow:inset 0 2px 0 #ffffff35,0 5px 0 #5536a0;font-family:var(--font-heading);font-size:.9rem;font-weight:900;transition:transform .18s,box-shadow .18s}
+.island-expedition .island-play-button>svg:last-child{margin-left:auto}
+.island-expedition .island-play-button:hover{transform:translateY(-2px);box-shadow:inset 0 2px 0 #ffffff35,0 7px 0 #5536a0}
+.island-expedition .island-play-button:active{transform:translateY(3px);box-shadow:0 2px 0 #5536a0}
+.island-expedition .island-itinerary{width:100%;margin-top:32px;padding-top:21px;border-top:2px dashed #e9e2d1}
+.island-expedition .island-itinerary h4{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:.83rem;color:var(--island-ink)}
+.island-expedition .island-itinerary h4 small{font-size:.63rem;background:#f0e8fc;color:#7d5cad;border-radius:20px;padding:4px 8px}
+.island-expedition .island-itinerary ol{list-style:none;padding:0;margin:17px 0 0;display:grid;gap:16px}
+.island-expedition .island-itinerary li{position:relative;display:flex;align-items:center;gap:10px;color:#7c8395;min-width:0}
+.island-expedition .island-itinerary li:not(:last-child):before{content:'';position:absolute;left:14px;top:31px;height:20px;border-left:2px dashed #e5dded}
+.island-expedition .island-itinerary-number{display:grid;place-items:center;width:30px;height:30px;flex-shrink:0;background:#e8edf1;border:2px solid #fff;border-radius:50%;color:#79889a;font-family:var(--font-heading);font-size:.75rem;font-weight:900;box-shadow:0 2px 0 #d5dde5}
+.island-expedition .island-itinerary li.is-current .island-itinerary-number{background:#b895ed;color:#fff;border-color:#ddc8fb;box-shadow:0 2px 0 #9771c9}
+.island-expedition .island-itinerary li.is-completed .island-itinerary-number{background:#80cf60;color:#fff;border-color:#d5f4c5;box-shadow:0 2px 0 #63ae44}
+.island-expedition .island-itinerary li>div{flex:1;min-width:0}
+.island-expedition .island-itinerary strong{display:block;font-family:var(--font-heading);font-size:.74rem;line-height:1.3;font-weight:800;color:#5c697e}
+.island-expedition .island-itinerary small{display:block;margin-top:3px;font-size:.58rem;line-height:1.4;color:#7f8a9a}
+.island-expedition .island-itinerary li.is-current strong{color:#7048b0}
+.island-expedition .island-itinerary li.is-current>svg{color:#966bd6}
+.island-expedition .island-itinerary li.is-completed strong{color:#468336}
+.island-expedition .island-rules{display:flex;align-items:flex-start;gap:8px;margin:26px 0 0;border-radius:13px;padding:11px;color:#917340;background:#fff4d3;font-size:.64rem;line-height:1.6}
+.island-expedition .island-rules>svg{margin-top:2px;color:#d7a52c;fill:#ffe48a}
+.island-expedition .island-notice:empty{display:none}
+.island-expedition .island-notice:not(:empty){display:flex;align-items:center;gap:9px;padding:13px 16px;border-radius:16px;background:#fff2c6;color:#775b2d;font-size:.77rem;border:2px solid #ffe8a1}
+.island-expedition .island-guide{display:flex;align-items:center;gap:15px;padding:15px 20px;border:2px solid #fff;border-radius:24px;background:#eee7ff;box-shadow:0 4px 0 #d5c9eb}
+.island-expedition .island-guide>div{flex:1;min-width:0}
+.island-expedition .island-guide strong{color:#654897;font-family:var(--font-heading);font-size:.9rem;font-weight:900}
+.island-expedition .island-guide p{color:#857599;font-size:.74rem;margin-top:3px}
+.island-expedition .island-guide>button{display:flex;align-items:center;justify-content:center;gap:7px;border:2px solid #fff;border-radius:15px;background:#fffdf9;color:#7a56b5;box-shadow:0 3px 0 #cfc1e4;padding:11px 15px;font-size:.74rem;font-weight:900;white-space:nowrap}
+.island-expedition .island-guide>button:hover{background:#fff;transform:translateY(-2px)}
+.island-expedition .island-legend{display:flex;justify-content:center;flex-wrap:wrap;gap:20px;font-size:.67rem;font-weight:700;color:#8490a2}
+.island-expedition .island-legend>span{display:flex;align-items:center;gap:6px}
+.island-expedition .island-world:focus-visible,.island-expedition .island-play-button:focus-visible,.island-expedition .island-guide>button:focus-visible{outline:3px solid #503491;outline-offset:4px}
+
+.expedition-compact.island-expedition{gap:15px}
+.expedition-compact.island-expedition .island-board{grid-template-columns:minmax(0,320px) minmax(0,1fr);border-radius:25px}
+.expedition-compact.island-expedition .island-scenery{--node-size:59px;padding-top:60px}
+.expedition-compact.island-expedition .island-worlds{gap:7px}
+.expedition-compact.island-expedition .island-world{padding:10px 5px;gap:8px;border-radius:16px}
+.expedition-compact.island-expedition .island-world-icon{width:34px;height:34px;border-radius:12px}
+.expedition-compact.island-expedition .island-world-icon>svg:first-child{width:19px;height:19px}
+.expedition-compact.island-expedition .island-world-copy small{font-size:.6rem}
+.expedition-compact.island-expedition .island-world-copy strong{font-size:.75rem}
+.expedition-compact.island-expedition .island-ribbon>span{font-size:.85rem;padding:9px 5px;gap:5px}
+.expedition-compact.island-expedition .island-ribbon>span svg{width:14px;height:14px}
+.expedition-compact.island-expedition .island-marker-stars svg{width:19px;height:19px}
+.expedition-compact.island-expedition .island-marker-stars svg:nth-child(2){width:22px;height:22px}
+.expedition-compact.island-expedition .island-stop-caption{top:calc(100% + 22px);font-size:.5rem;padding:2px 7px}
+.expedition-compact.island-expedition .island-current-label{bottom:calc(100% + 9px);padding:3px 9px;font-size:.59rem}
+.expedition-compact.island-expedition .island-map-pill{font-size:.58rem;padding:7px 12px}
+.expedition-compact.island-expedition .island-mission-panel{padding:22px}
+.expedition-compact.island-expedition .island-mission-status{font-size:.53rem;margin-bottom:19px;gap:5px}
+.expedition-compact.island-expedition .island-mission-icon{width:59px;height:59px;border-radius:20px;margin-bottom:21px}
+.expedition-compact.island-expedition .island-mission-icon>svg:first-child{width:29px;height:29px}
+.expedition-compact.island-expedition .island-mission-panel h3{font-size:1.25rem;margin-bottom:10px}
+.expedition-compact.island-expedition .island-mission-description{font-size:.75rem;line-height:1.7}
+.expedition-compact.island-expedition .island-mission-facts{margin-top:17px;gap:10px;font-size:.64rem}
+.expedition-compact.island-expedition .island-play-button{margin-top:20px;border-radius:14px;padding:12px 10px;font-size:.8rem;gap:6px}
+.expedition-compact.island-expedition .island-play-button svg{width:16px;height:16px}
+.expedition-compact.island-expedition .island-itinerary{display:none}
+.expedition-compact.island-expedition .island-rules{font-size:.62rem;padding:11px;margin-top:24px}
+.expedition-compact.island-expedition .island-guide{padding:12px 15px;gap:12px}
+.expedition-compact.island-expedition .island-guide strong{font-size:.77rem}
+.expedition-compact.island-expedition .island-guide p{font-size:.63rem}
+.expedition-compact.island-expedition .island-guide>button{font-size:.64rem;padding:10px}
+
+@keyframes island-beacon{0%,100%{outline:7px solid #fff6bb30}50%{outline:11px solid #fff6bb80}}
+@media(max-width:1100px) and (min-width:761px){
+  .island-expedition:not(.expedition-compact) .island-scenery{--node-size:65px}
+  .island-expedition:not(.expedition-compact) .island-mission-panel{padding:22px}
+  .island-expedition .island-world-copy strong{font-size:.75rem}
+  .island-expedition .island-guide{flex-wrap:wrap}
+  .island-expedition .island-guide>button{margin-left:auto}
+}
+@media(max-width:760px){
+  .expedition.island-expedition{gap:16px}
+  .island-expedition .island-intro{align-items:flex-start}
+  .island-expedition .island-intro h2{font-size:1.5rem}
+  .island-expedition .island-intro p{font-size:.77rem;max-width:350px}
+  .island-expedition .island-total{padding:10px;gap:8px;border-radius:16px}
+  .island-expedition .island-total>span{width:33px;height:33px;border-radius:11px}
+  .island-expedition .island-total strong{font-size:1.2rem}
+  .island-expedition .island-total strong small{font-size:.7rem}
+  .island-expedition .island-total p{font-size:.52rem}
+  .island-expedition .island-board{grid-template-columns:minmax(0,1.08fr) minmax(0,1fr)}
+  .island-expedition .island-scenery{--node-size:62px}
+  .island-expedition .island-mission-panel{padding:20px}
+  .island-expedition .island-mission-panel h3{font-size:1.24rem}
+  .island-expedition .island-mission-description{font-size:.74rem}
+  .island-expedition .island-itinerary strong{font-size:.67rem}
+  .island-expedition .island-guide{flex-wrap:wrap}
+  .island-expedition .island-guide>button{margin-left:auto}
+}
+@container island (max-width:570px){
+  .island-expedition .island-intro{display:block}
+  .island-expedition .island-total{display:none}
+  .island-expedition .island-eyebrow{font-size:.6rem}
+  .island-expedition .island-worlds,.expedition-compact.island-expedition .island-worlds{grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+  .island-expedition .island-world,.expedition-compact.island-expedition .island-world{grid-column:span 2}
+  .island-expedition .island-world:nth-last-child(-n+2),.expedition-compact.island-expedition .island-world:nth-last-child(-n+2){grid-column:span 3}
+  .island-expedition .island-world,.expedition-compact.island-expedition .island-world{padding:9px 3px 10px;gap:7px;border-radius:15px}
+  .island-expedition .island-world-icon,.expedition-compact.island-expedition .island-world-icon{width:32px;height:33px;border-radius:11px}
+  .island-expedition .island-world-icon>svg:first-child{width:18px;height:18px}
+  .island-expedition .island-world-copy small,.expedition-compact.island-expedition .island-world-copy small{font-size:.6rem;letter-spacing:.01em}
+  .island-expedition .island-world-copy strong,.expedition-compact.island-expedition .island-world-copy strong{font-size:.75rem;line-height:1.25;overflow-wrap:normal}
+  .island-expedition .island-board,.expedition-compact.island-expedition .island-board{display:flex;flex-direction:column;border-radius:26px}
+  .island-expedition .island-scenery,.expedition-compact.island-expedition .island-scenery{--node-size:65px;width:100%;flex:none;padding-top:65px}
+  .island-expedition .island-ribbon>span,.expedition-compact.island-expedition .island-ribbon>span{font-size:1.06rem;padding:10px 8px}
+  .island-expedition .island-ribbon>span svg{display:none}
+  .island-expedition .island-mission-panel,.expedition-compact.island-expedition .island-mission-panel{padding:24px}
+  .island-expedition .island-mission-status,.expedition-compact.island-expedition .island-mission-status{margin-bottom:15px;font-size:.58rem}
+  .island-expedition .island-mission-icon,.expedition-compact.island-expedition .island-mission-icon{width:55px;height:55px;border-radius:18px;margin-bottom:17px}
+  .island-expedition .island-mission-panel h3,.expedition-compact.island-expedition .island-mission-panel h3{font-size:1.4rem}
+  .island-expedition .island-mission-description,.expedition-compact.island-expedition .island-mission-description{font-size:.79rem}
+  .island-expedition .island-play-button,.expedition-compact.island-expedition .island-play-button{font-size:.89rem;padding:13px}
+  .island-expedition .island-itinerary h4{font-size:.8rem}
+  .island-expedition .island-itinerary strong{font-size:.74rem}
+  .island-expedition .island-itinerary small{font-size:.58rem}
+  .island-expedition .island-itinerary ol{gap:15px}
+  .island-expedition .island-itinerary-number{width:29px;height:29px;font-size:.75rem}
+  .island-expedition .island-itinerary li:not(:last-child):before{top:31px;left:14px;height:22px}
+  .island-expedition .island-rules,.expedition-compact.island-expedition .island-rules{font-size:.66rem;padding:12px}
+  .island-expedition .island-guide,.expedition-compact.island-expedition .island-guide{flex-wrap:wrap;padding:13px;gap:10px;border-radius:20px}
+  .island-expedition .island-guide>div{min-width:170px}
+  .island-expedition .island-guide strong,.expedition-compact.island-expedition .island-guide strong{font-size:.83rem}
+  .island-expedition .island-guide p,.expedition-compact.island-expedition .island-guide p{font-size:.69rem}
+  .island-expedition .island-guide>button,.expedition-compact.island-expedition .island-guide>button{margin-left:63px;flex:1;padding:10px;font-size:.74rem}
+  .island-expedition .island-legend{gap:13px;font-size:.6rem}
+}
+@container island (max-width:340px){
+  .island-expedition .island-scenery,.expedition-compact.island-expedition .island-scenery{--node-size:57px}
+  .island-expedition .island-ribbon>span,.expedition-compact.island-expedition .island-ribbon>span{font-size:.9rem}
+  .island-expedition .island-mission-panel,.expedition-compact.island-expedition .island-mission-panel{padding:21px}
+  .island-expedition .island-world-copy strong,.expedition-compact.island-expedition .island-world-copy strong{font-size:.75rem}
+  .island-expedition .island-map-pill{padding:7px 11px}
+  .island-expedition .island-stop-caption{top:calc(100% + 23px);font-size:.5rem}
+}
+@media(prefers-reduced-motion:reduce){
+  .island-expedition .island-marker{animation:none!important}
+  .island-expedition .island-marker,.island-expedition .island-world,.island-expedition .island-play-button,.island-expedition .island-progress>span{transition:none}
+}
+.reduce-motion .island-expedition .island-marker{animation:none}
+.high-contrast .island-expedition{--island-ink:#fff;--island-muted:#eee}
+.high-contrast .island-expedition .island-board,.high-contrast .island-expedition .island-mission-panel,.high-contrast .island-expedition .island-world,.high-contrast .island-expedition .island-total,.high-contrast .island-expedition .island-guide{background:#171428;border-color:#fff;color:#fff}
+.high-contrast .island-expedition .island-world-copy small,.high-contrast .island-expedition .island-mission-status,.high-contrast .island-expedition .island-itinerary strong,.high-contrast .island-expedition .island-itinerary small,.high-contrast .island-expedition .island-guide strong,.high-contrast .island-expedition .island-guide p,.high-contrast .island-expedition .island-legend,.high-contrast .island-expedition .island-progress-row>span{color:#fff}
+
+/* A connected archipelago with an environment unique to every learning world. */
+.ecosystem-expedition .archipelago{position:relative;overflow:hidden;border:3px solid #fff;border-radius:28px;background:linear-gradient(160deg,#d9f5ff,#9fdde9 62%,#cbf0ec);box-shadow:0 5px 0 #c2dfe6,0 12px 26px #20758b0b}
+.ecosystem-expedition .archipelago-heading{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:23px 27px 0;position:relative;z-index:2}
+.ecosystem-expedition .archipelago-heading>div>span{display:flex;align-items:center;gap:6px;font-size:.67rem;font-weight:900;letter-spacing:.08em;color:#287a95}
+.ecosystem-expedition .archipelago-heading h3{margin:7px 0 0;font-size:1.17rem;font-weight:900;line-height:1.25;color:#194561}
+.ecosystem-expedition .archipelago-growth{display:flex;align-items:center;gap:6px;flex-shrink:0;padding:8px 11px;background:#ffffffc4;border:1px solid #fff;border-radius:30px;color:#427356;font-size:.72rem;font-weight:800}
+.ecosystem-expedition .archipelago-ocean{position:relative;isolation:isolate;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));column-gap:20px;row-gap:27px;padding:36px 60px 26px;min-width:0}
+.ecosystem-expedition .archipelago-island{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;grid-column:span 2;min-width:0;padding:0 5px 9px;border:0;background:transparent;color:#19465c;border-radius:22px;z-index:2;transition:transform .2s}
+.ecosystem-expedition .archipelago-island-4{grid-column:4/span 2;grid-row:2}
+.ecosystem-expedition .archipelago-island-5{grid-column:2/span 2;grid-row:2}
+.ecosystem-expedition .archipelago-island-art{position:relative;display:block;width:min(100%,170px);height:109px;margin-bottom:10px;border-radius:55% 45% 46% 54%;background:var(--mini-soft);box-shadow:0 5px 0 #3daac953,0 9px 0 6px #f7feff70,0 14px 0 10px #59bad22b;transition:transform .2s,box-shadow .2s}
+.ecosystem-expedition .archipelago-island-image{display:block;width:100%;height:100%;border:3px solid #f7ffffd9;border-radius:inherit;background:var(--mini-image) center 59%/cover no-repeat;box-shadow:inset 0 -10px 12px #18505118;filter:saturate(calc(.8 + var(--mini-growth) * .075))}
+.ecosystem-expedition .archipelago-island-number{position:absolute;bottom:1px;left:50%;transform:translate(-50%,25%);display:grid;place-items:center;width:27px;height:27px;border:2px solid #fff;border-radius:50%;background:var(--mini-accent);color:#fff;font-family:var(--font-heading);font-size:.82rem;font-weight:900;box-shadow:0 2px 0 #1c567936}
+.ecosystem-expedition .archipelago-you{position:absolute;top:-16px;left:50%;transform:translateX(-50%);padding:4px 10px;border:2px solid #fff;border-radius:20px;background:#fff4ba;color:#725017;box-shadow:0 3px 0 #8b782329;font-size:.65rem;font-weight:900;white-space:nowrap}
+.ecosystem-expedition .archipelago-island-name{display:flex;align-items:center;justify-content:center;gap:5px;margin-top:5px;font-size:.82rem;line-height:1.25;font-weight:900;font-family:var(--font-heading);text-align:center;max-width:185px;text-wrap:balance}
+.ecosystem-expedition .archipelago-island-name>svg{flex-shrink:0;color:var(--mini-accent)}
+.ecosystem-expedition .archipelago-island-state{margin-top:4px;font-size:.71rem;line-height:1.3;color:#38657a}
+.ecosystem-expedition .archipelago-life{display:flex;justify-content:center;gap:5px;margin-top:7px}
+.ecosystem-expedition .archipelago-life i{width:6px;height:6px;border-radius:50%;background:#d8ecf0;border:1px solid #80adba}
+.ecosystem-expedition .archipelago-life i.is-grown{background:var(--mini-accent);border-color:var(--mini-accent);box-shadow:0 0 0 2px #ffffffb0}
+.ecosystem-expedition .archipelago-island:hover .archipelago-island-art{transform:translateY(-4px);box-shadow:0 8px 0 #3daac953,0 12px 0 6px #f7feff90,0 16px 0 10px #59bad236}
+.ecosystem-expedition .archipelago-island.is-selected .archipelago-island-art{outline:3px solid var(--mini-accent);outline-offset:4px;box-shadow:0 5px 0 #3daac953,0 9px 0 9px #ffffffb0,0 14px 0 13px #59bad233}
+.ecosystem-expedition .archipelago-island.is-selected .archipelago-island-name{color:var(--mini-accent)}
+.ecosystem-expedition .archipelago-island.is-locked .archipelago-island-image{filter:saturate(.37) brightness(1.06)}
+.ecosystem-expedition .archipelago-island.is-locked .archipelago-island-number{background:#eef5f5;color:#456377}
+.ecosystem-expedition .archipelago-island.is-completed .archipelago-island-number{background:#4a9c3e}
+.ecosystem-expedition .archipelago-sea-route{position:absolute;z-index:-1;left:20%;right:18%;top:25%;bottom:27%;border:3px dashed #ffffffba;border-left-color:transparent;border-radius:0 110px 110px 0;transform:rotate(4deg)}
+.ecosystem-expedition .archipelago-sea-route:after{content:'';position:absolute;left:11%;right:11%;top:calc(100% - 4px);border-bottom:3px dashed #ffffffba;transform:rotate(-7deg)}
+.ecosystem-expedition .archipelago-wave{position:absolute;color:#62afc1;z-index:-1;opacity:.48}
+.ecosystem-expedition .archipelago-wave svg{width:35px;height:35px;stroke-width:1.5}
+.ecosystem-expedition .wave-one{top:43%;left:9%;transform:rotate(-9deg)}
+.ecosystem-expedition .wave-two{bottom:7%;right:7%;transform:rotate(7deg)}
+.ecosystem-expedition .archipelago-tiny-island{position:absolute;z-index:-1;display:grid;place-items:center;width:43px;height:20px;border-radius:50%;background:#b7d989;border:2px solid #e9e5a2;box-shadow:0 3px 0 #69bbbc55,0 6px 0 4px #e8fdff69;color:#68986b;opacity:.8}
+.ecosystem-expedition .archipelago-tiny-island svg{width:26px;height:26px;transform:translateY(-14px);fill:#b7d989;stroke-width:1.5}
+.ecosystem-expedition .tiny-one{left:9%;bottom:16%;transform:rotate(-8deg)}
+.ecosystem-expedition .tiny-two{right:8%;bottom:28%;transform:scale(.72) rotate(9deg)}
+.ecosystem-expedition .archipelago-footer{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:14px 24px;background:#ffffff9c;border-top:1px solid #ffffffab}
+.ecosystem-expedition .archipelago-footer p{display:flex;align-items:flex-start;gap:9px;margin:0;color:#406c7b;font-size:.77rem;line-height:1.5;max-width:570px}
+.ecosystem-expedition .archipelago-footer p>svg{flex-shrink:0;margin-top:2px}
+.ecosystem-expedition .archipelago-footer button{display:flex;align-items:center;justify-content:center;gap:7px;flex-shrink:0;padding:10px 12px;border:2px solid #fff;border-radius:14px;background:#faf6ff;color:#7047ab;box-shadow:0 3px 0 #bfcfe0;font-size:.74rem;font-weight:900}
+.ecosystem-expedition .habitat-heading{display:flex;align-items:center;justify-content:space-between;gap:25px;padding:8px 4px 0}
+.ecosystem-expedition .habitat-heading>div{max-width:650px}
+.ecosystem-expedition .habitat-heading>div>span{font-size:.68rem;font-weight:900;letter-spacing:.08em;color:var(--habitat-accent)}
+.ecosystem-expedition .habitat-heading h3{font-size:1.48rem;line-height:1.2;font-weight:900;margin:8px 0;color:var(--island-ink)}
+.ecosystem-expedition .habitat-heading p{font-size:.82rem;line-height:1.65;color:var(--island-muted);margin:0}
+.ecosystem-expedition .habitat-level{display:flex;align-items:center;gap:10px;flex-shrink:0;padding:12px 16px;background:var(--habitat-soft);border:2px solid #fff;border-radius:18px;box-shadow:0 3px 0 color-mix(in srgb,var(--habitat-accent) 20%,#e4eaf1);color:var(--habitat-accent);font-size:.8rem;font-weight:900}
+.ecosystem-expedition .habitat-level small{display:block;margin-top:3px;font-size:.7rem;font-weight:700}
+.ecosystem-expedition .habitat-board .island-scenery{background:var(--habitat-sky)}
+.ecosystem-expedition .habitat-board .island-background{background-image:var(--habitat-image);transition:filter .3s ease}
+.ecosystem-expedition .island-board-locked .island-background{filter:saturate(.64)}
+.ecosystem-expedition .habitat-board .island-mission-panel{background:radial-gradient(ellipse at right top,var(--habitat-soft),transparent 58%),#fffdf7}
+.ecosystem-expedition .habitat-board .island-mission-status{color:var(--habitat-accent);font-size:.67rem;line-height:1.5;letter-spacing:.055em}
+.ecosystem-expedition .habitat-board .island-mission-icon{background:linear-gradient(145deg,color-mix(in srgb,var(--habitat-accent) 55%,#fff),var(--habitat-accent));border-color:var(--habitat-soft);box-shadow:inset 0 3px 0 #ffffff50,0 5px 0 color-mix(in srgb,var(--habitat-accent) 85%,#182741)}
+.ecosystem-expedition .habitat-board .island-mission-icon.is-locked{filter:saturate(.55)}
+.ecosystem-expedition .habitat-board .island-mission-description{font-size:.84rem;line-height:1.65}
+.ecosystem-expedition .habitat-next-challenge{margin-top:19px;border-left:3px solid var(--habitat-accent);padding-left:12px}
+.ecosystem-expedition .habitat-next-challenge small{display:block;font-size:.65rem;font-weight:900;letter-spacing:.07em;color:var(--habitat-accent)}
+.ecosystem-expedition .habitat-next-challenge strong{display:block;font-family:var(--font-heading);font-size:.85rem;font-weight:900;margin-top:5px;color:var(--island-ink)}
+.ecosystem-expedition .habitat-next-challenge p{margin-top:5px;font-size:.76rem;line-height:1.55;color:var(--island-muted)}
+.ecosystem-expedition .habitat-growth-card{width:100%;margin-top:25px;padding:16px;border-radius:19px;background:var(--habitat-soft);border:2px solid #ffffffc9;box-shadow:0 3px 0 color-mix(in srgb,var(--habitat-accent) 14%,#dbe6e1)}
+.ecosystem-expedition .habitat-growth-card h4{display:flex;align-items:center;gap:7px;color:var(--habitat-accent);font-size:.86rem;font-weight:900;line-height:1.3;margin:0}
+.ecosystem-expedition .habitat-growth-card p{font-size:.78rem;line-height:1.55;color:#4d6570;margin:12px 0 0}
+.ecosystem-expedition .habitat-growth-card>small{display:flex;align-items:flex-start;gap:5px;border-top:1px dashed color-mix(in srgb,var(--habitat-accent) 25%,transparent);margin-top:12px;padding-top:10px;font-size:.71rem;line-height:1.6;color:var(--habitat-accent)}
+.ecosystem-expedition .habitat-growth-card>small>svg{flex-shrink:0;margin-top:3px}
+.ecosystem-expedition .habitat-growth-tokens{display:flex;align-items:center;gap:10px;margin-top:15px}
+.ecosystem-expedition .habitat-growth-tokens>span{position:relative;display:grid;place-items:center;width:43px;height:43px;background:#ffffff7a;border:2px dashed #a6bdb68c;border-radius:15px;color:#9aaeaa}
+.ecosystem-expedition .habitat-growth-tokens>span.is-grown{border-style:solid;border-color:#ffffffda;background:var(--habitat-accent);color:#fff;box-shadow:0 3px 0 color-mix(in srgb,var(--habitat-accent) 75%,#203f44);transform:rotate(-4deg)}
+.ecosystem-expedition .habitat-growth-tokens>span:nth-child(even).is-grown{transform:rotate(4deg)}
+.ecosystem-expedition .habitat-growth-tokens>span>svg+svg{position:absolute;bottom:-4px;right:-4px;width:17px;height:17px;padding:3px;border-radius:50%;background:#fff;color:var(--habitat-accent);box-shadow:0 1px 2px #14394225}
+.ecosystem-expedition .habitat-board .island-itinerary{margin-top:26px}
+.ecosystem-expedition .habitat-board .island-itinerary strong{font-size:.8rem}
+.ecosystem-expedition .habitat-board .island-itinerary small{font-size:.74rem;line-height:1.5}
+.ecosystem-expedition .habitat-board .island-itinerary h4 small{font-size:.72rem}
+.ecosystem-expedition .habitat-board .island-itinerary li:not(:last-child):before{height:calc(100% - 16px)}
+.ecosystem-expedition .habitat-board .island-itinerary li.is-current strong{color:var(--habitat-accent)}
+.ecosystem-expedition .habitat-board .island-rules{font-size:.76rem}
+.ecosystem-expedition .island-guide p{font-size:.8rem;line-height:1.5}
+.ecosystem-expedition .island-progress-row>span{font-size:.76rem}
+.ecosystem-expedition .archipelago-island:focus-visible,.ecosystem-expedition .archipelago-footer button:focus-visible{outline:3px solid #412680;outline-offset:5px}.ecosystem-expedition.expedition-compact .archipelago-heading{padding:18px 19px 0;gap:8px}
+.ecosystem-expedition.expedition-compact .archipelago-heading h3{font-size:1rem}
+.ecosystem-expedition.expedition-compact .archipelago-heading>div>span{font-size:.62rem}
+.ecosystem-expedition.expedition-compact .archipelago-growth{display:none}
+.ecosystem-expedition.expedition-compact .archipelago-ocean{padding:30px 25px 16px;column-gap:10px;row-gap:24px}
+.ecosystem-expedition.expedition-compact .archipelago-island-art{height:83px;width:min(100%,134px)}
+.ecosystem-expedition.expedition-compact .archipelago-island-name{font-size:.75rem;gap:3px}
+.ecosystem-expedition.expedition-compact .archipelago-island-name>svg{display:none}
+.ecosystem-expedition.expedition-compact .archipelago-island-state{font-size:.71rem}
+.ecosystem-expedition.expedition-compact .archipelago-you{font-size:.59rem;padding:3px 6px;top:-14px}
+.ecosystem-expedition.expedition-compact .archipelago-footer{padding:12px 16px;flex-wrap:wrap;gap:10px}
+.ecosystem-expedition.expedition-compact .archipelago-footer p{font-size:.75rem}
+.ecosystem-expedition.expedition-compact .archipelago-footer button{font-size:.73rem;width:100%}
+.ecosystem-expedition.expedition-compact .habitat-heading{display:block;padding-top:7px}
+.ecosystem-expedition.expedition-compact .habitat-heading h3{font-size:1.2rem}
+.ecosystem-expedition.expedition-compact .habitat-heading p{font-size:.79rem}
+.ecosystem-expedition.expedition-compact .habitat-level{display:none}
+.ecosystem-expedition.expedition-compact .island-mission-icon{display:none}
+.ecosystem-expedition.expedition-compact .habitat-next-challenge{display:none}
+.ecosystem-expedition.expedition-compact .island-mission-status{font-size:.65rem;margin-bottom:15px}
+.ecosystem-expedition.expedition-compact .island-mission-description{font-size:.79rem}
+.ecosystem-expedition.expedition-compact .island-mission-panel{padding:21px}
+.ecosystem-expedition.expedition-compact .island-mission-facts{font-size:.71rem}
+.ecosystem-expedition.expedition-compact .island-play-button{font-size:.79rem;line-height:1.3}
+.ecosystem-expedition.expedition-compact .habitat-growth-card{padding:13px;margin-top:23px}
+.ecosystem-expedition.expedition-compact .habitat-growth-card h4{font-size:.78rem}
+.ecosystem-expedition.expedition-compact .habitat-growth-card p{font-size:.74rem}
+.ecosystem-expedition.expedition-compact .habitat-growth-card>small{display:none}
+.ecosystem-expedition.expedition-compact .habitat-growth-tokens{gap:7px}
+.ecosystem-expedition.expedition-compact .habitat-growth-tokens>span{width:34px;height:36px;border-radius:12px}
+.ecosystem-expedition.expedition-compact .habitat-growth-tokens>span>svg:first-child{width:19px;height:19px}
+.ecosystem-expedition.expedition-compact .island-rules{font-size:.73rem}
+.ecosystem-expedition.expedition-compact .island-guide p{font-size:.75rem}
+@container island (max-width:800px){
+  .ecosystem-expedition .archipelago-heading{padding:21px 23px 0}
+  .ecosystem-expedition .archipelago-heading h3{font-size:1.08rem}
+  .ecosystem-expedition .archipelago-growth{font-size:.65rem;padding:7px 9px}
+  .ecosystem-expedition .archipelago-ocean{padding:34px 35px 23px}
+  .ecosystem-expedition .archipelago-island-art{height:95px;width:min(100%,150px)}
+  .ecosystem-expedition .archipelago-footer{flex-wrap:wrap;gap:12px}
+  .ecosystem-expedition .archipelago-footer button{margin-left:auto}
+  .ecosystem-expedition .habitat-heading{align-items:flex-start;gap:15px}
+  .ecosystem-expedition .habitat-heading h3{font-size:1.3rem}
+  .ecosystem-expedition .habitat-level{font-size:.74rem;max-width:170px;padding:11px}
+  .ecosystem-expedition .habitat-level>svg{flex-shrink:0}
+  .ecosystem-expedition .habitat-level small{font-size:.68rem}
+}
+@container island (max-width:570px){
+  .ecosystem-expedition .archipelago{border-radius:23px}
+  .ecosystem-expedition .archipelago-heading,.ecosystem-expedition.expedition-compact .archipelago-heading{padding:18px 17px 0;display:block}
+  .ecosystem-expedition .archipelago-heading>div>span,.ecosystem-expedition.expedition-compact .archipelago-heading>div>span{font-size:.65rem;letter-spacing:.055em}
+  .ecosystem-expedition .archipelago-heading h3,.ecosystem-expedition.expedition-compact .archipelago-heading h3{font-size:1.04rem;line-height:1.3}
+  .ecosystem-expedition .archipelago-growth{display:none}
+  .ecosystem-expedition .archipelago-ocean,.ecosystem-expedition.expedition-compact .archipelago-ocean{column-gap:9px;row-gap:25px;padding:35px 13px 21px}
+  .ecosystem-expedition .archipelago-island{padding:0 1px 5px}
+  .ecosystem-expedition .archipelago-island-art,.ecosystem-expedition.expedition-compact .archipelago-island-art{height:79px;width:min(100%,125px);margin-bottom:10px}
+  .ecosystem-expedition .archipelago-island-image{border-width:2px}
+  .ecosystem-expedition .archipelago-island-number{width:23px;height:23px;font-size:.73rem}
+  .ecosystem-expedition .archipelago-island-number>svg{width:12px;height:12px}
+  .ecosystem-expedition .archipelago-island-name,.ecosystem-expedition.expedition-compact .archipelago-island-name{font-size:.76rem;line-height:1.25;max-width:130px}
+  .ecosystem-expedition .archipelago-island-name>svg{display:none}
+  .ecosystem-expedition .archipelago-island-state,.ecosystem-expedition.expedition-compact .archipelago-island-state{font-size:.7rem;line-height:1.35}
+  .ecosystem-expedition .archipelago-you,.ecosystem-expedition.expedition-compact .archipelago-you{font-size:.6rem;padding:3px 5px;top:-17px}
+  .ecosystem-expedition .archipelago-sea-route{left:18%;right:17%;top:22%;bottom:31%;border-width:2px;border-radius:0 75px 75px 0}
+  .ecosystem-expedition .archipelago-sea-route:after{border-width:2px}
+  .ecosystem-expedition .archipelago-tiny-island{transform:scale(.6);bottom:18%;left:2%}
+  .ecosystem-expedition .archipelago-tiny-island.tiny-two{left:auto;right:3%;bottom:20%}
+  .ecosystem-expedition .wave-one{top:46%;left:4%}
+  .ecosystem-expedition .wave-two{bottom:5%;right:10%}
+  .ecosystem-expedition .archipelago-wave svg{width:25px;height:25px}
+  .ecosystem-expedition .archipelago-footer,.ecosystem-expedition.expedition-compact .archipelago-footer{padding:13px 15px;gap:12px}
+  .ecosystem-expedition .archipelago-footer p,.ecosystem-expedition.expedition-compact .archipelago-footer p{font-size:.77rem;line-height:1.55}
+  .ecosystem-expedition .archipelago-footer button,.ecosystem-expedition.expedition-compact .archipelago-footer button{width:100%;font-size:.79rem;min-height:44px}
+  .ecosystem-expedition .habitat-heading{display:block;padding:6px 2px 0}
+  .ecosystem-expedition .habitat-heading>div>span{font-size:.65rem;line-height:1.5;letter-spacing:.04em}
+  .ecosystem-expedition .habitat-heading h3,.ecosystem-expedition.expedition-compact .habitat-heading h3{font-size:1.24rem}
+  .ecosystem-expedition .habitat-heading p,.ecosystem-expedition.expedition-compact .habitat-heading p{font-size:.8rem}
+  .ecosystem-expedition .habitat-level{display:none}
+  .ecosystem-expedition .habitat-board .island-mission-status,.ecosystem-expedition.expedition-compact .island-mission-status{font-size:.7rem}
+  .ecosystem-expedition .habitat-board .island-mission-description,.ecosystem-expedition.expedition-compact .island-mission-description{font-size:.85rem}
+  .ecosystem-expedition .habitat-board .island-play-button,.ecosystem-expedition.expedition-compact .island-play-button{font-size:.88rem}
+  .ecosystem-expedition .habitat-board .island-mission-facts,.ecosystem-expedition.expedition-compact .island-mission-facts{font-size:.77rem}
+  .ecosystem-expedition .habitat-growth-card,.ecosystem-expedition.expedition-compact .habitat-growth-card{padding:16px}
+  .ecosystem-expedition .habitat-growth-card h4,.ecosystem-expedition.expedition-compact .habitat-growth-card h4{font-size:.87rem}
+  .ecosystem-expedition .habitat-growth-card p,.ecosystem-expedition.expedition-compact .habitat-growth-card p{font-size:.81rem}
+  .ecosystem-expedition .habitat-growth-card>small{font-size:.77rem}
+  .ecosystem-expedition .habitat-growth-tokens,.ecosystem-expedition.expedition-compact .habitat-growth-tokens{gap:12px}
+  .ecosystem-expedition .habitat-growth-tokens>span,.ecosystem-expedition.expedition-compact .habitat-growth-tokens>span{width:42px;height:42px;border-radius:14px}
+  .ecosystem-expedition .habitat-board .island-itinerary strong{font-size:.83rem}
+  .ecosystem-expedition .habitat-board .island-itinerary small{font-size:.77rem}
+  .ecosystem-expedition .habitat-board .island-rules,.ecosystem-expedition.expedition-compact .island-rules{font-size:.79rem}
+  .ecosystem-expedition .island-guide p,.ecosystem-expedition.expedition-compact .island-guide p{font-size:.8rem}
+}
+@container island (max-width:340px){
+  .ecosystem-expedition .archipelago-ocean,.ecosystem-expedition.expedition-compact .archipelago-ocean{padding-left:10px;padding-right:10px;column-gap:7px}
+  .ecosystem-expedition .archipelago-island-art,.ecosystem-expedition.expedition-compact .archipelago-island-art{height:62px}
+  .ecosystem-expedition .archipelago-island-name,.ecosystem-expedition.expedition-compact .archipelago-island-name{font-size:.73rem}
+  .ecosystem-expedition .archipelago-island-state,.ecosystem-expedition.expedition-compact .archipelago-island-state{font-size:.69rem}
+  .ecosystem-expedition .archipelago-you,.ecosystem-expedition.expedition-compact .archipelago-you{font-size:.57rem;padding:3px 4px}
+}
+@media(prefers-reduced-motion:reduce){.ecosystem-expedition .archipelago-island,.ecosystem-expedition .archipelago-island-art,.ecosystem-expedition .island-background{transition:none}}
+.reduce-motion .ecosystem-expedition .archipelago-island,.reduce-motion .ecosystem-expedition .archipelago-island-art,.reduce-motion .ecosystem-expedition .island-background{transition:none}
+.high-contrast .ecosystem-expedition .archipelago{background:#c7edf3;border-color:#172c47}
+.high-contrast .ecosystem-expedition .archipelago-island-name,.high-contrast .ecosystem-expedition .archipelago-island-state,.high-contrast .ecosystem-expedition .archipelago-heading h3,.high-contrast .ecosystem-expedition .archipelago-heading>div>span,.high-contrast .ecosystem-expedition .archipelago-footer p{color:#162b45}
+.high-contrast .ecosystem-expedition .habitat-heading h3,.high-contrast .ecosystem-expedition .habitat-heading p{color:var(--text)}
+.high-contrast .ecosystem-expedition .habitat-growth-card{background:#fff;border-color:#172c47}
+.high-contrast .ecosystem-expedition .habitat-growth-card h4,.high-contrast .ecosystem-expedition .habitat-growth-card p,.high-contrast .ecosystem-expedition .habitat-growth-card>small{color:#172c47}/* New life appears only after a territory has actually been conquered. */
+.ecosystem-expedition .archipelago-sea-route{opacity:.36}
+.ecosystem-expedition .archipelago-route-leg{position:absolute;z-index:-1;border-top:3px dashed #ffffffdb;pointer-events:none;transition:border-color .3s}
+.ecosystem-expedition .route-leg-1{left:27%;width:14%;top:25%}
+.ecosystem-expedition .route-leg-2{left:60%;width:14%;top:25%}
+.ecosystem-expedition .route-leg-3{top:25%;right:16%;width:14%;height:44%;border-top:0;border-right:3px dashed #ffffffdb;border-bottom:3px dashed #ffffffdb;border-radius:0 0 70px 0}
+.ecosystem-expedition .route-leg-4{left:41%;width:15%;bottom:31%}
+.ecosystem-expedition .archipelago-route-leg.is-open{border-color:#409b94;filter:drop-shadow(0 2px 0 #f0fff9c4)}
+.ecosystem-expedition .archipelago-island.is-locked .archipelago-island-art:after{content:'';position:absolute;inset:-5px -8px -2px;border-radius:inherit;background:radial-gradient(ellipse at 18% 42%,#f9fefff7 0 17%,transparent 62%),radial-gradient(ellipse at 84% 62%,#f9feffeb 0 19%,transparent 66%),linear-gradient(0deg,#f8fdff38,#eef9fc4d);filter:blur(2px);pointer-events:none;z-index:1}
+.ecosystem-expedition .archipelago-island-number,.ecosystem-expedition .archipelago-you{z-index:3}
+.ecosystem-expedition .archipelago-habitats{position:absolute;display:flex;flex-wrap:wrap;justify-content:center;gap:3px;bottom:4px;left:-7px;width:45px;z-index:2}
+.ecosystem-expedition .archipelago-habitats>i{display:grid;place-items:center;width:21px;height:21px;background:var(--mini-accent);border:2px solid #ffffe7;border-radius:8px;color:#fff;box-shadow:0 2px 0 #38605c30;transform:rotate(-7deg)}
+.ecosystem-expedition .archipelago-habitats>i:nth-child(even){transform:rotate(7deg)}
+.ecosystem-expedition .island-grown-habitats{position:absolute;inset:0;pointer-events:none;z-index:2}
+.ecosystem-expedition .island-grown-habitats>span{position:absolute;display:grid;place-items:center;width:40px;height:40px;transform:translate(-50%,-50%) rotate(-8deg);background:var(--habitat-soft);border:3px solid #fffad3;border-radius:14px;color:var(--habitat-accent);box-shadow:0 4px 0 color-mix(in srgb,var(--habitat-accent) 50%,#243e3550),0 6px 7px #223c412d}
+.ecosystem-expedition .island-grown-habitats>span>svg+svg{position:absolute;right:-6px;top:-7px;width:18px;height:18px;fill:#ffe691;color:#be8919;filter:drop-shadow(0 1px 0 #fff)}
+.ecosystem-expedition.expedition-compact .island-grown-habitats>span{width:32px;height:32px;border-radius:11px;border-width:2px}
+.ecosystem-expedition.expedition-compact .island-grown-habitats>span>svg:first-child{width:19px;height:19px}
+@container island (max-width:570px){
+ .ecosystem-expedition .archipelago-route-leg{border-width:2px}
+ .ecosystem-expedition .route-leg-1,.ecosystem-expedition .route-leg-2{top:23%}
+ .ecosystem-expedition .route-leg-3{top:23%;height:45%;border-right-width:2px;border-bottom-width:2px}
+ .ecosystem-expedition .route-leg-4{bottom:32%}
+ .ecosystem-expedition .archipelago-habitats{left:-4px;bottom:7px;width:36px;gap:2px}
+ .ecosystem-expedition .archipelago-habitats>i{width:17px;height:17px;border-width:1px;border-radius:6px}
+ .ecosystem-expedition .archipelago-habitats>i>svg{width:11px;height:11px}
+ .ecosystem-expedition .island-grown-habitats>span,.ecosystem-expedition.expedition-compact .island-grown-habitats>span{width:34px;height:34px;border-radius:12px;border-width:2px}
+ .ecosystem-expedition .island-grown-habitats>span>svg:first-child{width:21px;height:21px}
+}
+@media(prefers-reduced-motion:reduce){.ecosystem-expedition .archipelago-route-leg{transition:none}}
+.reduce-motion .ecosystem-expedition .archipelago-route-leg{transition:none}
+/* Outdoor labels sit on the light app surface; mission panels remain dark. */
+.high-contrast .ecosystem-expedition .island-intro>div:first-child h2,
+.high-contrast .ecosystem-expedition .island-intro>div:first-child p,
+.high-contrast .ecosystem-expedition .island-eyebrow,
+.high-contrast .ecosystem-expedition .island-legend,
+.high-contrast .ecosystem-expedition .island-progress-row>span,
+.high-contrast .ecosystem-expedition .habitat-heading>div>span{color:var(--text,#101c32)}
+.high-contrast .ecosystem-expedition .habitat-board .island-mission-panel{background:#171428;color:#fff}
+.high-contrast .ecosystem-expedition .habitat-board .island-mission-status,
+.high-contrast .ecosystem-expedition .habitat-board .island-mission-facts,
+.high-contrast .ecosystem-expedition .habitat-board .habitat-next-challenge small,
+.high-contrast .ecosystem-expedition .habitat-board .island-itinerary strong,
+.high-contrast .ecosystem-expedition .habitat-board .island-itinerary small{color:#fff}
+.high-contrast .ecosystem-expedition .habitat-board .island-itinerary h4 small{color:#172c47;background:#fff}
+.high-contrast .ecosystem-expedition .island-total strong small{color:#d7dfef}

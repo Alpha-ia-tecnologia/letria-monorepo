@@ -1,0 +1,35 @@
+# Private settings, tokens and certificates
+.env*
+!.env.example
+.dev.vars*
+*.pem
+*.key
+
+# Installed runtimes and Python artifacts
+/.venv-qwen/
+/.venv/
+/venv/
+**/__pycache__/
+*.py[cod]
+/.pytest_cache/
+/htmlcov/
+.coverage*
+
+# Downloaded weights, generated audio and Lumi's private reference
+/models/
+/cache/
+/voices/
+*.safetensors
+*.pt
+*.pth
+*.onnx
+*.wav
+*.mp3
+*.ogg
+*.webm
+
+# Local logs and temporary outputs
+*.log
+/outputs/
+/work/
+.DS_Store

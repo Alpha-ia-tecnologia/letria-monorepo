@@ -1,0 +1,101 @@
+.adventure-home {
+  container: adventure-home / inline-size;
+}
+
+.welcome-world {
+  /* Fit the illustration vertically so the characters keep their headroom. */
+  background-size: auto 100%;
+  background-position: right bottom;
+}
+
+.welcome-copy {
+  max-width: 58%;
+  padding: 2rem 2rem 1.25rem;
+}
+
+/* Progress stays with the text, leaving the boy and Lumi unobstructed. */
+.welcome-progress {
+  position: relative;
+  inset: auto;
+  display: grid;
+  grid-template-columns: 2rem auto auto;
+  grid-template-areas:
+    "medal title amount"
+    "medal track track"
+    "medal level level";
+  gap: .3rem .7rem;
+  align-items: center;
+  justify-items: start;
+  width: 25rem;
+  max-width: calc(58% - 4rem);
+  margin: 0 0 2rem 2rem;
+  padding: .85rem 1rem;
+  border-width: 2px;
+  border-radius: 1.25rem;
+}
+
+.welcome-progress .progress-medal {
+  grid-area: medal;
+  margin: 0;
+}
+
+.welcome-progress > small {
+  grid-area: title;
+  font-size: .75rem;
+}
+
+.welcome-progress > strong {
+  grid-area: amount;
+  justify-self: end;
+  font-size: 1.3rem;
+}
+
+.welcome-progress > .xp-track {
+  grid-area: track;
+}
+
+.welcome-progress > span:last-child {
+  grid-area: level;
+  font-size: .65rem;
+  overflow-wrap: anywhere;
+}
+
+/* Use the banner's available width, including sidebar and text-size changes. */
+@container adventure-home (max-width: 52rem) {
+  .welcome-world {
+    --welcome-art-height: min(20rem, 105cqw);
+    padding-bottom: var(--welcome-art-height);
+    background-size: auto var(--welcome-art-height);
+  }
+
+  .welcome-copy {
+    max-width: 100%;
+    padding: 1.5rem 1.5rem 1.25rem;
+  }
+
+  .welcome-copy p,
+  .welcome-copy .btn-large,
+  .welcome-reassurance {
+    max-width: 100%;
+  }
+
+  .welcome-progress {
+    max-width: calc(100% - 3rem);
+    margin: 0 1.5rem 1rem;
+  }
+}
+
+@container adventure-home (max-width: 22rem) {
+  .welcome-progress {
+    grid-template-columns: 1.6rem minmax(0, 1fr);
+    grid-template-areas:
+      "medal title"
+      "medal amount"
+      "track track"
+      "level level";
+  }
+
+  .welcome-progress > strong {
+    justify-self: start;
+  }
+}

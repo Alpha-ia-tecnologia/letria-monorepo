@@ -1,0 +1,65 @@
+.activity-viewport {
+  min-width: 0;
+}
+
+.activity-viewport.activity-fullscreen[class] {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  width: 100%;
+  max-width: none;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+  margin: 0;
+  border-radius: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  isolation: isolate;
+  scroll-padding: 1rem;
+}
+
+.activity-viewport:fullscreen::backdrop {
+  background: #f5fafc;
+}
+
+.activity-viewport .activity-fullscreen-button {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  min-height: 44px;
+  padding: .6rem .85rem;
+  border: 2px solid #ded2f6;
+  border-radius: 14px;
+  background: #fff;
+  color: #6541a6;
+  font-size: .85rem;
+  font-weight: 800;
+  line-height: 1.3;
+  cursor: pointer;
+}
+
+.activity-viewport .activity-fullscreen-button:hover {
+  background: #f4eefe;
+}
+
+.activity-viewport .activity-fullscreen-button:focus-visible {
+  outline: 3px solid #7954cf;
+  outline-offset: 3px;
+}
+
+.activity-viewport .activity-fullscreen-button[aria-pressed=true] {
+  background: #eee5ff;
+  border-color: #b69cde;
+}
+
+@media (forced-colors: active) {
+  .activity-viewport .activity-fullscreen-button {
+    border-color: ButtonText;
+    color: ButtonText;
+    background: ButtonFace;
+  }
+}

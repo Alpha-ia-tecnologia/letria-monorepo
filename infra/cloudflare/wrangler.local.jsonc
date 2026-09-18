@@ -1,0 +1,19 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "letria-local",
+  "main": "../../apps/plataforma/worker/index.ts",
+  "compatibility_date": "2026-09-16",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "assets": {
+    "directory": "../../apps/plataforma/public",
+    "binding": "ASSETS"
+  },
+  "r2_buckets": [
+    {
+      "binding": "AUDIO",
+      "bucket_name": "site-creator-r2"
+    }
+  ]
+}

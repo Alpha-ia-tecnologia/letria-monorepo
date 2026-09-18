@@ -1,0 +1,382 @@
+/* A bright learning adventure. Scoped styles preserve the rest of the platform. */
+.lumi-character.lumi-illustrated {
+  display: inline-block;
+  position: relative;
+  flex-shrink: 0;
+  width: 82px;
+  height: 86px;
+  vertical-align: middle;
+  filter: drop-shadow(0 5px 3px #24446122);
+}
+.lumi-character.lumi-illustrated.lumi-small { width: 57px; height: 60px; }
+.lumi-illustrated .lumi-portrait { display: block; width: 100%; height: 100%; object-fit: contain; user-select: none; pointer-events: none; }
+.lumi-illustrated.lumi-thinking .lumi-portrait { animation: playful-lumi-think 1.2s ease-in-out infinite; }
+@keyframes playful-lumi-think { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg) translateY(-3px); } }
+
+.game-wrap.playful-game {
+  --adventure-ink: #193153;
+  --adventure-muted: #53637b;
+  --adventure-purple: #7151db;
+  position: relative;
+  isolation: isolate;
+  max-width: 840px;
+  padding: 6px 0 105px;
+  color: var(--adventure-ink);
+}
+.playful-game .game-top { gap: 18px; margin: 2px 0 15px; }
+.playful-game .game-top > .icon-btn {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  color: #6242c5;
+  background: linear-gradient(#fff, #f5f1ff);
+  border: 2px solid #fff;
+  box-shadow: 0 4px 0 #cfc7d9, 0 6px 12px #8b762720;
+}
+.playful-game .game-progress-pill {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 10px 17px 10px 11px;
+  flex: 1;
+  min-width: 0;
+  background: #fffef7;
+  border: 2px solid #fff;
+  border-radius: 50px;
+  box-shadow: 0 3px 0 #e6d998;
+}
+.playful-game .game-progress-pill > span { font-size: .86rem; font-weight: 850; white-space: nowrap; }
+.playful-game .game-progress { height: 17px; background: #e6eacb; box-shadow: inset 0 2px 3px #6385331c; }
+.playful-game .game-progress > div { background: linear-gradient(#88dc59, #69c741); border-top: 2px solid #a8ed86; }
+.playful-game .game-top > .badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 46px;
+  padding: 10px 14px;
+  border-radius: 50px;
+  background: #fff;
+  color: #193153;
+  border: 2px solid #fff;
+  box-shadow: 0 3px 0 #e5d7a4, 0 5px 12px #8b76271a;
+  font-size: .83rem;
+  font-weight: 850;
+  white-space: nowrap;
+}
+.playful-game .game-top .badge > svg { fill: #ffcc37; color: #e5a915; width: 20px; height: 20px; }
+.playful-game .game-scene {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: 148px;
+  z-index: 2;
+  pointer-events: none;
+}
+.playful-game .game-scene > .lumi-character { width: 178px; height: 178px; margin-bottom: -35px; transform: rotate(-4deg); }
+.playful-game .game-scene-greeting {
+  align-self: center;
+  margin: 20px 0 0 -12px;
+  padding: 12px 17px;
+  border-radius: 20px 20px 20px 5px;
+  background: #fff;
+  border: 2px solid #ffe99a;
+  box-shadow: 0 4px 0 #eac35933;
+  color: #4f399b;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: .87rem;
+  transform: rotate(4deg);
+}
+.playful-game .game-cloud { position: absolute; width: 79px; height: 22px; background: #fff; opacity: .63; border-radius: 30px; z-index: -1; }
+.playful-game .game-cloud::before, .playful-game .game-cloud::after { content: ''; position: absolute; border-radius: 50%; background: inherit; }
+.playful-game .game-cloud::before { width: 30px; height: 30px; left: 12px; bottom: 6px; }
+.playful-game .game-cloud::after { width: 39px; height: 39px; right: 11px; bottom: 1px; }
+.playful-game .game-cloud-one { left: 9%; top: 54px; }
+.playful-game .game-cloud-two { right: 9%; top: 83px; transform: scale(.75); }
+.playful-game .question-card {
+  position: relative;
+  z-index: 1;
+  background: #fffaf0;
+  color: var(--adventure-ink);
+  border: 3px solid #fff;
+  border-radius: 32px;
+  padding: 42px 36px 28px;
+  box-shadow: 0 7px 0 #e9d595, 0 14px 36px #8a73271c;
+}
+.playful-game .question-card > .eyebrow { color: #6a5195; letter-spacing: .095em; font-size: .7rem; font-weight: 850; margin-bottom: 13px; }
+.playful-game .question-heading { gap: 15px; align-items: center; }
+.playful-game .question-heading h1 { color: var(--adventure-ink); font-size: clamp(1.4rem, 2.9vw, 1.9rem); font-weight: 900; line-height: 1.35; max-width: 585px; }
+.playful-game .speak-btn {
+  background: #e7f5ff;
+  color: #24709b;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  box-shadow: 0 4px 0 #9dccdf;
+}
+.playful-game .question-stimulus { background: #fff1bb; border: 2px solid #ffe79c; color: #193153; border-radius: 23px; box-shadow: inset 0 2px 0 #fff8dc; font-size: 2.8rem; font-weight: 900; padding: 20px; margin: 25px auto; }
+.playful-game .question-stimulus.reading-text { background: #fff; border-color: #e2d9f1; font-size: 1.17rem; font-weight: 650; line-height: 1.9; }
+.playful-game .question-visual { font-size: 3.9rem; margin: 20px; filter: drop-shadow(0 5px 2px #bca25c24); }
+.playful-game .answer-options { gap: 20px; margin-top: 28px; }
+.playful-game .answer-option {
+  --option-top: #ffdf66;
+  --option-bottom: #ffd040;
+  --option-shadow: #d6a331;
+  display: flex;
+  align-items: center;
+  position: relative;
+  min-height: 91px;
+  gap: 12px;
+  padding: 19px 18px;
+  border: 2px solid #ffffffa3;
+  border-radius: 23px;
+  color: #193153;
+  background: linear-gradient(155deg, var(--option-top), var(--option-bottom));
+  box-shadow: inset 0 2px 0 #ffffff6b, 0 6px 0 var(--option-shadow), 0 10px 15px #66533717;
+  font-size: 1.24rem;
+  font-weight: 900;
+  transition: transform .16s, box-shadow .16s, outline-color .16s;
+}
+.playful-game .answer-option:nth-child(4n + 2) { --option-top: #84ddff; --option-bottom: #51c4f3; --option-shadow: #319acf; }
+.playful-game .answer-option:nth-child(4n + 3) { --option-top: #b7ed80; --option-bottom: #8bd950; --option-shadow: #61a937; }
+.playful-game .answer-option:nth-child(4n + 4) { --option-top: #dbbfff; --option-bottom: #bc9aee; --option-shadow: #9070c2; }
+.playful-game .answer-option:hover:not(:disabled) { background: linear-gradient(155deg, var(--option-top), var(--option-bottom)); border-color: #fff; transform: translateY(-3px); box-shadow: inset 0 2px 0 #ffffffb0, 0 9px 0 var(--option-shadow), 0 13px 18px #66533724; }
+.playful-game .answer-option.selected { background: linear-gradient(155deg, var(--option-top), var(--option-bottom)); outline: 3px solid #193153; outline-offset: 3px; border-color: #fff; color: #193153; }
+.playful-game .answer-option:focus-visible { outline: 3px solid #4f32b4; outline-offset: 4px; }
+.playful-game .answer-option .option-letter { display: grid; place-items: center; width: 29px; min-width: 29px; height: 29px; color: #32415e; background: #fff9; border: 0; border-radius: 50%; font-size: .74rem; font-weight: 850; }
+.playful-game .answer-option .answer-text { flex: 1; overflow-wrap: anywhere; }
+.playful-game .answer-indicator { display: grid; place-items: center; background: #193153; color: #fff; flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%; }
+.playful-game .answer-option.correct { --option-top: #b2ef92; --option-bottom: #90dd6b; --option-shadow: #4f9c40; outline-color: #27753a; }
+.playful-game .answer-option.try-again { --option-top: #ffe49f; --option-bottom: #ffda79; --option-shadow: #d7ab49; outline-color: #805ab0; }
+.playful-game .answer-option.try-again .answer-indicator { background: #71469b; }
+.playful-game .order-options .answer-option { min-height: 61px; padding: 12px 22px; border-radius: 19px; font-size: 1.17rem; }
+.playful-game .order-options .answer-option:disabled { opacity: .42; outline: 0; transform: translateY(4px); box-shadow: inset 0 2px 0 #ffffff70, 0 2px 0 var(--option-shadow); }
+.playful-game .answer-slots { border: 2px dashed #baa9df; background: #f2ebff; border-radius: 22px; min-height: 84px; padding: 15px; }
+.playful-game .answer-slots > span { color: #675584; font-size: .96rem; }
+.playful-game .answer-slots button { background: #7151db; color: #fff; border: 2px solid #a58aed; border-radius: 13px; padding: 10px 16px; box-shadow: 0 3px 0 #533ca3; font-size: 1.14rem; }
+.playful-game .question-tools { gap: 12px; margin: 26px 0 18px; align-items: center; flex-wrap: wrap; }
+.playful-game .question-tools .text-btn { min-height: 44px; padding: 9px 13px; border: 1px solid #f1daa4; border-radius: 14px; background: #fff3d2; color: #75510f; font-weight: 750; font-size: .84rem; }
+.playful-game .question-tools .text-btn:last-child:not(:first-child) { background: #eee8ff; border-color: #d9c8f8; color: #5e4493; }
+.playful-game .hint-box { background: #fff0bb; color: #664c16; border: 1px solid #e6ce80; border-radius: 18px; line-height: 1.75; font-size: .93rem; padding: 17px; }
+.playful-game .hint-box > svg { flex-shrink: 0; margin-top: 4px; }
+.playful-game .game-lumi-hint { padding: 11px 18px; gap: 13px; background: #eee8ff; border: 2px solid #d9cbf7; border-radius: 21px; box-shadow: 0 3px 0 #dacdef; }
+.playful-game .game-lumi-hint .lumi-character { width: 58px; height: 63px; }
+.playful-game .game-lumi-hint strong { color: #54398c; font-size: .94rem; }
+.playful-game .game-lumi-hint p { color: #66557c; font-size: .83rem; line-height: 1.55; }
+.playful-game .game-lumi-hint p svg { vertical-align: middle; }
+.playful-game .feedback { padding: 21px; border-radius: 22px; }
+.playful-game .feedback strong { font-size: 1.07rem; font-weight: 850; }
+.playful-game .feedback p { color: inherit; font-size: .95rem; line-height: 1.7; }
+.playful-game .feedback-correct { background: #e2f6d6; border: 2px solid #9cd28c; color: #2b6532; }
+.playful-game .feedback-learn { background: #fff0c3; border: 2px solid #e4c771; color: #735221; }
+.playful-game .feedback > div > svg { flex-shrink: 0; }
+.playful-game .game-footer { gap: 17px; padding-top: 23px; margin-top: 25px; border-color: #e5ddcc; }
+.playful-game .game-footer > span { max-width: 180px; font-size: .8rem; color: #697281; line-height: 1.5; }
+.playful-game .btn-primary {
+  color: #fff;
+  background: linear-gradient(#8a69ef, #7151db);
+  border: 2px solid #a78bef;
+  border-radius: 17px;
+  box-shadow: 0 5px 0 #513b9e, inset 0 1px 0 #ffffff2b;
+  min-height: 52px;
+  padding: 13px 21px;
+  font-size: .94rem;
+  font-weight: 800;
+}
+.playful-game .btn-primary:hover:not(:disabled) { background: linear-gradient(#9778f3, #7c5ce2); transform: translateY(-2px); box-shadow: 0 7px 0 #513b9e; }
+.playful-game .btn-primary:disabled { opacity: .55; cursor: not-allowed; box-shadow: 0 3px 0 #73658c; }
+.playful-game .preview-strip { color: #665187; background: #eee5ff; border: 1px solid #ceb9ed; border-radius: 14px; line-height: 1.6; font-size: .8rem; margin: 16px 0; }
+.playful-game .info-box { color: #415b76; background: #eaf6ff; border: 1px solid #c4deed; border-radius: 15px; line-height: 1.65; font-size: .87rem; padding: 15px; }
+.playful-game .form-error { color: #8b3346; background: #fff0f2; border: 1px solid #eab2c2; border-radius: 14px; font-size: .9rem; line-height: 1.6; }
+.playful-game .result-card {
+  position: relative;
+  border: 3px solid #fff;
+  border-radius: 34px;
+  background: radial-gradient(ellipse at 50% 0%, #ffe995, #fffaf0 60%);
+  padding: 30px 34px 38px;
+  box-shadow: 0 7px 0 #e9d595, 0 15px 40px #8a73271a;
+  color: #193153;
+  overflow: hidden;
+}
+.playful-game .result-mascot { position: relative; margin: 0 auto -8px; }
+.playful-game .result-mascot .lumi-character { width: 142px; height: 149px; }
+.playful-game .result-stars { gap: 14px; margin-bottom: 24px; color: #e4a725; filter: drop-shadow(0 4px 0 #e2ba53); }
+.playful-game .result-stars svg { fill: #ffd446; stroke-width: 1.5px; width: 39px; height: 39px; }
+.playful-game .result-stars svg:nth-child(2) { width: 59px; height: 59px; }
+.playful-game .result-card > .eyebrow { color: #705299; font-size: .72rem; font-weight: 850; }
+.playful-game .result-card h1 { color: #193153; font-weight: 900; }
+.playful-game .result-card > p { color: #566378; font-size: .96rem; }
+.playful-game .result-metrics { gap: 13px; margin: 27px auto; }
+.playful-game .result-metrics > div { background: #fff; border: 2px solid #eee3bd; border-radius: 22px; box-shadow: 0 4px 0 #ece1bd; padding: 21px 10px; gap: 8px; }
+.playful-game .result-metrics > div:nth-child(2) { background: #f0eaff; border-color: #d6c6ef; box-shadow: 0 4px 0 #d6c6ef; }
+.playful-game .result-metrics svg { color: #6c4abd; }
+.playful-game .result-metrics strong { color: #193153; font-weight: 900; font-size: 1.65rem; }
+.playful-game .result-metrics span { color: #667083; font-size: .81rem; }
+.playful-game .unlock-celebration { border: 2px solid #b5d99b; border-radius: 24px; background: radial-gradient(ellipse at top, #e5f7c9, #f6ffe9); padding: 25px; }
+.playful-game .unlock-celebration .unlock-badge { color: #49723b; font-size: .73rem; letter-spacing: .045em; }
+.playful-game .unlock-celebration h2 { color: #2d6433; font-size: 1.48rem; }
+.playful-game .unlock-celebration p { color: #506747; font-size: .94rem; }
+.playful-game .unlock-celebration::before, .playful-game .unlock-celebration::after { color: #d6a32f; }
+.playful-game .offline-message { background: #fff0c7; color: #6d541c; padding: 15px; border-radius: 16px; font-size: .86rem; line-height: 1.6; }
+.playful-game .recording-panel { background: #eef8ff; border: 2px solid #c2e0ed; border-radius: 22px; padding: 23px; }
+.playful-game .recording-panel > div:first-child { color: #285777; }
+.playful-game .recording-panel p { color: #567083; font-size: .88rem; }
+.playful-game .recording-panel .btn-secondary { color: #345879; background: #fff; border: 1px solid #b1d3e5; border-radius: 14px; }
+.playful-game .modal { background: #fffaf0; border: 3px solid #fff; color: #193153; border-radius: 28px; }
+.playful-game .modal h2 { color: #193153; }
+.playful-game .modal > p { color: #586579; font-size: .95rem; }
+.playful-game .modal .btn-secondary { color: #5d4691; background: #eee6ff; border: 1px solid #cfbfec; border-radius: 15px; }
+.playful-game .speech-caption { color: #6b587d; }
+
+.playful-lumi .lumi-launcher { right: 27px; bottom: 25px; gap: 2px; filter: drop-shadow(0 6px 8px #23324f25); }
+.playful-lumi .lumi-launcher > .lumi-character { width: 93px; height: 98px; }
+.playful-lumi .lumi-launcher > span:last-child { background: #fff; border: 2px solid #e3d4fb; border-radius: 22px 22px 22px 5px; padding: 14px 19px; box-shadow: 0 4px 0 #d6c4e8; color: #49307d; max-width: 246px; }
+.playful-lumi .lumi-launcher strong { font-size: .87rem; line-height: 1.3; }
+.playful-lumi .lumi-launcher small { font-size: .79rem; color: #72599c; margin-top: 6px; }
+.playful-lumi .lumi-shade { background: #24384b42; backdrop-filter: blur(3px); }
+.playful-lumi .lumi-panel {
+  width: min(433px, calc(100vw - 28px));
+  height: min(738px, calc(100dvh - 42px));
+  right: 24px;
+  bottom: 21px;
+  border: 3px solid #fff;
+  border-radius: 30px;
+  background: #fffaf1;
+  box-shadow: 0 12px 0 #543b8717, 0 22px 70px #29365647;
+  color: #193153;
+}
+.playful-lumi .lumi-panel-header { gap: 13px; padding: 14px 17px; background: linear-gradient(120deg, #8e6fec, #7151cf); border: 0; color: #fff; }
+.playful-lumi .lumi-panel-header .lumi-character { width: 73px; height: 76px; margin: -7px 0; }
+.playful-lumi .lumi-panel-header h2 { color: #fff; font-size: 1.5rem; font-weight: 900; }
+.playful-lumi .lumi-panel-header p { color: #fff; font-size: .82rem; margin-top: 3px; }
+.playful-lumi .lumi-panel-header .icon-btn { color: #5a3a97; width: 39px; height: 39px; background: #fff; border-radius: 50%; box-shadow: 0 3px 0 #543c992e; }
+.playful-lumi .lumi-context { background: #f1eaff; color: #65488b; padding: 12px 18px; font-size: .82rem; line-height: 1.4; flex-shrink: 0; }
+.playful-lumi .lumi-context > svg { flex-shrink: 0; }
+.playful-lumi .lumi-conversation { min-height: 80px; padding: 20px 17px 12px; gap: 16px; scrollbar-width: thin; scrollbar-color: #ccbbe7 #fffaf1; }
+.playful-lumi .lumi-message { padding: 15px 16px; max-width: 93%; font-size: .94rem; line-height: 1.7; }
+.playful-lumi .lumi-message.assistant { color: #29435c; background: #fff; border: 1px solid #e8e0d2; border-radius: 5px 22px 22px; box-shadow: 0 3px 0 #e8e0d242; }
+.playful-lumi .lumi-message.user { color: #204866; background: #d5efff; border: 1px solid #a6d9f5; border-radius: 22px 5px 22px 22px; box-shadow: 0 3px 0 #c1e2f666; }
+.playful-lumi .lumi-message p { font-size: inherit; line-height: inherit; }
+.playful-lumi .lumi-message-footer { margin-top: 12px; gap: 8px; align-items: center; flex-wrap: wrap; }
+.playful-lumi .lumi-message-footer small { color: #6b6478; font-size: .78rem; }
+.playful-lumi .lumi-message .text-btn { color: #674499; font-weight: 750; font-size: .82rem; min-height: 38px; padding: 7px 9px; border-radius: 11px; background: #f1eaff; margin-top: 8px; }
+.playful-lumi .lumi-message-footer .text-btn { margin-top: 0; }
+.playful-lumi .speech-caption { color: #745188; font-size: .79rem; }
+.playful-lumi .lumi-thinking-message { color: #705196; font-size: .85rem; line-height: 1.5; padding: 3px; }
+.playful-lumi .lumi-thinking-message > svg { flex-shrink: 0; }
+.playful-lumi .lumi-suggestions { padding: 11px 15px 6px; gap: 8px; flex-shrink: 0; }
+.playful-lumi .lumi-suggestions > button { background: #f0e8ff; color: #61418e; border: 1px solid #d6c3ef; box-shadow: 0 2px 0 #ded0ed; border-radius: 16px; padding: 10px 12px; min-height: 40px; font-size: .81rem; font-weight: 750; }
+.playful-lumi .lumi-suggestions > button:hover:not(:disabled) { background: #e6d9fc; transform: translateY(-1px); }
+.playful-lumi .lumi-suggestions > button:disabled { opacity: .55; }
+.playful-lumi .lumi-composer { padding: 12px 15px 5px; gap: 9px; flex-shrink: 0; }
+.playful-lumi .lumi-composer input { min-height: 48px; border-radius: 17px; background: #fff; color: #193153; border: 2px solid #d8cde8; font-size: .94rem; padding: 11px 13px; }
+.playful-lumi .lumi-composer input::placeholder { color: #8a7d9a; }
+.playful-lumi .lumi-composer input:focus { outline: 2px solid #8060ca; outline-offset: 2px; }
+.playful-lumi .lumi-composer button { background: linear-gradient(#8f6ded, #7452d4); color: #fff; width: 48px; min-height: 48px; border: 2px solid #a78aed; border-radius: 16px; box-shadow: 0 3px 0 #533b9b; }
+.playful-lumi .lumi-composer button:disabled { opacity: .5; }
+.playful-lumi .lumi-footnote { font-size: .76rem; color: #746b7d; line-height: 1.55; padding: 10px 17px 14px; flex-shrink: 0; }
+.playful-lumi .lumi-notice { color: #785421; font-size: .82rem; line-height: 1.5; background: #fff0c9; margin: 5px 15px; border-radius: 12px; padding: 9px 11px; flex-shrink: 0; }
+.playful-lumi .lumi-notice > svg { flex-shrink: 0; margin-top: 3px; }
+
+@media (max-width: 760px) {
+  .game-wrap.playful-game { padding: 4px 0 140px; }
+  .playful-game .game-top { gap: 12px; margin-bottom: 8px; }
+  .playful-game .game-top > .icon-btn { width: 43px; height: 43px; }
+  .playful-game .game-top > .badge { min-height: 42px; font-size: .8rem; padding: 9px 12px; }
+  .playful-game .game-progress-pill { padding: 8px 12px 8px 8px; gap: 9px; }
+  .playful-game .game-progress-pill > span { font-size: .8rem; }
+  .playful-game .game-progress { height: 14px; }
+  .playful-game .game-scene { height: 127px; }
+  .playful-game .game-scene > .lumi-character { width: 154px; height: 155px; margin-bottom: -29px; }
+  .playful-game .game-scene-greeting { font-size: .78rem; padding: 11px 13px; margin-left: -14px; }
+  .playful-game .game-cloud-one { left: 4%; top: 47px; transform: scale(.7); }
+  .playful-game .game-cloud-two { right: 2%; top: 77px; transform: scale(.58); }
+  .playful-game .question-card { border-radius: 28px; padding: 34px 19px 24px; }
+  .playful-game .question-card > .eyebrow { font-size: .67rem; }
+  .playful-game .question-heading h1 { font-size: 1.43rem; }
+  .playful-game .question-heading { gap: 10px; }
+  .playful-game .speak-btn { width: 43px; height: 43px; min-width: 43px; }
+  .playful-game .question-stimulus { margin: 23px auto; font-size: 2.5rem; padding: 17px; border-radius: 20px; }
+  .playful-game .question-stimulus.reading-text { font-size: 1.1rem; line-height: 1.8; }
+  .playful-game .answer-options { gap: 17px 13px; }
+  .playful-game .answer-option { min-height: 88px; padding: 15px 12px; font-size: 1.14rem; gap: 8px; border-radius: 21px; }
+  .playful-game .answer-option .option-letter { width: 24px; min-width: 24px; height: 24px; font-size: .68rem; }
+  .playful-game .answer-indicator { width: 23px; height: 23px; }
+  .playful-game .answer-indicator > svg { width: 16px; height: 16px; }
+  .playful-game .question-tools .text-btn { font-size: .81rem; padding: 8px 10px; }
+  .playful-game .game-lumi-hint { padding: 10px 13px; gap: 8px; }
+  .playful-game .game-lumi-hint strong { font-size: .88rem; }
+  .playful-game .game-lumi-hint p { font-size: .79rem; }
+  .playful-game .feedback { padding: 18px; }
+  .playful-game .feedback strong { font-size: 1.02rem; }
+  .playful-game .feedback p { font-size: .9rem; margin-left: 0; }
+  .playful-game .game-footer { flex-direction: column-reverse; padding-bottom: 0; gap: 16px; }
+  .playful-game .game-footer > span { max-width: none; text-align: center; font-size: .77rem; }
+  .playful-game .game-footer > .btn { width: 100%; }
+  .playful-game .result-card { padding: 23px 18px 29px; border-radius: 28px; }
+  .playful-game .result-card h1 { font-size: 1.7rem; }
+  .playful-game .result-card > p { font-size: .9rem; }
+  .playful-game .result-metrics { gap: 8px; }
+  .playful-game .result-metrics > div { padding: 16px 7px; border-radius: 18px; }
+  .playful-game .result-metrics strong { font-size: 1.4rem; }
+  .playful-game .result-metrics span { font-size: .74rem; }
+  .playful-game .unlock-celebration { padding: 21px 15px; }
+  .playful-game .unlock-celebration h2 { font-size: 1.3rem; }
+  .playful-game .unlock-celebration::before, .playful-game .unlock-celebration::after { top: 5px; }
+  .playful-lumi .lumi-launcher { right: 12px; bottom: calc(91px + env(safe-area-inset-bottom, 0px)); gap: 0; }
+  .playful-lumi .lumi-launcher > .lumi-character { width: 68px; height: 74px; }
+  .playful-lumi .lumi-launcher > span:last-child { padding: 11px 13px; border-radius: 18px 18px 18px 4px; max-width: 211px; }
+  .playful-lumi .lumi-launcher strong { font-size: .79rem; }
+  .playful-lumi .lumi-launcher small { font-size: .75rem; margin-top: 4px; }
+  .playful-lumi .lumi-panel { right: 10px; bottom: calc(10px + env(safe-area-inset-bottom, 0px)); width: calc(100vw - 20px); height: min(738px, calc(100dvh - 20px - env(safe-area-inset-bottom, 0px))); border-radius: 26px; }
+  .playful-lumi .lumi-panel-header { padding: 13px 15px; }
+  .playful-lumi .lumi-panel-header .lumi-character { width: 64px; height: 65px; }
+  .playful-lumi .lumi-panel-header h2 { font-size: 1.4rem; }
+  .playful-lumi .lumi-conversation { padding: 16px 13px 9px; }
+  .playful-lumi .lumi-message { font-size: .91rem; padding: 13px 14px; }
+  .playful-lumi .lumi-suggestions { padding: 10px 12px 4px; gap: 7px; }
+  .playful-lumi .lumi-suggestions > button { font-size: .8rem; padding: 8px 10px; min-height: 39px; }
+  .playful-lumi .lumi-footnote { font-size: .76rem; padding-bottom: 12px; }
+}
+@media (max-width: 380px) {
+  .playful-game .game-top { gap: 8px; }
+  .playful-game .game-top > .badge { padding: 9px; font-size: .74rem; }
+  .playful-game .game-progress-pill { gap: 7px; padding-right: 8px; }
+  .playful-game .question-card { padding-right: 15px; padding-left: 15px; }
+  .playful-game .answer-options { grid-template-columns: 1fr; }
+  .playful-game .answer-option { min-height: 70px; }
+  .playful-game .game-scene-greeting { font-size: .73rem; padding: 10px; }
+  .playful-game .game-scene > .lumi-character { width: 137px; height: 145px; }
+}
+@media (max-height: 640px) {
+  .playful-lumi .lumi-panel-header { padding-top: 9px; padding-bottom: 9px; }
+  .playful-lumi .lumi-panel-header .lumi-character { width: 51px; height: 51px; }
+  .playful-lumi .lumi-context { padding-top: 8px; padding-bottom: 8px; }
+  .playful-lumi .lumi-suggestions { max-height: 96px; overflow-y: auto; }
+  .playful-lumi .lumi-footnote { max-height: 63px; overflow-y: auto; padding-top: 7px; padding-bottom: 7px; }
+}
+@media (max-height: 520px) {
+  .playful-lumi .lumi-panel { overflow-y: auto; }
+  .playful-lumi .lumi-conversation { flex: 0 0 150px; min-height: 150px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lumi-illustrated.lumi-thinking .lumi-portrait { animation: none; }
+  .playful-game .answer-option, .playful-game .btn-primary { transition: none; }
+}
+.reduce-motion .lumi-illustrated .lumi-portrait { animation: none !important; }
+.high-contrast .playful-game { --adventure-ink: #fff; --adventure-muted: #fff; }
+.high-contrast .playful-game .question-card, .high-contrast .playful-game .result-card,
+.high-contrast .playful-game .modal, .high-contrast .playful-lumi .lumi-panel { background: #11131d; color: #fff; border-color: #fff; box-shadow: none; }
+.high-contrast .playful-game .question-card > .eyebrow, .high-contrast .playful-game .result-card > p,
+.high-contrast .playful-game .result-card > .eyebrow, .high-contrast .playful-game .result-card h1,
+.high-contrast .playful-game .game-footer > span, .high-contrast .playful-game .modal h2,
+.high-contrast .playful-game .modal > p { color: #fff; }
+.high-contrast .playful-game .result-card > .info-box,
+.high-contrast .playful-game .result-card > .offline-message { background: #252b3e; color: #fff; border: 1px solid #fff; }
+.high-contrast .playful-lumi .lumi-message.assistant { background: #fff; color: #142239; border-color: #fff; }
+.high-contrast .playful-lumi .lumi-footnote, .high-contrast .playful-lumi .lumi-thinking-message { color: #fff; }
+@media print { .playful-game .game-scene { display: none; } }

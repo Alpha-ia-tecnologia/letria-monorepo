@@ -1,0 +1,53 @@
+.computational-lab .logic-catalog { margin-top: 32px; }
+.computational-lab .logic-catalog-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+.computational-lab .logic-catalog-heading h2 { font-size: 1.25rem; line-height: 1.4; }
+.computational-lab .logic-catalog-heading p { margin-top: 5px; font-size: .9rem; line-height: 1.5; }
+.computational-lab .logic-curriculum-note { color: #477768; font-size: .78rem; font-weight: 800; padding: 8px 12px; border-radius: 12px; background: #e1f3e9; }
+.computational-lab .logic-year-filters { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 21px; }
+.computational-lab .logic-year-filters button { min-height: 44px; padding: 9px 16px; border: 2px solid #dcd6ed; border-radius: 15px; background: #fff; color: #635183; font-size: .86rem; font-weight: 800; box-shadow: 0 3px 0 #e4dced; }
+.computational-lab .logic-year-filters button[aria-pressed="true"] { background: #7860bb; color: #fff; border-color: #6850a7; box-shadow: 0 3px 0 #594085; }
+.computational-lab .logic-catalog-filters { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 20px; margin-top: 21px; }
+.computational-lab .logic-catalog-filters label { display: grid; gap: 7px; min-width: 0; max-width: 100%; color: #4b6871; font-size: .8rem; font-weight: 800; }
+.computational-lab .logic-catalog-filters label:first-child { flex: 1 1 23rem; }
+.computational-lab .logic-catalog-filters label:last-child { flex: 0 1 15rem; }
+.computational-lab .logic-catalog-filters select { width: 100%; min-width: 0; min-height: 44px; padding: 9px 32px 9px 12px; border: 1px solid #c6d8d7; border-radius: 12px; background: #fff; color: #3a5f68; font: inherit; font-weight: 650; }
+.computational-lab .logic-catalog-filters select:disabled { opacity: .55; }
+.computational-lab .logic-catalog-filters select:focus-visible,
+.computational-lab summary:focus-visible,
+.computational-lab .logic-curriculum-info a:focus-visible { outline: 3px solid #6744ab; outline-offset: 3px; }
+.computational-lab .logic-filter-count { margin: 17px 0 0; color: #587581; font-size: .82rem; }
+.computational-lab .logic-catalog .logic-explorations { margin-top: 14px; }
+.computational-lab .logic-exploration { min-width: 0; overflow-wrap: anywhere; }
+.computational-lab .logic-exploration .logic-skill-tag { margin-top: 12px; padding: 4px 8px; border: 1px solid #fff; border-radius: 8px; background: #ffffff94; font-size: .68rem !important; font-weight: 800; color: #4d606b !important; letter-spacing: .015em; }
+.computational-lab .logic-catalog-empty { display: grid; justify-items: center; gap: 12px; padding: 30px 18px; border: 2px dashed #b7cdd2; background: #ffffff85; border-radius: 22px; text-align: center; }
+.computational-lab .logic-catalog-empty > svg { color: #8c68b7; }
+.computational-lab .logic-catalog-empty h3 { font-size: 1.05rem; }
+.computational-lab .logic-catalog-empty p { line-height: 1.6; }
+.computational-lab .logic-curriculum-info { margin-bottom: 24px; padding: 15px 18px; border: 1px solid #d7e5e3; border-radius: 16px; background: #ffffffa6; color: #456c70; }
+.computational-lab .logic-curriculum-info summary { font-size: .86rem; font-weight: 800; cursor: pointer; }
+.computational-lab .logic-curriculum-info p { max-width: 850px; font-size: .85rem; line-height: 1.7; margin-top: 12px; }
+.computational-lab .logic-curriculum-info a { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; color: #6342a2; font-size: .84rem; font-weight: 750; text-decoration: underline; text-underline-offset: 3px; }
+.computational-lab .logic-skill-detail { margin: 12px 0 0; color: #537b6e; font-size: .8rem; text-align: left; }
+.computational-lab .logic-skill-detail summary { width: fit-content; max-width: 100%; margin-inline: auto; padding: 7px 11px; border-radius: 11px; background: #eaf5e8; cursor: pointer; font-weight: 800; line-height: 1.4; }
+.computational-lab .logic-skill-detail p { padding: 10px 12px; margin-top: 6px; border-left: 3px solid #a6c995; font-size: .81rem; line-height: 1.6; }
+.activity-fullscreen.computational-lab .logic-hero,
+.activity-fullscreen.computational-lab .logic-catalog,
+.activity-fullscreen.computational-lab .logic-guide,
+.activity-fullscreen.computational-lab .logic-celebration { max-width: 1150px; margin-inline: auto; }
+.activity-fullscreen.computational-lab .logic-workshop > .logic-challenge { grid-area: activity; min-width: 0; }
+.activity-fullscreen.computational-lab .logic-skill-detail { grid-column: 1 / -1; grid-row: 3; margin-top: 3px; }
+.activity-fullscreen.computational-lab .logic-skill-detail summary { margin: 0; padding: 5px 9px; }
+.activity-fullscreen.computational-lab .logic-skill-detail p { font-size: .81rem; }
+@media (max-width: 680px) {
+  .computational-lab .logic-year-filters { gap: 7px; }
+  .computational-lab .logic-year-filters button { padding-inline: 12px; }
+  .computational-lab .logic-catalog-filters label:last-child { flex: 1 1 15rem; }
+  .computational-lab .logic-catalog-heading h2 { font-size: 1.12rem; }
+}
+@media (max-width: 430px) {
+  .computational-lab .logic-catalog .logic-explorations { grid-template-columns: 1fr; }
+  .computational-lab .logic-exploration { min-height: 0; padding: 20px; }
+  .computational-lab .logic-exploration-icon { width: 48px; height: 48px; margin-bottom: 12px; }
+}
+.high-contrast .computational-lab :is(.logic-curriculum-info, .logic-year-filters button, .logic-catalog-filters select, .logic-skill-detail summary) { border: 2px solid #193c50; }
+.high-contrast .computational-lab :is(.logic-curriculum-info p, .logic-filter-count, .logic-skill-detail p) { color: #253e4c; }

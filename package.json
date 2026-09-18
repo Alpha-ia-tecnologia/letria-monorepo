@@ -1,49 +1,36 @@
 {
-    "name":  "letria-plataforma",
-    "version":  "0.1.0",
-    "private":  true,
-    "engines":  {
-                    "node":  "\u003e=22.15.0"
-                },
-    "scripts":  {
-                    "dev":  "vinext dev",
-                    "build":  "vinext build",
-                    "start":  "wrangler dev --config dist/server/wrangler.json --local --persist-to .wrangler/state",
-                    "test":  "npm run test:unit \u0026\u0026 npm run test:api",
-                    "test:unit":  "tsx --test tests/*.test.ts",
-                    "test:api":  "node --test tests/api-security.test.mjs",
-                    "test:http":  "node --test tests/api-http-smoke.test.mjs",
-                    "test:render":  "node --test tests/rendered-html.test.mjs",
-                    "lint":  "eslint . --ignore-pattern dist --ignore-pattern .next",
-                    "db:generate":  "drizzle-kit generate",
-                    "typecheck":  "tsc --noEmit",
-                    "db:migrate":  "wrangler d1 migrations apply site-creator-d1 --config wrangler.local.jsonc --local"
-                },
-    "dependencies":  {
-                         "drizzle-orm":  "0.45.2",
-                         "next":  "16.2.6",
-                         "react":  "19.2.6",
-                         "react-dom":  "19.2.6",
-                         "lucide-react":  "^0.468.0"
-                     },
-    "devDependencies":  {
-                            "@cloudflare/vite-plugin":  "1.37.1",
-                            "@tailwindcss/postcss":  "4.2.1",
-                            "@types/node":  "22.19.19",
-                            "@types/react":  "19.2.14",
-                            "@types/react-dom":  "19.2.3",
-                            "@vitejs/plugin-react":  "6.0.2",
-                            "@vitejs/plugin-rsc":  "0.5.26",
-                            "drizzle-kit":  "0.31.10",
-                            "eslint":  "9.39.4",
-                            "eslint-config-next":  "16.2.6",
-                            "react-server-dom-webpack":  "19.2.6",
-                            "tailwindcss":  "4.2.1",
-                            "typescript":  "5.9.3",
-                            "vinext":  "0.0.50",
-                            "vite":  "8.0.13",
-                            "wrangler":  "4.92.0",
-                            "tsx":  "^4.20.0"
-                        },
-    "type":  "module"
+  "name": "letria-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=22.15.0"
+  },
+  "workspaces": [
+    "apps/plataforma"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=apps/plataforma --",
+    "build": "npm run build --workspace=apps/plataforma --",
+    "start": "npm run start --workspace=apps/plataforma --",
+    "test": "npm run test --workspace=apps/plataforma --",
+    "test:unit": "npm run test:unit --workspace=apps/plataforma --",
+    "test:api": "npm run test:api --workspace=apps/plataforma --",
+    "test:http": "npm run test:http --workspace=apps/plataforma --",
+    "test:render": "npm run test:render --workspace=apps/plataforma --",
+    "lint": "npm run lint --workspace=apps/plataforma --",
+    "db:generate": "npm run db:generate --workspace=apps/plataforma --",
+    "typecheck": "npm run typecheck --workspace=apps/plataforma --",
+    "db:migrate": "npm run db:migrate --workspace=apps/plataforma --",
+    "voice:setup": "npm run voice:setup --workspace=apps/plataforma --",
+    "voice:test": "npm run voice:test --workspace=apps/plataforma --",
+    "start:kokoro": "npm run start:kokoro --workspace=apps/plataforma --",
+    "db:apply": "npm run db:apply --workspace=apps/plataforma --",
+    "test:postgres": "npm run test:postgres --workspace=apps/plataforma --",
+    "test:migration": "npm run test:migration --workspace=apps/plataforma --",
+    "voice:qwen:setup": "npm run voice:qwen:setup --workspace=apps/plataforma --",
+    "voice:qwen:test": "npm run voice:qwen:test --workspace=apps/plataforma --",
+    "start:qwen": "npm run start:qwen --workspace=apps/plataforma --",
+    "voice:qwen:base:setup": "npm run voice:qwen:base:setup --workspace=apps/plataforma --",
+    "voice:prepare": "npm run voice:prepare --workspace=apps/plataforma --"
+  }
 }

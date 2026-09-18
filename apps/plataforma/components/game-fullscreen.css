@@ -1,0 +1,154 @@
+/* Keep the usual activity layout; full screen uses a centered, bounded stage. */
+.playful-game .question-content,
+.playful-game .question-response { display: contents; }
+.playful-game .question-content > .eyebrow {
+  display: block;
+  text-align: center;
+  color: #6a5195;
+  letter-spacing: .095em;
+  font-size: .7rem;
+  font-weight: 850;
+  margin-bottom: 13px;
+}
+.playful-game .game-view-controls {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+.playful-game .game-top > .activity-fullscreen-button { flex-shrink: 0; }
+.high-contrast .playful-game .question-content > .eyebrow { color: #fff; }
+
+.game-wrap.playful-game.activity-fullscreen {
+  --game-stage-width: 1180px;
+  max-width: none;
+  margin: 0;
+  padding: max(14px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) max(18px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left));
+}
+.playful-game.activity-fullscreen .game-top {
+  max-width: var(--game-stage-width);
+  margin: 0 auto 12px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.playful-game.activity-fullscreen .game-view-controls {
+  max-width: var(--game-stage-width);
+  margin-inline: auto;
+}
+.playful-game.activity-fullscreen .game-scene { display: none; }
+.playful-game.activity-fullscreen .game-environment {
+  gap: 12px;
+  max-width: var(--game-stage-width);
+  margin: 0 auto 12px;
+  padding: 8px 14px;
+  border-radius: 18px;
+}
+.playful-game.activity-fullscreen .game-environment-art { width: 48px; height: 48px; border-radius: 12px; }
+.playful-game.activity-fullscreen .game-environment > div > span { margin-bottom: 1px; }
+.playful-game.activity-fullscreen .game-environment p { margin-top: 2px; }
+.playful-game.activity-fullscreen .preview-strip,
+.playful-game.activity-fullscreen > .info-box,
+.playful-game.activity-fullscreen > .form-error { max-width: var(--game-stage-width); margin: 8px auto; padding: 8px 12px; }
+.playful-game.activity-fullscreen .question-card {
+  width: 100%;
+  max-width: var(--game-stage-width);
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 24px;
+}
+.playful-game.activity-fullscreen .question-content,
+.playful-game.activity-fullscreen .question-response {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 40rem;
+  margin-inline: auto;
+}
+.playful-game.activity-fullscreen .question-content > .eyebrow { margin-bottom: 10px; }
+.playful-game.activity-fullscreen .question-heading h1 { min-width: 0; max-width: 26ch; overflow-wrap: anywhere; }
+.playful-game.activity-fullscreen .question-stimulus { margin: 16px auto 0; padding: 12px 16px; overflow-wrap: anywhere; }
+.playful-game.activity-fullscreen .question-stimulus.reading-text { text-align: left; line-height: 1.65; }
+.playful-game.activity-fullscreen .question-visual { margin: 12px 0 0; }
+.playful-game.activity-fullscreen .answer-options {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+  width: 100%;
+  max-width: 36rem;
+  gap: 14px;
+  margin: 16px auto 0;
+}
+.playful-game.activity-fullscreen .answer-option {
+  min-width: 0;
+  min-height: 80px;
+  padding: 14px;
+  border-radius: 20px;
+}
+.playful-game.activity-fullscreen .answer-option .answer-text { min-width: 0; }
+/* Ordering uses movable word pieces; the text determines each piece's width. */
+.playful-game.activity-fullscreen .order-options {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.playful-game.activity-fullscreen .order-options .answer-option {
+  flex: 0 1 auto;
+  min-width: 3rem;
+  max-width: 100%;
+  min-height: 54px;
+  padding: 10px 16px;
+  text-align: center;
+}
+.playful-game.activity-fullscreen .answer-slots button { max-width: 100%; overflow-wrap: anywhere; }
+.playful-game.activity-fullscreen .answer-slots { min-height: 60px; margin-top: 14px; padding: 10px; }
+.playful-game.activity-fullscreen .answer-slots button { padding: 8px 12px; }
+.playful-game.activity-fullscreen .question-tools { margin: 16px 0 10px; gap: 10px; }
+.playful-game.activity-fullscreen .hint-box { margin: 10px 0; padding: 12px; line-height: 1.6; }
+.playful-game.activity-fullscreen .game-lumi-hint { margin-top: 10px; padding: 8px 12px; border-radius: 16px; }
+.playful-game.activity-fullscreen .game-lumi-hint .lumi-character { width: 43px; height: 46px; }
+.playful-game.activity-fullscreen .game-lumi-hint p { margin-top: 2px; }
+.playful-game.activity-fullscreen .feedback { margin-top: 14px; padding: 12px 14px; border-radius: 16px; }
+.playful-game.activity-fullscreen .feedback p { line-height: 1.55; margin: 6px 0 0; }
+.playful-game.activity-fullscreen .feedback > div { flex-wrap: wrap; }
+.playful-game.activity-fullscreen .game-footer { padding: 14px 0 0; margin-top: 14px; gap: 12px; }
+.playful-game.activity-fullscreen .mechanic-instruction { margin: 10px 0; line-height: 1.5; }
+.playful-game.activity-fullscreen .mechanic-progress { margin-top: 10px; }
+.playful-game.activity-fullscreen .pair-challenge { margin-top: 10px; }
+.playful-game.activity-fullscreen .pair-row { margin-bottom: 10px; padding: 9px; gap: 10px; }
+.playful-game.activity-fullscreen .pair-row select { min-height: 44px; padding-top: 8px; padding-bottom: 8px; }
+/* The same help remains available in the card without covering any controls. */
+.playful-game.activity-fullscreen .lumi-launcher { display: none; }
+.playful-game.activity-fullscreen .result-card { max-width: 1000px; margin: 0 auto; padding: 20px 28px; overflow: visible; }
+.playful-game.activity-fullscreen .result-mascot .lumi-character { width: 86px; height: 90px; }
+.playful-game.activity-fullscreen .result-stars { gap: 10px; margin-bottom: 12px; }
+.playful-game.activity-fullscreen .result-stars svg { width: 28px; height: 28px; }
+.playful-game.activity-fullscreen .result-stars svg:nth-child(2) { width: 38px; height: 38px; }
+.playful-game.activity-fullscreen .result-metrics { margin: 16px auto; }
+.playful-game.activity-fullscreen .result-metrics > div { padding: 12px 10px; }
+.playful-game.activity-fullscreen .unlock-celebration { padding: 16px; }
+.playful-game.activity-fullscreen .result-card > .btn { margin-top: 14px; }
+
+@media (min-width: 960px) {
+  .playful-game.activity-fullscreen .question-card {
+    display: grid;
+    grid-template-columns: minmax(0, .88fr) minmax(0, 1.12fr);
+    align-items: start;
+    gap: clamp(24px, 2.5vw, 36px);
+    margin: 0 auto;
+  }
+  .playful-game.activity-fullscreen .question-content,
+  .playful-game.activity-fullscreen .question-response { display: block; min-width: 0; }
+  .playful-game.activity-fullscreen .question-content { padding-top: 8px; }
+  .playful-game.activity-fullscreen .question-response > :first-child { margin-top: 0; }
+  .playful-game.activity-fullscreen .question-heading { align-items: flex-start; justify-content: flex-start; }
+  .playful-game.activity-fullscreen .question-heading h1 { text-align: left; }
+  .playful-game.activity-fullscreen .question-content > .eyebrow { text-align: left; }
+  .playful-game.activity-fullscreen .game-footer { flex-wrap: wrap; }
+  .playful-game.activity-fullscreen .game-footer > .btn { margin-left: auto; }
+}
+@media (max-width: 560px) {
+  .playful-game .game-top { flex-wrap: wrap; }
+  .playful-game .game-top > .game-progress-pill { order: 1; flex-basis: 100%; }
+  .playful-game .game-top > .activity-fullscreen-button { margin-left: auto; }
+  .game-wrap.playful-game.activity-fullscreen { padding: max(12px, env(safe-area-inset-top)) 12px max(16px, env(safe-area-inset-bottom)); }
+  .playful-game.activity-fullscreen .question-card { padding: 16px 12px; }
+  .playful-game.activity-fullscreen .answer-option { min-height: 72px; }
+  .playful-game.activity-fullscreen .result-card { padding: 18px 14px; }
+}

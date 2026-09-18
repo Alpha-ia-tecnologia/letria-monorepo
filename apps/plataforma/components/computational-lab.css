@@ -1,0 +1,504 @@
+.computational-lab {
+  --logic-ink: #193c50;
+  --logic-muted: #587483;
+  --logic-green: #237b64;
+  max-width: 1150px;
+  margin: 0 auto;
+  padding-bottom: 100px;
+  color: var(--logic-ink);
+}
+.computational-lab button { touch-action: manipulation; }
+.computational-lab button:focus-visible { outline: 3px solid #5f3cad; outline-offset: 4px; }
+.computational-lab button:disabled { cursor: not-allowed; opacity: .48; }
+.computational-lab h1, .computational-lab h2, .computational-lab h3 { color: var(--logic-ink); font-weight: 900; }
+.computational-lab h1[tabindex] { outline: none; }
+.computational-lab p { color: var(--logic-muted); }
+.computational-lab .logic-topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
+.computational-lab .logic-back { display: inline-flex; align-items: center; gap: 8px; background: #fff; color: #456477; border: 2px solid #e1eced; border-radius: 17px; padding: 11px 15px; font-size: .89rem; font-weight: 850; box-shadow: 0 3px 0 #d5e3e6; }
+.computational-lab .logic-free { display: flex; align-items: center; justify-content: center; gap: 6px; color: #458676; font-size: .86rem; font-weight: 800; }
+.computational-lab .logic-count { display: flex; align-items: center; gap: 8px; color: #386457; background: #edfae9; border: 2px solid #fff; border-radius: 50px; padding: 10px 16px; font-weight: 900; box-shadow: 0 3px 0 #d2e6cd; }
+.computational-lab .logic-count svg { color: #73a43e; }
+.computational-lab .logic-progress { height: 11px; border: 2px solid #fff; background: #dceced; border-radius: 20px; overflow: hidden; margin-bottom: 26px; }
+.computational-lab .logic-progress > span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #59bcad, #9cd967); transition: width .35s; }
+.computational-lab .logic-hero { position: relative; overflow: hidden; min-height: 303px; padding: 36px; border: 3px solid #fff; border-radius: 32px; background: linear-gradient(90deg, #d2faf2 0%, #d2faf2f2 38%, #d2faf242 70%), url('/art/ecosystem-logic.png') right center / auto 135% no-repeat, #c8f3ed; box-shadow: 0 6px 0 #c3e2dc, 0 10px 22px #255c6710; }
+.computational-lab .logic-hero > div { max-width: 66%; position: relative; }
+.computational-lab .logic-kicker { display: flex; align-items: center; gap: 7px; color: #437e74; font-size: .74rem; font-weight: 900; letter-spacing: .075em; }
+.computational-lab .logic-hero h1 { font-size: clamp(2rem, 3.4vw, 3.1rem); line-height: 1.13; margin: 16px 0 15px; }
+.computational-lab .logic-hero h1 span { color: #278c79; }
+.computational-lab .logic-hero p { max-width: 470px; color: #376d6d; font-size: 1rem; font-weight: 650; line-height: 1.7; }
+.computational-lab .logic-hero-note { display: inline-block; margin-top: 18px; padding: 8px 13px; border: 1px solid #fff; border-radius: 15px; background: #ffffffb8; font-size: .83rem; font-weight: 800; color: #377971; }
+.computational-lab .logic-explorations { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; margin: 29px 0; }
+.computational-lab .logic-exploration { --card-bg: #fff0b9; --card-shadow: #e7d099; --card-icon: #d3a343; position: relative; display: flex; align-items: flex-start; flex-direction: column; min-height: 250px; padding: 24px 20px 19px; border: 3px solid #fff; border-radius: 26px; text-align: left; background: linear-gradient(145deg, #ffffff7a, transparent), var(--card-bg); box-shadow: 0 6px 0 var(--card-shadow); color: var(--logic-ink); transition: transform .18s; }
+.computational-lab .logic-exploration:hover { transform: translateY(-4px); }
+.computational-lab .logic-exploration.logic-color-1 { --card-bg: #e5d7fc; --card-shadow: #cbb6e6; --card-icon: #9365c7; }
+.computational-lab .logic-exploration.logic-color-2 { --card-bg: #cbefff; --card-shadow: #a0d3e8; --card-icon: #469cc5; }
+.computational-lab .logic-exploration.logic-color-3 { --card-bg: #ddf0b9; --card-shadow: #bfda9a; --card-icon: #72a640; }
+.computational-lab .logic-exploration-icon { display: grid; place-items: center; width: 61px; height: 61px; border: 2px solid #fff; background: #ffffff9c; color: var(--card-icon); border-radius: 21px; box-shadow: 0 4px 0 #59655717; margin-bottom: 19px; transform: rotate(-6deg); }
+.computational-lab .logic-exploration > small { font-size: .66rem; color: #5c6876; font-weight: 900; letter-spacing: .07em; margin-bottom: 7px; }
+.computational-lab .logic-exploration > strong { font-size: 1.15rem; font-weight: 900; line-height: 1.3; margin-bottom: 7px; }
+.computational-lab .logic-exploration > span:not(.logic-exploration-icon):not(.logic-exploration-action) { font-size: .84rem; line-height: 1.5; color: #607080; }
+.computational-lab .logic-exploration-action { display: flex; align-items: center; gap: 7px; font-size: .81rem; font-weight: 850; margin-top: auto; padding-top: 18px; }
+.computational-lab .logic-exploration.is-complete .logic-exploration-action { color: #2c7858; }
+.computational-lab .logic-guide { display: flex; align-items: center; gap: 22px; padding: 23px; background: #fffdf6; border: 2px solid #fff; border-radius: 25px; box-shadow: 0 4px 0 #e0e9e9; }
+.computational-lab .logic-guide h2 { font-size: 1.15rem; margin-bottom: 7px; }
+.computational-lab .logic-guide p { font-size: .93rem; line-height: 1.75; max-width: 690px; margin-bottom: 9px; }
+.computational-lab .logic-guide .lumi-character { width: 94px; height: 101px; }
+.computational-lab .logic-celebration { display: flex; align-items: center; gap: 18px; margin-top: 27px; padding: 21px 25px; background: linear-gradient(120deg, #fff0bb, #fffdf4); border: 2px solid #fff; border-radius: 24px; box-shadow: 0 4px 0 #e5dcae; }
+.computational-lab .logic-celebration > svg { color: #bf8d24; flex-shrink: 0; }
+.computational-lab .logic-celebration > div { flex: 1; }
+.computational-lab .logic-celebration h2 { font-size: 1.17rem; margin-bottom: 5px; }
+.computational-lab .logic-celebration p { color: #776a45; font-size: .9rem; line-height: 1.6; }
+.computational-lab .logic-workshop { max-width: 890px; margin: 0 auto; padding: 27px 31px 30px; border-radius: 31px; border: 3px solid #fff; background: #fffdf5; box-shadow: 0 6px 0 #d5e3dd, 0 12px 27px #4166700c; }
+.computational-lab .logic-workshop-nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.computational-lab .logic-workshop-nav > span { display: flex; align-items: center; gap: 6px; color: #518674; font-size: .8rem; font-weight: 800; }
+.computational-lab .logic-workshop-nav > .text-btn { font-size: .85rem; min-height: 42px; }
+.computational-lab .logic-question { text-align: center; margin: 7px auto 27px; max-width: 660px; }
+.computational-lab .logic-question .logic-kicker { justify-content: center; font-size: .68rem; }
+.computational-lab .logic-question-mascot { display: flex; justify-content: center; margin-bottom: 8px; }
+.computational-lab .logic-question-mascot .lumi-character { width: 83px; height: 89px; }
+.computational-lab .logic-question h1 { font-size: 2rem; line-height: 1.2; margin: 9px 0 13px; }
+.computational-lab .logic-question p { font-size: 1.03rem; line-height: 1.65; color: #476779; }
+.computational-lab .logic-question .speech-control { margin-top: 10px; }
+.computational-lab .speech-control .text-btn { background: #f1eaff; color: #684792; border-radius: 12px; min-height: 39px; padding: 8px 11px; font-size: .83rem; }
+.computational-lab .speech-caption { font-size: .78rem; color: #73588b; }
+.computational-lab .logic-choices, .computational-lab .logic-pattern-options { border: 0; margin: 0; padding: 0; min-width: 0; }
+.computational-lab .logic-choices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.computational-lab .logic-choice { position: relative; display: flex; align-items: center; gap: 15px; padding: 20px 18px; min-height: 104px; color: #2b515a; background: linear-gradient(#e9faf1, #daf2e5); border: 2px solid #fff; border-radius: 23px; box-shadow: 0 5px 0 #b7d7c5; text-align: left; }
+.computational-lab .logic-choice:nth-of-type(2) { background: linear-gradient(#f6eafe, #e9d5f5); box-shadow: 0 5px 0 #c7afd9; }
+.computational-lab .logic-choice:nth-of-type(3) { background: linear-gradient(#fff2c6, #ffe9ab); box-shadow: 0 5px 0 #e0c98e; }
+.computational-lab .logic-choice:nth-of-type(4) { background: linear-gradient(#e0f5ff, #c9e8f6); box-shadow: 0 5px 0 #a9d0e3; }
+.computational-lab .logic-choice:hover { transform: translateY(-2px); }
+.computational-lab .logic-choice.is-selected, .computational-lab .logic-pattern-choice.is-selected { outline: 3px solid #345c60; outline-offset: 3px; }
+.computational-lab .logic-choice-symbol { font-size: 2.4rem; flex-shrink: 0; }
+.computational-lab .logic-choice strong { font-size: 1rem; line-height: 1.4; font-weight: 850; flex: 1; }
+.computational-lab .logic-choice-check { display: grid; place-items: center; width: 25px; height: 25px; flex-shrink: 0; border: 2px solid #709792; color: #fff; background: #fff6; border-radius: 50%; }
+.computational-lab .logic-choice.is-selected .logic-choice-check { background: #3a7b6e; border-color: #3a7b6e; }
+.computational-lab .logic-sequence { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; list-style: none; padding: 0; margin: 0 0 30px; }
+.computational-lab .logic-sequence li { display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 8px; min-height: 105px; background: #fff; border: 2px solid #e4e9dc; border-radius: 19px; box-shadow: 0 3px 0 #e8e7d2; }
+.computational-lab .logic-sequence li > span { font-size: 2.5rem; line-height: 1; }
+.computational-lab .logic-sequence li > small { font-size: .77rem; color: #6b776a; text-align: center; }
+.computational-lab .logic-sequence .logic-missing { border: 2px dashed #c4abdf; background: #f2e9ff; color: #8762b5; box-shadow: none; }
+.computational-lab .logic-sequence .logic-missing > span { font-weight: 900; }
+.computational-lab .logic-pattern-options { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 15px; max-width: 600px; margin: 0 auto; }
+.computational-lab .logic-pattern-choice { position: relative; display: flex; align-items: center; flex-direction: column; justify-content: center; gap: 9px; min-height: 119px; padding: 15px 10px; background: #e8f7ea; border: 2px solid #fff; border-radius: 23px; color: #386854; box-shadow: 0 5px 0 #bcdbc1; }
+.computational-lab .logic-pattern-choice:nth-child(2n) { background: #e2f2ff; box-shadow: 0 5px 0 #bdd8ed; }
+.computational-lab .logic-pattern-choice > span { font-size: 2.8rem; line-height: 1; }
+.computational-lab .logic-pattern-choice strong { font-size: .92rem; font-weight: 850; }
+.computational-lab .logic-pattern-check { position: absolute; top: 8px; right: 8px; color: #396b5b; }
+.computational-lab .logic-robot-play { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 29px; align-items: start; }
+.computational-lab .logic-board-wrap { min-width: 0; }
+.computational-lab .logic-board { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; padding: 13px; background: linear-gradient(#a9e0c5, #7bc9af); border: 3px solid #d8f4d6; border-radius: 27px; box-shadow: 0 7px 0 #4eaa8b, 0 12px 15px #48836912; }
+.computational-lab .logic-cell { display: grid; place-items: center; aspect-ratio: 1; min-width: 0; background: #e1f7cd; border: 2px solid #f6ffe8; border-radius: 15px; color: #77ac6a; box-shadow: 0 3px 0 #8ec389; }
+.computational-lab .logic-cell.is-rock { color: #7b8e91; background: #c0d6cd; border-color: #d8e3d7; box-shadow: 0 3px 0 #879f97; }
+.computational-lab .logic-cell.is-rock > svg { fill: #9ab0ad; stroke-width: 1.6px; filter: drop-shadow(0 3px 0 #657f7226); }
+.computational-lab .logic-cell.is-goal { background: #fff0a8; border-color: #fff8cf; box-shadow: 0 3px 0 #d4ba72; }
+.computational-lab .logic-cell.is-visited:not(.is-goal) { background: #bde9ff; border-color: #e3f8ff; box-shadow: 0 3px 0 #87bccb; }
+.computational-lab .logic-cell .logic-goal-star { color: #c89822; fill: #ffd64c; filter: drop-shadow(0 3px 0 #cba44638); }
+.computational-lab .logic-cell .logic-robot { color: #356b88; fill: #a7dbf2; stroke-width: 2px; filter: drop-shadow(0 4px 0 #5d96a72e); }
+.computational-lab .logic-cell-dot { width: 7px; height: 7px; background: #a9cd90; border-radius: 50%; opacity: .7; }
+.computational-lab .logic-board-legend { display: flex; justify-content: center; gap: 15px; margin-top: 19px; font-size: .78rem; color: #647e75; }
+.computational-lab .logic-board-legend > span { display: flex; align-items: center; gap: 5px; }
+.computational-lab .logic-board-instruction { font-size: .79rem; line-height: 1.65; text-align: center; margin-top: 12px; padding: 0 6px; }
+.computational-lab .logic-program-panel { min-width: 0; }
+.computational-lab .logic-program-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 2px 0 15px; }
+.computational-lab .logic-program-heading h2 { font-size: 1.1rem; }
+.computational-lab .logic-program-heading > span { color: #718278; font-size: .79rem; }
+.computational-lab .logic-program { display: flex; align-content: flex-start; align-items: flex-start; flex-wrap: wrap; gap: 9px; min-height: 137px; padding: 13px; background: #f0f4ee; border: 2px dashed #b7cdb9; border-radius: 20px; }
+.computational-lab .logic-program > p { align-self: center; padding: 4px; font-size: .88rem; line-height: 1.6; }
+.computational-lab .logic-program > button { position: relative; display: flex; align-items: center; justify-content: center; width: 46px; height: 48px; border: 2px solid #fff; border-radius: 13px; color: #4e4581; background: #e0d5fa; box-shadow: 0 3px 0 #b7a7d6; }
+.computational-lab .logic-program > button > span { font-size: 1.8rem; font-weight: 900; line-height: 1; }
+.computational-lab .logic-program > button > small { position: absolute; top: -6px; left: -5px; display: grid; place-items: center; width: 18px; height: 18px; font-size: .63rem; font-weight: 900; color: #5d6182; background: #fff; border: 1px solid #c9c5de; border-radius: 50%; }
+.computational-lab .logic-program > button.is-selected { color: #fff; background: #7f62c5; outline: 2px solid #533993; outline-offset: 2px; }
+.computational-lab .logic-directions { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 9px; margin-top: 21px; }
+.computational-lab .logic-directions > button { display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 3px; padding: 11px 4px; min-height: 81px; background: linear-gradient(#d7f0ff, #b2ddf5); color: #37647f; border: 2px solid #fff; border-radius: 17px; box-shadow: 0 4px 0 #91bdd4; }
+.computational-lab .logic-directions > button > span { font-size: 2rem; line-height: 1; font-weight: 900; }
+.computational-lab .logic-directions > button > small { font-size: .69rem; font-weight: 800; white-space: nowrap; }
+.computational-lab .logic-directions > button.is-selected { background: #c7b2ed; color: #48326c; outline: 3px solid #6a5095; outline-offset: 2px; box-shadow: 0 4px 0 #9c83bc; }
+.computational-lab .logic-program-help { font-size: .77rem; line-height: 1.6; margin-top: 15px; }
+.computational-lab .logic-reset, .computational-lab .logic-watch { font-size: .82rem; min-height: 43px; margin-top: 8px; }
+.computational-lab .logic-repair-label { font-size: .88rem; font-weight: 750; line-height: 1.55; margin-top: 16px; }
+.computational-lab .logic-running { display: flex; align-items: center; gap: 7px; color: #377a73; font-size: .84rem; line-height: 1.5; margin-top: 15px; }
+.computational-lab .logic-controls { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding-top: 24px; border-top: 1px solid #e2e5d9; margin-top: 33px; }
+.computational-lab .logic-hint-button { display: flex; align-items: center; gap: 8px; font-size: .89rem; font-weight: 850; color: #926d22; background: #fff3ce; border: 2px solid #f4e2a9; border-radius: 15px; min-height: 46px; padding: 10px 13px; }
+.computational-lab .logic-check, .computational-lab .logic-next { display: flex; align-items: center; justify-content: center; gap: 9px; min-height: 50px; padding: 12px 18px; border: 2px solid #a38adc; border-radius: 16px; background: linear-gradient(#9272e3, #7252c5); color: #fff; font-size: .92rem; font-weight: 900; box-shadow: 0 5px 0 #543b98; }
+.computational-lab .logic-check:hover:not(:disabled), .computational-lab .logic-next:hover { transform: translateY(-2px); }
+.computational-lab .logic-hint { display: flex; align-items: center; gap: 16px; margin-top: 21px; padding: 18px; border: 2px solid #eddda4; border-radius: 22px; background: #fff4cf; }
+.computational-lab .logic-hint p { color: #74602f; font-size: .93rem; line-height: 1.7; margin-bottom: 8px; }
+.computational-lab .logic-feedback { margin-top: 25px; padding: 22px; border: 2px solid #cae0b0; border-radius: 24px; background: #e9f6d7; }
+.computational-lab .logic-feedback > div { display: flex; align-items: flex-start; gap: 13px; }
+.computational-lab .logic-feedback > div > svg { color: #609b3f; flex-shrink: 0; margin-top: 2px; }
+.computational-lab .logic-feedback strong { font-size: 1.05rem; color: #3d6d36; font-weight: 900; }
+.computational-lab .logic-feedback p { font-size: .94rem; line-height: 1.7; color: #557548; margin-top: 8px; }
+.computational-lab .logic-feedback .logic-concept { font-weight: 750; color: #356f48; }
+.computational-lab .logic-feedback .speech-control { margin: 13px 0 0 39px; }
+.computational-lab .logic-feedback .logic-next { margin: 18px 0 0 auto; }
+.computational-lab .logic-feedback.retry { background: #fff1c9; border-color: #e7d096; }
+.computational-lab .logic-feedback.retry strong, .computational-lab .logic-feedback.retry > div > svg { color: #906c21; }
+.computational-lab .logic-feedback.retry p { color: #806837; }
+.computational-lab .logic-save-notice { border: 1px solid #e4c975; border-radius: 14px; padding: 13px; color: #7c6328; background: #fff2c2; font-size: .87rem; line-height: 1.6; margin-top: 18px; }
+.computational-lab .logic-footer { display: flex; align-items: center; justify-content: center; gap: 7px; margin: 27px 0 0; color: #6c897e; font-size: .81rem; line-height: 1.5; text-align: center; }
+
+@media (max-width: 1100px) {
+  .computational-lab .logic-explorations { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .computational-lab .logic-exploration { min-height: 227px; }
+  .computational-lab .logic-hero { padding: 30px; }
+  .computational-lab .logic-hero > div { max-width: 72%; }
+  .computational-lab .logic-robot-play { gap: 20px; }
+}
+@media (max-width: 680px) {
+  .computational-lab { padding-bottom: 80px; }
+  .computational-lab .logic-topbar { gap: 8px; margin-bottom: 18px; }
+  .computational-lab .logic-back { padding: 10px; font-size: .8rem; gap: 5px; }
+  .computational-lab .logic-count { padding: 10px 12px; gap: 5px; font-size: .88rem; }
+  .computational-lab .logic-free { font-size: .75rem; gap: 4px; }
+  .computational-lab .logic-free > svg { width: 12px; }
+  .computational-lab .logic-hero { padding: 27px 22px; min-height: 330px; border-radius: 27px; background-size: auto, auto 115%; background-position: center, 72% center; }
+  .computational-lab .logic-hero > div { max-width: 91%; }
+  .computational-lab .logic-kicker { font-size: .65rem; letter-spacing: .025em; }
+  .computational-lab .logic-hero h1 { font-size: 2.3rem; }
+  .computational-lab .logic-hero p { font-size: .94rem; max-width: 280px; background: #d2faf272; border-radius: 12px; }
+  .computational-lab .logic-hero-note { font-size: .79rem; }
+  .computational-lab .logic-explorations { gap: 18px 13px; margin: 24px 0; }
+  .computational-lab .logic-exploration { padding: 19px 14px 16px; min-height: 245px; border-radius: 23px; }
+  .computational-lab .logic-exploration-icon { width: 55px; height: 55px; margin-bottom: 17px; border-radius: 18px; }
+  .computational-lab .logic-exploration > small { font-size: .61rem; letter-spacing: .03em; }
+  .computational-lab .logic-exploration > strong { font-size: 1.04rem; }
+  .computational-lab .logic-exploration > span:not(.logic-exploration-icon):not(.logic-exploration-action) { font-size: .82rem; }
+  .computational-lab .logic-exploration-action { font-size: .77rem; gap: 5px; flex-wrap: wrap; padding-top: 15px; }
+  .computational-lab .logic-guide { gap: 12px; padding: 18px 15px; align-items: flex-start; }
+  .computational-lab .logic-guide .lumi-character { width: 65px; height: 73px; }
+  .computational-lab .logic-guide h2 { font-size: 1.05rem; }
+  .computational-lab .logic-guide p { font-size: .87rem; }
+  .computational-lab .logic-celebration { padding: 19px 16px; gap: 12px; }
+  .computational-lab .logic-celebration .lumi-character { display: none; }
+  .computational-lab .logic-celebration h2 { font-size: 1.09rem; }
+  .computational-lab .logic-workshop { padding: 18px 17px 23px; border-radius: 27px; }
+  .computational-lab .logic-workshop-nav { gap: 7px; flex-wrap: wrap; }
+  .computational-lab .logic-workshop-nav > span { font-size: .76rem; }
+  .computational-lab .logic-workshop-nav > .text-btn { font-size: .8rem; }
+  .computational-lab .logic-question { margin-top: 10px; margin-bottom: 23px; }
+  .computational-lab .logic-question h1 { font-size: 1.65rem; }
+  .computational-lab .logic-question p { font-size: .96rem; }
+  .computational-lab .logic-choices { grid-template-columns: 1fr; gap: 15px; }
+  .computational-lab .logic-choice { min-height: 85px; padding: 16px 15px; gap: 13px; border-radius: 21px; }
+  .computational-lab .logic-choice strong { font-size: .99rem; }
+  .computational-lab .logic-choice-symbol { font-size: 2rem; }
+  .computational-lab .logic-sequence { gap: 5px; margin-bottom: 24px; }
+  .computational-lab .logic-sequence li { min-height: 77px; border-radius: 13px; padding: 6px 1px; gap: 7px; }
+  .computational-lab .logic-sequence li > span { font-size: 1.65rem; }
+  .computational-lab .logic-sequence li > small { font-size: .66rem; line-height: 1.3; }
+  .computational-lab .logic-pattern-options { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 15px; }
+  .computational-lab .logic-pattern-choice { min-height: 111px; border-radius: 20px; }
+  .computational-lab .logic-robot-play { grid-template-columns: 1fr; gap: 23px; }
+  .computational-lab .logic-board-wrap { width: min(100%, 360px); margin: 0 auto; }
+  .computational-lab .logic-board { border-radius: 24px; padding: 11px; gap: 7px; }
+  .computational-lab .logic-cell { border-radius: 13px; }
+  .computational-lab .logic-board-legend { font-size: .76rem; }
+  .computational-lab .logic-program-heading h2 { font-size: 1.04rem; }
+  .computational-lab .logic-program { min-height: 130px; }
+  .computational-lab .logic-directions { gap: 10px; }
+  .computational-lab .logic-directions > button > small { font-size: .72rem; }
+  .computational-lab .logic-controls { gap: 17px; flex-direction: column-reverse; align-items: stretch; margin-top: 27px; }
+  .computational-lab .logic-hint-button { justify-content: center; font-size: .86rem; }
+  .computational-lab .logic-check { font-size: .9rem; }
+  .computational-lab .logic-hint { padding: 15px 12px; align-items: flex-start; gap: 10px; }
+  .computational-lab .logic-hint .lumi-character { width: 43px; height: 49px; }
+  .computational-lab .logic-hint p { font-size: .9rem; }
+  .computational-lab .logic-feedback { padding: 18px 15px; border-radius: 21px; }
+  .computational-lab .logic-feedback > div { gap: 10px; }
+  .computational-lab .logic-feedback strong { font-size: 1rem; }
+  .computational-lab .logic-feedback p { font-size: .89rem; }
+  .computational-lab .logic-feedback .speech-control { margin-left: 0; }
+  .computational-lab .logic-feedback .logic-next { width: 100%; font-size: .87rem; }
+  .computational-lab .logic-footer { font-size: .77rem; padding: 0 5px; }
+}
+@media (max-width: 370px) {
+  .computational-lab .logic-topbar { flex-wrap: wrap; }
+  .computational-lab .logic-free { flex: 1; }
+  .computational-lab .logic-hero { padding: 23px 18px; }
+  .computational-lab .logic-hero h1 { font-size: 2.03rem; }
+  .computational-lab .logic-exploration { padding: 17px 12px; }
+  .computational-lab .logic-exploration > strong { font-size: .98rem; }
+  .computational-lab .logic-workshop { padding-left: 12px; padding-right: 12px; }
+  .computational-lab .logic-sequence { gap: 4px; }
+  .computational-lab .logic-sequence li > span { font-size: 1.4rem; }
+  .computational-lab .logic-directions { gap: 6px; }
+  .computational-lab .logic-directions > button > small { font-size: .65rem; }
+}
+.high-contrast .computational-lab { --logic-ink: #142231; --logic-muted: #354952; }
+.high-contrast .computational-lab .logic-guide, .high-contrast .computational-lab .logic-workshop,
+.high-contrast .computational-lab .logic-exploration { border-color: #193c50; }
+.high-contrast .computational-lab .logic-exploration > small,
+.high-contrast .computational-lab .logic-exploration > span:not(.logic-exploration-icon):not(.logic-exploration-action),
+.high-contrast .computational-lab .logic-board-instruction,
+.high-contrast .computational-lab .logic-program-help,
+.high-contrast .computational-lab .logic-footer { color: #253e4c; }
+@media (prefers-reduced-motion: reduce) {
+  .computational-lab .logic-exploration, .computational-lab .logic-progress > span { transition: none; }
+}
+.reduce-motion .computational-lab .logic-exploration, .reduce-motion .computational-lab .logic-progress > span { transition: none; }
+
+
+/* Keep the fullscreen action available at every activity size. */
+.computational-lab .logic-topbar { flex-wrap: wrap; }
+.computational-lab .logic-free { margin-right: auto; }
+.computational-lab .logic-fullscreen-button { flex-shrink: 0; }
+.computational-lab .logic-support { min-width: 0; }
+
+/* The expanded workshop trades decorative space for the challenge itself.
+   Its rows retain their natural height, so larger text can still scroll safely. */
+.activity-fullscreen.computational-lab {
+  max-width: none;
+  margin: 0;
+  padding: 12px clamp(12px, 2vw, 28px);
+  background: linear-gradient(135deg, #e6faf3, #eef7ff);
+}
+.activity-fullscreen.computational-lab .logic-topbar { margin-bottom: 8px; gap: 8px 14px; }
+.activity-fullscreen.computational-lab .logic-back { min-height: 44px; padding: 7px 12px; }
+.activity-fullscreen.computational-lab .logic-count { min-height: 44px; padding: 7px 12px; }
+.activity-fullscreen.computational-lab .logic-progress { height: 7px; margin-bottom: 10px; }
+.activity-fullscreen.computational-lab .logic-workshop {
+  display: grid;
+  grid-template-areas: 'question' 'activity' 'controls' 'support';
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 10px;
+  width: 100%;
+  max-width: 1120px;
+  padding: 12px 16px;
+  border-radius: 23px;
+}
+.activity-fullscreen.computational-lab .logic-topbar-nav { gap: 12px; }
+.activity-fullscreen.computational-lab .logic-workshop-nav > .text-btn { min-height: 36px; }
+.activity-fullscreen.computational-lab .logic-question {
+  grid-area: question;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  text-align: left;
+}
+.activity-fullscreen.computational-lab .logic-question-mascot,
+.activity-fullscreen.computational-lab .logic-question > .logic-kicker { display: none; }
+.activity-fullscreen.computational-lab .logic-question h1 { font-size: 1.5rem; line-height: 1.2; margin: 0 0 5px; }
+.activity-fullscreen.computational-lab .logic-question p { line-height: 1.4; }
+.activity-fullscreen.computational-lab .logic-question .speech-control { margin: 4px 0 0; }
+.activity-fullscreen.computational-lab .logic-choices,
+.activity-fullscreen.computational-lab .logic-pattern,
+.activity-fullscreen.computational-lab .logic-robot-play { grid-area: activity; }
+.activity-fullscreen.computational-lab .logic-controls {
+  grid-area: controls;
+  gap: 10px;
+  margin: 0;
+  padding-top: 10px;
+}
+.activity-fullscreen.computational-lab .logic-check,
+.activity-fullscreen.computational-lab .logic-next,
+.activity-fullscreen.computational-lab .logic-hint-button { min-height: 44px; padding: 8px 12px; }
+.activity-fullscreen.computational-lab .logic-support {
+  grid-area: support;
+  display: grid;
+  align-content: start;
+  gap: 10px;
+}
+.activity-fullscreen.computational-lab .logic-hint,
+.activity-fullscreen.computational-lab .logic-feedback { margin: 0; padding: 12px; border-radius: 17px; }
+.activity-fullscreen.computational-lab .logic-hint > .lumi-character { display: none; }
+.activity-fullscreen.computational-lab .logic-hint p,
+.activity-fullscreen.computational-lab .logic-feedback p { margin: 5px 0 0; line-height: 1.4; }
+.activity-fullscreen.computational-lab .logic-hint p { margin: 0 0 6px; }
+.activity-fullscreen.computational-lab .logic-feedback > div { gap: 8px; }
+.activity-fullscreen.computational-lab .logic-feedback .speech-control { margin: 8px 0 0; }
+.activity-fullscreen.computational-lab .logic-feedback .logic-next { margin: 8px 0 0; width: 100%; }
+.activity-fullscreen.computational-lab .logic-footer { margin: 10px 0 0; }
+.activity-fullscreen.computational-lab .logic-save-notice { margin-top: 10px; padding: 8px 12px; }
+
+@media (min-width: 681px) {
+  .activity-fullscreen.computational-lab .logic-question {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 4px 12px;
+    align-items: center;
+  }
+  .activity-fullscreen.computational-lab .logic-question h1 { margin: 0; }
+  .activity-fullscreen.computational-lab .logic-question > p { grid-column: 1 / -1; grid-row: 2; }
+  .activity-fullscreen.computational-lab .logic-question > .speech-control { grid-column: 2; grid-row: 1; margin: 0; }
+  .activity-fullscreen.computational-lab .logic-robot-play {
+    grid-template-columns: minmax(200px, min(31dvh, 320px)) minmax(0, 1fr);
+    gap: 18px;
+    width: 100%;
+  }
+  .activity-fullscreen.computational-lab .logic-board-wrap { width: 100%; margin: 0; }
+  .activity-fullscreen.computational-lab .logic-board { padding: 8px; gap: 6px; border-radius: 20px; }
+  .activity-fullscreen.computational-lab .logic-cell { border-radius: 10px; }
+  .activity-fullscreen.computational-lab .logic-cell > svg { max-width: 80%; max-height: 80%; }
+  .activity-fullscreen.computational-lab .logic-board-legend { flex-wrap: wrap; gap: 5px 9px; margin-top: 12px; }
+  .activity-fullscreen.computational-lab .logic-board-instruction { line-height: 1.4; padding: 0; margin-top: 6px; }
+  .activity-fullscreen.computational-lab .logic-program-heading { margin: 0 0 8px; flex-wrap: wrap; }
+  .activity-fullscreen.computational-lab .logic-program { min-height: 70px; padding: 10px; gap: 7px; border-radius: 16px; }
+  .activity-fullscreen.computational-lab .logic-program > p { padding: 0; line-height: 1.4; }
+  .activity-fullscreen.computational-lab .logic-directions { gap: 8px; margin-top: 10px; }
+  .activity-fullscreen.computational-lab .logic-directions > button { min-height: 65px; padding: 6px 4px; }
+  .activity-fullscreen.computational-lab .logic-directions > button > small { white-space: normal; }
+  .activity-fullscreen.computational-lab .logic-program-help,
+  .activity-fullscreen.computational-lab .logic-repair-label,
+  .activity-fullscreen.computational-lab .logic-running { margin-top: 8px; line-height: 1.4; }
+  .activity-fullscreen.computational-lab .logic-reset,
+  .activity-fullscreen.computational-lab .logic-watch { min-height: 36px; margin-top: 5px; }
+  .activity-fullscreen.computational-lab .logic-choices { gap: 12px; }
+  .activity-fullscreen.computational-lab .logic-choice { min-height: 84px; padding: 12px; gap: 10px; }
+  .activity-fullscreen.computational-lab .logic-sequence { gap: 8px; margin-bottom: 14px; }
+  .activity-fullscreen.computational-lab .logic-sequence li { min-height: 85px; gap: 5px; padding: 7px 2px; }
+  .activity-fullscreen.computational-lab .logic-pattern-options { max-width: 600px; gap: 12px; }
+  .activity-fullscreen.computational-lab .logic-pattern-choice { min-height: 95px; padding: 10px; gap: 5px; }
+}
+
+@media (min-width: 1150px) {
+  .activity-fullscreen.computational-lab .logic-workshop.has-support {
+    grid-template-columns: minmax(0, 1fr) minmax(17rem, .46fr);
+    grid-template-areas: 'question support' 'activity support' 'controls support';
+    column-gap: 16px;
+  }
+}
+
+@media (max-width: 680px) {
+  .computational-lab .logic-free { flex: 1; }
+  .computational-lab .logic-fullscreen-button { order: 4; margin-left: auto; }
+  .activity-fullscreen.computational-lab .logic-workshop { padding: 12px; }
+  .activity-fullscreen.computational-lab .logic-question h1 { font-size: 1.4rem; }
+  .activity-fullscreen.computational-lab .logic-controls { flex-direction: row; flex-wrap: wrap; }
+  .activity-fullscreen.computational-lab .logic-controls > button { flex: 1 1 13rem; }
+  .activity-fullscreen.computational-lab .logic-board-wrap { max-width: min(100%, 300px); }
+}
+
+.computational-lab .logic-topbar-nav { flex-wrap: wrap; }
+@media (min-width: 681px) {
+  .activity-fullscreen.computational-lab .logic-topbar-nav { flex-wrap: nowrap; }
+}
+
+/* Short desktop screens keep room for both a hint and the full result.
+   Only spacing changes here; the learner's text-size setting is retained. */
+@media (min-width: 1150px) and (max-height: 800px) {
+  .activity-fullscreen.computational-lab { padding-top: 8px; padding-bottom: 8px; }
+  .activity-fullscreen.computational-lab .logic-workshop { padding: 10px 14px; row-gap: 8px; }
+  .activity-fullscreen.computational-lab .logic-support { gap: 8px; }
+  .activity-fullscreen.computational-lab .logic-hint,
+  .activity-fullscreen.computational-lab .logic-feedback { padding: 10px; }
+  .activity-fullscreen.computational-lab .logic-footer { margin-top: 6px; }
+}
+
+/* Fullscreen adds breathing room around a bounded learning workspace. */
+.activity-fullscreen.computational-lab .logic-topbar,
+.activity-fullscreen.computational-lab .logic-progress {
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+}
+.activity-fullscreen.computational-lab .logic-workshop {
+  padding: 20px 24px;
+  gap: 16px;
+  margin-top: clamp(8px, 2dvh, 24px);
+}
+.activity-fullscreen.computational-lab .logic-question > .speech-control {
+  max-width: 18rem;
+  min-width: 0;
+}
+.activity-fullscreen.computational-lab .logic-question .speech-caption {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.activity-fullscreen.computational-lab .logic-choices,
+.activity-fullscreen.computational-lab .logic-pattern {
+  width: 100%;
+  max-width: 760px;
+  justify-self: center;
+}
+.activity-fullscreen.computational-lab .logic-choices { gap: 16px; }
+.activity-fullscreen.computational-lab .logic-choice {
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  min-width: 0;
+  min-height: 142px;
+  padding: 18px 34px;
+  text-align: center;
+  border-radius: 22px;
+}
+.activity-fullscreen.computational-lab .logic-choice-symbol {
+  font-size: 2.3rem;
+  line-height: 1.15;
+}
+.activity-fullscreen.computational-lab .logic-choice strong {
+  flex: none;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.activity-fullscreen.computational-lab .logic-choice-check {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+.activity-fullscreen.computational-lab .logic-pattern-options { width: 100%; }
+.activity-fullscreen.computational-lab .logic-controls {
+  width: 100%;
+  max-width: 760px;
+  justify-self: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.activity-fullscreen.computational-lab .logic-controls > button {
+  flex: 0 1 auto;
+  max-width: 100%;
+}
+.activity-fullscreen.computational-lab .logic-feedback .logic-next {
+  width: fit-content;
+  max-width: 100%;
+  margin: 12px 0 0 auto;
+}
+.activity-fullscreen.computational-lab .logic-robot-play {
+  max-width: 920px;
+  justify-self: center;
+}
+.activity-fullscreen.computational-lab .logic-directions {
+  width: 100%;
+  max-width: 368px;
+}
+.activity-fullscreen.computational-lab .logic-program-panel { max-width: 540px; }
+.activity-fullscreen.computational-lab .logic-workshop:is([data-activity="algorithm"], [data-activity="debug"]) .logic-controls {
+  max-width: 920px;
+}
+@media (min-width: 681px) {
+  .activity-fullscreen.computational-lab .logic-question {
+    grid-template-columns: minmax(0, 1fr) fit-content(18rem);
+  }
+  .activity-fullscreen.computational-lab .logic-robot-play {
+    grid-template-columns: minmax(200px, min(31dvh, 320px)) minmax(0, 540px);
+    justify-content: center;
+  }
+}
+@media (max-width: 680px) {
+  .activity-fullscreen.computational-lab .logic-workshop { padding: 16px; }
+  .activity-fullscreen.computational-lab .logic-choices {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .activity-fullscreen.computational-lab .logic-choice { padding: 16px 24px; min-height: 132px; }
+  .activity-fullscreen.computational-lab .logic-choice-check { width: 21px; height: 21px; top: 8px; right: 8px; }
+}
+@media (max-width: 440px) {
+  .activity-fullscreen.computational-lab .logic-choices { grid-template-columns: 1fr; }
+  .activity-fullscreen.computational-lab .logic-choice {
+    flex-direction: row;
+    min-height: 90px;
+    padding: 14px 38px 14px 16px;
+    text-align: left;
+  }
+  .activity-fullscreen.computational-lab .logic-choice strong { flex: 1; }
+  .activity-fullscreen.computational-lab .logic-choice-check { top: calc(50% - 10px); }
+  .activity-fullscreen.computational-lab .logic-controls > button { flex: 1 1 11rem; }
+}
+@media (min-width: 681px) and (max-height: 800px) {
+  .activity-fullscreen.computational-lab .logic-workshop { padding: 12px 16px; gap: 10px; margin-top: 0; }
+  .activity-fullscreen.computational-lab .logic-choices { gap: 12px; }
+  .activity-fullscreen.computational-lab .logic-choice { min-height: 116px; padding: 12px 32px; gap: 6px; }
+  .activity-fullscreen.computational-lab .logic-choice-symbol { font-size: 1.9rem; }
+}
