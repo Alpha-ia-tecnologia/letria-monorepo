@@ -71,6 +71,10 @@ class ServerTests(unittest.TestCase):
         if outgoing.get("Authorization") is None:
             del outgoing["Authorization"]
         payload = raw if raw is not None else json.dumps(body if body is not None else {"input": "Olá, sou a Lumi!"})
+        # Browser preflight and ordinary GET have no body. An unread dummy body
+        # can make Windows reset the socket as the rejecting handler closes it.
+        if method in ("GET", "OPTIONS") and raw is None and body is None:
+            payload = None
         connection.request(method, path, payload, outgoing)
         response = connection.getresponse()
         result = response.status, dict(response.getheaders()), response.read()

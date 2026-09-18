@@ -50,10 +50,20 @@ jobs:
         run: npm run test:unit
       - name: Test API with an in-memory database and mocked providers
         run: npm run test:api
+      - name: Test local OpenAI launcher without private credentials
+        run: node --test apps/plataforma/tests/local-server-start.test.mjs
+      - name: Test voice preparation CLI with a local mock service
+        run: node --test apps/plataforma/tests/prepare-speech-cli.test.mjs
+      - name: Test proxy identity and database connection lifecycle
+        run: node --test apps/plataforma/tests/node-client-ip.test.mjs apps/plataforma/tests/node-rate-limit.test.mjs apps/plataforma/tests/database-lifecycle.test.mjs
       - name: Test migration planning without a database connection
         run: npm run test:migration
-      - name: Build application
+      - name: Build Worker application
         run: npm run build
+      - name: Build Node application for Easypanel
+        run: npm run build:node
+      - name: Smoke test the Node production server behind HTTPS proxy
+        run: npm run test:node
 
   voice-contracts:
     name: Voice contracts (${{ matrix.service }})

@@ -1,3 +1,4 @@
+import { env } from "cloudflare:workers";
 import { database, type Database } from "./database";
 import { activities as catalog } from "@/lib/content";
 import { getCatalogActivity } from "@/lib/activity-catalog";
@@ -13,7 +14,11 @@ export const defaults = { sound: true, reducedMotion: false, fontScale: 1 };
 const privileged = (auth: Auth) => auth.role === "teacher" || auth.role === "admin";
 export function requireRole(auth: Auth, roles: Role[]): void { if (!roles.includes(auth.role)) throw new ApiError(403, "Seu perfil não tem permissão para esta ação.", "FORBIDDEN"); }
 export async function rateLimit(request: Request, operation: string, identifier = "", limit = 20): Promise<void> {
-  const key = await digest(operation + ":" + (request.headers.get("CF-Connecting-IP") || "local") + ":" + identifier);
+  // Node only uses the header injected from the socket/trusted proxy by start-node.
+  // Worker requests retain Cloudflare's own verified connecting IP binding.
+  const ipHeader = (env as unknown as { LETRIA_RUNTIME?: string }).LETRIA_RUNTIME === "node"
+    ? "x-letria-client-ip" : "CF-Connecting-IP";
+  const key = await digest(operation + ":" + (request.headers.get(ipHeader) || "local") + ":" + identifier);
   const time = Date.now(); const reset = time + 15 * 60 * 1000;
   await db().prepare("INSERT INTO rate_limits (key,count,reset_at) VALUES (?,1,?) ON CONFLICT(key) DO UPDATE SET count=CASE WHEN rate_limits.reset_at<? THEN 1 ELSE rate_limits.count+1 END, reset_at=CASE WHEN rate_limits.reset_at<? THEN ? ELSE rate_limits.reset_at END").bind(key, reset, time, time, reset).run();
   const row = await db().prepare("SELECT count FROM rate_limits WHERE key=?").bind(key).first();

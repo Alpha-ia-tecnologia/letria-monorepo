@@ -1,0 +1,9 @@
+# Explicit build allowlist: never send models, references or secrets to Docker.
+**
+!Dockerfile
+!requirements.txt
+!server.py
+!synthesis.py
+!audio_store.py
+!preparation.py
+!healthcheck.py

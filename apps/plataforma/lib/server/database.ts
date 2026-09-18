@@ -5,11 +5,12 @@ import { createPostgresDatabase, databaseError, databaseTypes, type Database } f
 import { errorResponse } from './security';
 
 export type { Database, Statement } from './postgres-database';
-interface DatabaseEnvironment { DATABASE_URL?: string; DATABASE_SCHEMA?: string; DATABASE_DRIVER?: string; DB?: Database }
+interface DatabaseEnvironment { DATABASE_URL?: string; DATABASE_SCHEMA?: string; DATABASE_DRIVER?: string; LETRIA_RUNTIME?: string; DB?: Database }
 interface RequestDatabase { database?: Database; pool?: Pool; failed?: boolean }
 const requests = new AsyncLocalStorage<RequestDatabase>();
+let nodePool: Pool | undefined;
 
-/** No sockets are shared between Workers requests. Connections open lazily. */
+/** Node shares a bounded process pool; Workers own their request pools. Connections open lazily. */
 export function database(): Database {
   const context = requests.getStore();
   if (!context || context.failed) throw databaseError();
@@ -29,9 +30,11 @@ export function database(): Database {
     const url = new URL(settings.DATABASE_URL.trim());
     if (!['postgres:', 'postgresql:'].includes(url.protocol) || !url.hostname || url.pathname.length < 2) throw databaseError();
     url.searchParams.delete('options');
+    const isNode = settings.LETRIA_RUNTIME === 'node';
+    if (isNode && nodePool) return context.database = createPostgresDatabase(nodePool);
     const pool = new Pool({
       connectionString: url.href,
-      max: 4,
+      max: isNode ? 10 : 4,
       connectionTimeoutMillis: 8000,
       idleTimeoutMillis: 10000,
       query_timeout: 15000,
@@ -41,13 +44,19 @@ export function database(): Database {
       options: '-c search_path=' + schema + ',pg_catalog -c timezone=UTC',
       types: databaseTypes,
     });
-    pool.on('error', () => { context.failed = true; });
-    context.pool = pool;
+    if (isNode) {
+      // pg removes failed idle connections. Do not retain or fail a past request.
+      pool.on('error', () => { console.warn('[Letria] PostgreSQL idle connection closed.'); });
+      nodePool = pool;
+    } else {
+      pool.on('error', () => { context.failed = true; });
+      context.pool = pool;
+    }
     return context.database = createPostgresDatabase(pool);
   } catch (error) { throw databaseError(error); }
 }
 
-/** Wrap a route, preserving its error handling and closing every request pool. */
+/** Preserve route error handling and close only request-owned Worker pools. */
 export function withDatabase<Args extends unknown[]>(handler: (request: Request, ...args: Args) => Promise<Response>) {
   return async (request: Request, ...args: Args): Promise<Response> => {
     const context: RequestDatabase = {};

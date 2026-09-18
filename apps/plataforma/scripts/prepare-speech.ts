@@ -2,6 +2,7 @@ import { readFile } from 'node:fs/promises';
 import { parseEnv } from 'node:util';
 import { activityCatalog } from '../lib/activity-catalog';
 import { activitySpeech, commonSpeech, uniqueSpeech, type PreparedSpeech } from '../lib/speech-content';
+import { voiceServiceUrl } from '../lib/server/voice-url';
 
 const args = process.argv.slice(2);
 const activityId = args.find(value => value.startsWith('--activity='))?.slice('--activity='.length);
@@ -18,10 +19,15 @@ for (const item of items) {
   else last.push(item);
 }
 try {
-  const configuration = parseEnv(await readFile(new URL('../.env.qwen.local', import.meta.url), 'utf8'));
-  const base = new URL(configuration.QWEN_TTS_URL || 'http://127.0.0.1:8766');
-  if (!['127.0.0.1', 'localhost'].includes(base.hostname) || base.protocol !== 'http:' || base.username || base.password || base.search || base.hash) throw new Error();
-  const headers = { Authorization: 'Bearer ' + configuration.QWEN_TTS_API_TOKEN, 'Content-Type': 'application/json' };
+  let localConfiguration: ReturnType<typeof parseEnv> = {};
+  try { localConfiguration = parseEnv(await readFile(new URL('../.env.qwen.local', import.meta.url), 'utf8')); }
+  catch (error) { if (!(error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT')) throw error; }
+  // Easypanel supplies environment variables; the optional file remains a local fallback.
+  const configuration = { ...localConfiguration, ...process.env };
+  const token = configuration.QWEN_TTS_API_TOKEN?.trim();
+  if (!token || token.length < 32 || /\s/.test(token)) throw new Error();
+  const base = voiceServiceUrl(configuration.QWEN_TTS_URL || 'http://127.0.0.1:8766', configuration.QWEN_TTS_ALLOW_HTTP_ORIGIN);
+  const headers = { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' };
   let completed = 0, failed = 0;
   for (const batch of batches) {
     const response = await fetch(base.href.replace(/\/+$/, '') + '/v1/audio/prepare', {
@@ -34,7 +40,7 @@ try {
     let previous = '';
     // The service journal resumes queued educational content after a restart.
     while (true) {
-      const statusResponse = await fetch(base.href.replace(/\/+$/, '') + '/v1/audio/prepare/' + job.job_id, { headers, signal: AbortSignal.timeout(10000) });
+      const statusResponse = await fetch(base.href.replace(/\/+$/, '') + '/v1/audio/prepare/' + job.job_id, { headers, signal: AbortSignal.timeout(10000), redirect: 'manual' });
       if (!statusResponse.ok) throw new Error();
       const status = await statusResponse.json() as { completed: number; failed: number; remaining: number };
       const progress = `${completed + status.completed}/${items.length}`;
@@ -44,4 +50,4 @@ try {
     }
   }
   if (failed) { console.error('Falas não concluídas: ' + failed + '. Repita o comando para tentar novamente.'); process.exitCode = 1; }
-} catch { console.error('Não foi possível acompanhar a preparação. Verifique o serviço Qwen local e repita o comando; os áudios concluídos serão reaproveitados.'); process.exitCode = 1; }
+} catch { console.error('Não foi possível acompanhar a preparação. Verifique a configuração e o serviço de voz e repita o comando; os áudios concluídos serão reaproveitados.'); process.exitCode = 1; }

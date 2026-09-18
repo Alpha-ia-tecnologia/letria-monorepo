@@ -1,0 +1,22 @@
+# Only the Node workspace belongs in the platform image.
+**
+!Dockerfile
+!package.json
+!package-lock.json
+!apps/
+!apps/plataforma/
+!apps/plataforma/**
+**/node_modules
+**/dist
+**/.next
+**/.vinext
+**/.wrangler
+**/.env*
+**/.dev.vars*
+**/*.pem
+**/*.tsbuildinfo
+**/work
+**/outputs
+**/coverage
+**/tests
+**/.git

@@ -1,5 +1,6 @@
 import vinext from "vinext";
 import { defineConfig } from "vite";
+import { fileURLToPath } from "node:url";
 import hostingConfig from "./.openai/hosting.json";
 import { sites } from "./build/sites-vite-plugin";
 
@@ -22,6 +23,11 @@ const localBindingConfig = {
 };
 
 export default defineConfig(async () => {
+  // Easypanel builds a standard Node server; the existing Worker target stays available.
+  if (process.env.LETRIA_RUNTIME === "node") return {
+    resolve: { alias: [{ find: /^cloudflare:workers$/, replacement: fileURLToPath(new URL("./lib/server/node-env.ts", import.meta.url)) }] },
+    plugins: [vinext(), sites()],
+  };
   // Keep Wrangler and Miniflare state project-local. These are non-secret tool
   // settings; application environment belongs in ignored `.env*` files.
   process.env.WRANGLER_WRITE_LOGS ??= "false";

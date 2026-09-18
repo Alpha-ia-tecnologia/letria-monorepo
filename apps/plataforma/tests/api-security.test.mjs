@@ -1722,3 +1722,34 @@ test('Qwen streaming strips private provider fields and waits for complete valid
   assert.deepEqual(JSON.parse(new TextDecoder().decode((await reader.read()).value)), { type: 'error', code: 'SPEECH_INVALID' });
   assert.equal((await reader.read()).done, true);
 });
+
+
+test('Easypanel private Qwen origin serves speech and queues prepared content only after exact opt-in', async t => {
+  const origin = 'http://projeto_voice:8766';
+  configureQwen(t, { QWEN_TTS_URL: origin, QWEN_TTS_ALLOW_HTTP_ORIGIN: origin, QWEN_TTS_API_TOKEN: preparedTestToken });
+  const session = await start(), requests = [];
+  t.mock.method(globalThis, 'fetch', async (url, options) => {
+    requests.push({ url, options });
+    if (url.endsWith('/v1/audio/prepare')) return Response.json({ status: 'queued' }, { status: 202 });
+    if (url.endsWith('/health')) return Response.json({ status: 'ready', model: 'qwen3-tts', voice: 'lumi' });
+    return kokoroAudio();
+  });
+  const { queuePreparedSpeech } = await import('../lib/server/prepared-speech.ts');
+  const items = [{ input: 'Conteudo educacional aprovado.', profile: 'reading', pace: 'natural' }];
+  const ready = await speechStatus(new Request('https://letria.test/api/speech', { headers: { cookie: session.cookie } }));
+  assert.deepEqual(await ready.json(), { ok: true, mode: 'neural', provider: 'qwen', voice: 'Lumi' });
+  const audio = await synthesize(speechRequest(session.cookie, { text: 'Oi!' }));
+  assert.equal(audio.status, 200);
+  await audio.arrayBuffer();
+  assert.equal(await queuePreparedSpeech(items, globalThis.__letriaTestEnv), 'queued');
+  assert.deepEqual(requests.map(item => item.url), [origin + '/health', origin + '/v1/audio/speech', origin + '/v1/audio/prepare']);
+  assert.ok(requests.every(({ options }) => options.headers.Authorization === 'Bearer ' + preparedTestToken && options.redirect === 'manual'));
+  for (const allowed of [undefined, 'http://other_voice:8766', 'http://projeto_voice:8767']) {
+    globalThis.__letriaTestEnv.QWEN_TTS_ALLOW_HTTP_ORIGIN = allowed;
+    const denied = await synthesize(speechRequest(session.cookie, { text: 'Oi!' }));
+    assert.equal(denied.status, 503);
+    await denied.arrayBuffer();
+    assert.equal(await queuePreparedSpeech(items, globalThis.__letriaTestEnv), 'unavailable');
+  }
+  assert.equal(requests.length, 3);
+});

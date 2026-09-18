@@ -1,9 +1,10 @@
 import { env } from 'cloudflare:workers';
 import { activitySpeech, type PreparedSpeech } from '../speech-content';
 import type { Activity } from '../content';
+import { voiceServiceUrl } from './voice-url';
 
 export type VoicePreparation = 'queued' | 'partial' | 'unavailable' | 'disabled';
-interface VoiceSettings { TTS_PROVIDER?: string; QWEN_TTS_URL?: string; QWEN_TTS_API_TOKEN?: string }
+interface VoiceSettings { TTS_PROVIDER?: string; QWEN_TTS_URL?: string; QWEN_TTS_ALLOW_HTTP_ORIGIN?: string; QWEN_TTS_API_TOKEN?: string }
 /** Enqueue only approved educational content; arbitrary student messages never enter the disk library. */
 export async function queuePreparedSpeech(items: PreparedSpeech[], settings: VoiceSettings, fetcher: typeof fetch = fetch): Promise<VoicePreparation> {
   if (settings.TTS_PROVIDER !== 'qwen') return 'disabled';
@@ -11,9 +12,7 @@ export async function queuePreparedSpeech(items: PreparedSpeech[], settings: Voi
   try {
     const token = settings.QWEN_TTS_API_TOKEN?.trim();
     if (!token || token.length < 32 || /\s/.test(token)) return 'unavailable';
-    const url = new URL(settings.QWEN_TTS_URL || 'http://127.0.0.1:8766');
-    if (url.username || url.password || url.search || url.hash || (url.protocol !== 'https:'
-      && !(url.protocol === 'http:' && ['localhost', '127.0.0.1', '[::1]'].includes(url.hostname)))) return 'unavailable';
+    const url = voiceServiceUrl(settings.QWEN_TTS_URL || 'http://127.0.0.1:8766', settings.QWEN_TTS_ALLOW_HTTP_ORIGIN);
     const batches: PreparedSpeech[][] = [];
     for (const item of items) {
       const batch = batches.at(-1);

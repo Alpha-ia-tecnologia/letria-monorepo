@@ -31,6 +31,16 @@
     "voice:qwen:test": "npm run voice:qwen:test --workspace=apps/plataforma --",
     "start:qwen": "npm run start:qwen --workspace=apps/plataforma --",
     "voice:qwen:base:setup": "npm run voice:qwen:base:setup --workspace=apps/plataforma --",
-    "voice:prepare": "npm run voice:prepare --workspace=apps/plataforma --"
-  }
+    "voice:prepare": "npm run voice:prepare --workspace=apps/plataforma --",
+    "build:node": "npm run build:node --workspace=apps/plataforma --",
+    "start:node": "npm run start:node --workspace=apps/plataforma --",
+    "test:node": "npm run test:node --workspace=apps/plataforma --",
+    "start:openai": "npm run start:openai --workspace=apps/plataforma --"
+  },
+  "overrides": {
+    "vinext": {
+      "image-size": "2.0.4"
+    }
+  },
+  "packageManager": "npm@10.9.8"
 }

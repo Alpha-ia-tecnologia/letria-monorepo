@@ -30,6 +30,55 @@ jobs:
         with:
           python-version: '3.12'
       - name: Check Python syntax
-        run: python -S -m compileall -q server.py synthesis.py audio_store.py preparation.py scripts
+        run: python -S -m compileall -q server.py synthesis.py audio_store.py preparation.py healthcheck.py scripts
       - name: Run contracts without models or GPU
         run: python -S -m unittest discover -s . -p 'test_*.py'
+
+  docker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out service
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Build CPU image without models or credentials
+        run: docker build -t letria-voice:ci .
+      - name: Verify installed dependencies
+        run: docker run --rm --network none letria-voice:ci python -m pip check
+      - name: Import runtime and check WAV audio without network or models
+        run: |
+          docker run --rm -i --network none letria-voice:ci python - <<'PY'
+          import tempfile
+          from pathlib import Path
+          import librosa
+          import numpy as np
+          import soundfile as sf
+          import torch
+          import torchaudio
+          from qwen_tts import Qwen3TTSModel
+          import synthesis
+
+          assert torch.version.cuda is None, "The default image must use CPU wheels"
+          with tempfile.TemporaryDirectory() as folder:
+              audio_path = Path(folder) / "contract.wav"
+              sf.write(audio_path, np.zeros(240, dtype=np.float32), 24000, subtype="PCM_16")
+              samples, rate = librosa.load(audio_path, sr=None, mono=True)
+              assert rate == 24000 and len(samples) == 240
+          print("CPU runtime imports and WAV decoding passed without models or network")
+          PY
+      - name: Reject startup when model volume is empty
+        run: |
+          set +e
+          output=$(docker run --rm --network none \
+            -e QWEN_TTS_API_TOKEN=ci-only-fictional-token-for-empty-model-check \
+            -e QWEN_TTS_ALLOWED_HOSTS=projeto_voice:8766 \
+            letria-voice:ci 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          test "$status" -eq 1
+          case "$output" in
+            *"Installed model files are missing."*"startup never downloads weights."*) ;;
+            *) exit 1 ;;
+          esac

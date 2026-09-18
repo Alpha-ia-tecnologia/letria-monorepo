@@ -4,6 +4,7 @@ import { getAuth, rateLimit } from '@/lib/server/platform';
 import { ApiError, encoder, ensureSameOrigin, errorResponse, hex, jsonResponse, valueString } from '@/lib/server/security';
 import { readBounded } from '@/lib/server/storage';
 import { checkedSpeechStream } from '@/lib/server/speech-stream';
+import { voiceServiceUrl } from '@/lib/server/voice-url';
 
 export const dynamic = 'force-dynamic';
 interface SpeechEnv {
@@ -11,6 +12,7 @@ interface SpeechEnv {
   KOKORO_URL?: string;
   KOKORO_API_TOKEN?: string;
   QWEN_TTS_URL?: string;
+  QWEN_TTS_ALLOW_HTTP_ORIGIN?: string;
   QWEN_TTS_API_TOKEN?: string;
   OPENAI_API_KEY?: string;
   OPENAI_TTS_VOICE?: string;
@@ -84,9 +86,12 @@ function localVoiceConfig(settings: SpeechEnv, selected: 'kokoro' | 'qwen') {
   const token = (qwen ? settings.QWEN_TTS_API_TOKEN : settings.KOKORO_API_TOKEN)?.trim();
   if (!token || /[\r\n]/.test(token)) throw unavailable();
   let url: URL;
-  try { url = new URL((qwen ? settings.QWEN_TTS_URL : settings.KOKORO_URL)?.trim() || (qwen ? 'http://127.0.0.1:8766' : 'http://127.0.0.1:8765')); } catch { throw unavailable(); }
-  const loopback = ['localhost', '127.0.0.1', '[::1]'].includes(url.hostname);
-  if (url.username || url.password || url.search || url.hash || (url.protocol !== 'https:' && !(url.protocol === 'http:' && loopback))) throw unavailable();
+  try {
+    url = voiceServiceUrl(
+      (qwen ? settings.QWEN_TTS_URL : settings.KOKORO_URL)?.trim() || (qwen ? 'http://127.0.0.1:8766' : 'http://127.0.0.1:8765'),
+      qwen ? settings.QWEN_TTS_ALLOW_HTTP_ORIGIN : undefined,
+    );
+  } catch { throw unavailable(); }
   return { base: url.href.replace(/\/+$/, ''), token, model: qwen ? 'qwen3-tts' : 'kokoro', voice: qwen ? 'lumi' : 'pf_dora' };
 }
 

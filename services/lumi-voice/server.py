@@ -1,4 +1,4 @@
-"""Private loopback Qwen3-TTS service. Only Letria's server may call it.
+"""Private Qwen3-TTS service. Only Letria's server may call it.
 
 The runtime reads installed weights; model downloads belong to explicit setup.
 Text and tokens are never logged. Only explicitly prepared catalogue audio is
@@ -20,7 +20,7 @@ import select
 import socket
 import threading
 import time
-from typing import Callable
+from typing import Callable, Mapping
 import wave
 
 from audio_store import AudioStore, audio_key
@@ -45,6 +45,57 @@ class SpeechBusy(RuntimeError):
     pass
 
 
+def allowed_host_names(value: str) -> frozenset[str]:
+    """Accept exact HTTP Host authorities, never wildcards, URLs or credentials."""
+    if not isinstance(value, str):
+        raise ValueError("QWEN_TTS_ALLOWED_HOSTS must be a comma-separated list of exact hosts.")
+    if not value.strip():
+        return frozenset()
+    entries = value.split(",")
+    if len(entries) > 32:
+        raise ValueError("QWEN_TTS_ALLOWED_HOSTS accepts at most 32 exact hosts.")
+    result = set()
+    for entry in entries:
+        host = entry.strip().lower()
+        match = re.fullmatch(r"(?:[a-z0-9_][a-z0-9_.-]*|\[::1\])(?::([0-9]{1,5}))?", host, re.ASCII)
+        if not match or len(host) > 260 or ".." in host or (match[1] is not None and not 1 <= int(match[1]) <= 65535):
+            raise ValueError("QWEN_TTS_ALLOWED_HOSTS must contain exact hostnames with optional ports; URLs and wildcards are not allowed.")
+        result.add(host)
+    return frozenset(result)
+
+
+def validate_binding(host: str, allowed_hosts: frozenset[str]) -> None:
+    if host not in ("127.0.0.1", "0.0.0.0"):
+        raise ValueError("QWEN_TTS_HOST must be 127.0.0.1 or explicitly 0.0.0.0 for a private container network.")
+    if host == "0.0.0.0" and not allowed_hosts:
+        raise ValueError("Set QWEN_TTS_ALLOWED_HOSTS explicitly when QWEN_TTS_HOST is 0.0.0.0.")
+
+
+def voice_configuration(environment: Mapping[str, str] | None = None) -> dict:
+    settings = os.environ if environment is None else environment
+    token = settings.get("QWEN_TTS_API_TOKEN", "")
+    if len(token) < 32 or any(char.isspace() for char in token):
+        raise ValueError("Configure QWEN_TTS_API_TOKEN with at least 32 non-whitespace characters.")
+    host = settings.get("QWEN_TTS_HOST", "127.0.0.1").strip()
+    allowed_hosts = allowed_host_names(settings.get("QWEN_TTS_ALLOWED_HOSTS", ""))
+    validate_binding(host, allowed_hosts)
+    try:
+        port = int(settings.get("QWEN_TTS_PORT", "8766"))
+        if not 1 <= port <= 65535:
+            raise ValueError()
+    except (TypeError, ValueError):
+        raise ValueError("QWEN_TTS_PORT must be an integer from 1 to 65535.") from None
+    device = settings.get("QWEN_TTS_DEVICE", "auto").strip().lower()
+    if device not in ("auto", "cpu", "cuda"):
+        raise ValueError("QWEN_TTS_DEVICE must be auto, cpu or cuda.")
+    service_dir = Path(__file__).resolve().parent
+    model_dir = Path(settings.get("QWEN_TTS_MODEL_DIR") or service_dir / "models/voice-design").resolve()
+    reference_dir = Path(settings.get("QWEN_TTS_REFERENCE_DIR") or model_dir.parent.parent / "voices/lumi").resolve()
+    cache_dir = Path(settings.get("QWEN_TTS_CACHE_DIR") or service_dir / "cache/prepared").resolve()
+    return {"host": host, "port": port, "allowed_hosts": allowed_hosts, "token": token,
+            "model_dir": model_dir, "reference_dir": reference_dir, "cache_dir": cache_dir, "device": device}
+
+
 def request_identifier(body: dict, required: bool = False) -> str | None:
     if "request_id" not in body and not required:
         return None
@@ -58,9 +109,9 @@ class SpeechServer(ThreadingHTTPServer):
     daemon_threads = True
     request_queue_size = 8
 
-    def __init__(self, address: tuple[str, int], token: str, synthesize: Callable, device: str, store_dir: Path | None = None):
-        if address[0] != "127.0.0.1":
-            raise ValueError("The speech service must bind to 127.0.0.1")
+    def __init__(self, address: tuple[str, int], token: str, synthesize: Callable, device: str, store_dir: Path | None = None, allowed_hosts: frozenset[str] | None = None):
+        configured_hosts = allowed_host_names(",".join(allowed_hosts or ()))
+        validate_binding(address[0], configured_hosts)
         if not isinstance(token, str) or len(token) < 32 or any(char.isspace() for char in token):
             raise ValueError("QWEN_TTS_API_TOKEN must contain at least 32 non-whitespace characters")
         if device not in ("cuda", "cpu"):
@@ -79,6 +130,7 @@ class SpeechServer(ThreadingHTTPServer):
         self.store = AudioStore(store_dir) if store_dir is not None else None
         self.preparation: PreparationQueue | None = None
         super().__init__(address, SpeechHandler)
+        self.allowed_hosts = configured_hosts | {f"127.0.0.1:{self.server_port}", f"localhost:{self.server_port}"}
         if self.store is not None:
             self.preparation = PreparationQueue(self)
 
@@ -242,8 +294,7 @@ class SpeechHandler(BaseHTTPRequestHandler):
 
     def authorized(self) -> bool:
         host = self.headers.get_all("Host", [])
-        hosts = {f"127.0.0.1:{self.server.server_port}", f"localhost:{self.server.server_port}"}
-        if len(host) != 1 or host[0].lower() not in hosts or self.headers.get_all("Origin"):
+        if len(host) != 1 or host[0].lower() not in self.server.allowed_hosts or self.headers.get_all("Origin"):
             self.respond(403, {"error": "Forbidden"})
             return False
         auth = self.headers.get_all("Authorization", [])
@@ -464,20 +515,22 @@ class SpeechHandler(BaseHTTPRequestHandler):
 
 def main() -> None:
     logging.disable(logging.CRITICAL)
-    token = os.environ.get("QWEN_TTS_API_TOKEN", "")
-    if len(token) < 32 or any(char.isspace() for char in token):
-        raise SystemExit("Configure QWEN_TTS_API_TOKEN with at least 32 non-whitespace characters.")
-    model_dir = Path(os.environ.get("QWEN_TTS_MODEL_DIR", Path(__file__).parent / "models" / "voice-design"))
     try:
-        port = int(os.environ.get("QWEN_TTS_PORT", "8766"))
-        if not 1 <= port <= 65535:
-            raise ValueError("Invalid port")
-        synthesize, device = load_synthesizer(model_dir, os.environ.get("QWEN_TTS_DEVICE", "auto"))
-        cache_dir = Path(os.environ.get("QWEN_TTS_CACHE_DIR", Path(__file__).parent / "cache" / "prepared"))
-        server = SpeechServer(("127.0.0.1", port), token, synthesize, device, cache_dir)
+        settings = voice_configuration()
+    except ValueError as error:
+        raise SystemExit(str(error)) from None
+    if not (settings["model_dir"] / "config.json").is_file() or not (settings["model_dir"] / "model.safetensors").is_file():
+        raise SystemExit("Installed model files are missing. Provision the model volume and set QWEN_TTS_MODEL_DIR; startup never downloads weights.")
+    try:
+        synthesize, device = load_synthesizer(settings["model_dir"], settings["device"], reference_dir=settings["reference_dir"])
     except Exception:
-        raise SystemExit("Could not start Lumi voice. Check local model files, dependencies, device and port.") from None
-    print(f"Lumi voice ready on http://127.0.0.1:{port} ({device})", flush=True)
+        raise SystemExit("Could not load Lumi voice. Check the installed model, the original reference WAV/JSON and the selected CPU/CUDA runtime.") from None
+    try:
+        server = SpeechServer((settings["host"], settings["port"]), settings["token"], synthesize, device,
+                              settings["cache_dir"], allowed_hosts=settings["allowed_hosts"])
+    except Exception:
+        raise SystemExit("Could not start Lumi voice. Check the listening port and write permissions on QWEN_TTS_CACHE_DIR.") from None
+    print(f"Lumi voice ready on port {settings['port']} ({device})", flush=True)
     try:
         server.serve_forever(poll_interval=0.25)
     except KeyboardInterrupt:
