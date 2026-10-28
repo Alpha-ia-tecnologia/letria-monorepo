@@ -107,6 +107,20 @@ export async function authenticateAction(request: Request, body: Record<string, 
   }
   return null;
 }
+export async function changePassword(request: Request, auth: Auth, body: Record<string, unknown>): Promise<Record<string, unknown>> {
+  if (auth.isDemo || !auth.email) throw new ApiError(403, "Esta conta não usa senha para entrar.", "FORBIDDEN");
+  const current = valueString(body.currentPassword, "Senha atual", 128), password = valuePassword(body.newPassword);
+  await rateLimit(request, "change-password", auth.userId, 12);
+  const row = await db().prepare("SELECT password_hash FROM users WHERE id=?").bind(auth.userId).first();
+  if (!row?.password_hash || !await verifyPassword(current, String(row.password_hash))) throw new ApiError(400, "A senha atual está incorreta.", "INVALID_CREDENTIALS");
+  if (current === password) throw new ApiError(400, "Escolha uma senha diferente da atual.");
+  // Other devices must sign in again; the session that changed the password stays active.
+  await db().batch([
+    db().prepare("UPDATE users SET password_hash=? WHERE id=?").bind(await hashPassword(password), auth.userId),
+    db().prepare("DELETE FROM sessions WHERE user_id=? AND token_hash<>?").bind(auth.userId, auth.tokenHash)
+  ]);
+  await audit(auth, "changePassword", auth.userId); return {};
+}
 export async function requireStudent(auth: Auth, rawId?: unknown): Promise<Row> {
   const id = rawId ? valueId(rawId, "Estudante") : auth.studentId;
   if (!id) throw new ApiError(400, "Selecione um estudante.");

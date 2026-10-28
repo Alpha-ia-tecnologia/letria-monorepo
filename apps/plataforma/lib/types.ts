@@ -17,6 +17,7 @@ export type PlatformAction =
   | { action: "login"; email: string; password: string }
   | { action: "studentLogin"; code: string }
   | { action: "logout" }
+  | { action: "changePassword"; currentPassword: string; newPassword: string }
   | { action: "createClassroom"; name: string; grade: string; teacherName?: string; teacherUserId?: string | null }
   | { action: "updateClassroom"; id: string; name: string; grade: string; teacherUserId?: string | null }
   | { action: "deleteClassroom"; id: string }

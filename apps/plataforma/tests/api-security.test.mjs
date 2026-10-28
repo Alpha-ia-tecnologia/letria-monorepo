@@ -95,6 +95,22 @@ test("registration is empty, passwords are salted hashes and actual roles cannot
   await action(registered.cookie, { action: "login", email: "admin@example.test", password: "errada" }, 401);
   const logged = await action(registered.cookie, { action: "login", email: "admin@example.test", password: "Senha-segura-2026" }); assert.equal(logged.data.session.institutionName, "Escola Real");
 });
+test("password change requires the current password and signs out only the other devices", async () => {
+  const session = await start(), registered = await action(session.cookie, { action: "register", name: "Admin", email: "troca@example.test", password: "Senha-segura-2026", institutionName: "Escola Real" });
+  const other = await action("", { action: "login", email: "troca@example.test", password: "Senha-segura-2026" }), before = (await databaseFirst("SELECT password_hash FROM users WHERE email=?", "troca@example.test")).password_hash;
+  assert.equal((await action(registered.cookie, { action: "changePassword", currentPassword: "errada", newPassword: "Nova-senha-2026" }, 400)).code, "INVALID_CREDENTIALS");
+  await action(registered.cookie, { action: "changePassword", currentPassword: "Senha-segura-2026", newPassword: "curta" }, 400);
+  await action(registered.cookie, { action: "changePassword", currentPassword: "Senha-segura-2026", newPassword: "Senha-segura-2026" }, 400);
+  assert.equal((await databaseFirst("SELECT password_hash FROM users WHERE email=?", "troca@example.test")).password_hash, before);
+  await action(other.cookie, { action: "readNotifications" });
+  const changed = await action(registered.cookie, { action: "changePassword", currentPassword: "Senha-segura-2026", newPassword: "Nova-senha-2026" }); assert.equal(changed.data.session.email, "troca@example.test");
+  await action(registered.cookie, { action: "readNotifications" }); await action(other.cookie, { action: "readNotifications" }, 401);
+  await action("", { action: "login", email: "troca@example.test", password: "Senha-segura-2026" }, 401);
+  const logged = await action("", { action: "login", email: "troca@example.test", password: "Nova-senha-2026" }); assert.equal(logged.data.session.role, "admin");
+  const created = await action(registered.cookie, { action: "createStudent", name: "Aluno real" }), student = await action("", { action: "studentLogin", code: created.accessCode });
+  await action(student.cookie, { action: "changePassword", currentPassword: "Nova-senha-2026", newPassword: "Outra-senha-2026" }, 403);
+  const demo = await start(); await action(demo.cookie, { action: "changePassword", currentPassword: "qualquer", newPassword: "Outra-senha-2026" }, 403);
+});
 test("student code only grants student access to its own profile", async () => {
   const session = await start(); const teacher = await action(session.cookie, { action: "switchRole", role: "teacher" });
   const created = await action(session.cookie, { action: "createStudent", name: "Novo aluno", classroomId: teacher.data.classrooms[0].id }); assert.equal(created.accessCode.length, 12);

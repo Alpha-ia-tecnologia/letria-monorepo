@@ -1,5 +1,5 @@
 import { withDatabase } from "@/lib/server/database";
-import { authenticateAction, bootstrap, establishDemo, getAuth, rateLimit } from "@/lib/server/platform";
+import { authenticateAction, bootstrap, changePassword, establishDemo, getAuth, rateLimit } from "@/lib/server/platform";
 import { dispatch } from "@/lib/server/actions";
 import { ApiError, ensureSameOrigin, errorResponse, jsonResponse, sessionCookie } from "@/lib/server/security";
 import { readBounded } from "@/lib/server/storage";
@@ -33,7 +33,7 @@ async function handlePOST(request: Request): Promise<Response> {
     }
     if (!previous) throw new ApiError(401, "Sua sessão expirou. Atualize a página.", "UNAUTHENTICATED");
     await rateLimit(request, "actions", previous.userId, 150);
-    const result = await dispatch(previous, body), auth = await getAuth(request);
+    const result = body.action === "changePassword" ? await changePassword(request, previous, body) : await dispatch(previous, body), auth = await getAuth(request);
     if (!auth) throw new ApiError(401, "Sua sessão foi encerrada. Atualize a página.", "UNAUTHENTICATED");
     return jsonResponse({ ok: true, ...result, data: await bootstrap(auth) });
   } catch (error) { return errorResponse(error); }
