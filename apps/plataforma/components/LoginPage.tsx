@@ -2,14 +2,16 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { ArrowLeft, ArrowRight, BookOpen, Check, ChevronDown, Eye, EyeOff, GraduationCap, KeyRound, LoaderCircle, LockKeyhole, Mail, School, Sparkles, Users } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, Check, ChevronDown, Eye, EyeOff, GraduationCap, Heart, KeyRound, LoaderCircle, LockKeyhole, Mail, School, Sparkles, Users } from "lucide-react";
 import { api, cachePlatform, cachedPlatform, clearOffline, queued } from "@/lib/client";
-import type { PlatformAction } from "@/lib/types";
+import type { PlatformAction, Role } from "@/lib/types";
+import { demoProfiles } from "@/lib/demo-profiles";
 import "./login-page.css";
 import "./entry-guidance.css";
 
 type LoginMode = "login" | "student" | "register";
 type Props = { initialMode?: LoginMode };
+const demoLabels: Record<Role, { label: string; icon: typeof BookOpen }> = { student: { label: "Estudante", icon: GraduationCap }, teacher: { label: "Professor", icon: BookOpen }, guardian: { label: "Responsável", icon: Heart }, admin: { label: "Gestão da escola", icon: School } };
 
 export default function LoginPage({ initialMode = "login" }: Props) {
   return <LoginView key={initialMode} initialMode={initialMode} />;
@@ -133,6 +135,7 @@ function LoginView({ initialMode = "login" }: Props) {
           {!isRegister && <p className="lg-account-note">{isStudent ? "Depois de entrar, você encontrará sua próxima atividade." : "Depois de entrar, a plataforma abre o espaço da sua conta."}</p>}
         </form>
         <details className="lg-help" open><summary>{isRegister ? "O que acontece depois do cadastro?" : isStudent ? "Não tenho meu código" : "Não tenho acesso ou esqueci a senha"}<ChevronDown size={16} /></summary><div><p>{isRegister ? "Você entrará como administrador. Comece criando uma turma e cadastrando os estudantes. A equipe da escola também organiza os acessos de professores e responsáveis." : isStudent ? "Não encontrou seu código? Peça ao professor ou à secretaria da escola. Se um novo código foi emitido, use a versão mais recente." : "Peça ajuda à secretaria ou à pessoa que administra a Letria na escola. Professores e responsáveis recebem dela seu e-mail de acesso e sua senha inicial."}</p></div></details>
+        {!isRegister && <section className="eg-demo-profiles" aria-labelledby="eg-demo-title"><h3 id="eg-demo-title">Só quer conhecer?</h3><p>Entre na demonstração, com dados fictícios, já no perfil que escolher.</p><div className="eg-demo-grid">{demoProfiles.map(profile => { const { label, icon: Icon } = demoLabels[profile.role]; return <Link prefetch={false} key={profile.perfil} href={`/plataforma?demo=1&perfil=${profile.perfil}`} aria-label={`${label}: ver a demonstração`}><Icon size={20} aria-hidden="true" /><span>{label}</span></Link>; })}</div></section>}
         <div className="lg-create-link eg-school-link">{isRegister ? <><span>Já recebeu um acesso da escola?</span><Link prefetch={false} href="/login">Entrar na Letria<ArrowRight size={15} /></Link></> : <><span>Vai administrar uma escola nova?</span><Link prefetch={false} href="/login?modo=cadastro">Cadastrar uma nova escola<ArrowRight size={15} /></Link></>}</div>
       </div>
       <footer className="lg-access-footer"><span><Sparkles size={14} />Cada descoberta importa.</span><Link prefetch={false} href="/">letria</Link></footer>

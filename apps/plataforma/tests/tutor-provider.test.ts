@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { selectTutorProvider, tutorProviderReply, readTutorProviderResponse } from '../lib/server/tutor-provider';
+import { selectTutorProvider, selectTutorProviders, tutorProviderReply, readTutorProviderResponse } from '../lib/server/tutor-provider';
 
 test('DeepSeek stays inactive until both explicit activation and a private key exist', () => {
   for (const settings of [
@@ -11,6 +11,19 @@ test('DeepSeek stays inactive until both explicit activation and a private key e
     { TUTOR_PROVIDER: 'local', DEEPSEEK_ENABLED: 'true', DEEPSEEK_API_KEY: 'fake', OPENAI_API_KEY: 'other' },
     { TUTOR_PROVIDER: 'unknown', DEEPSEEK_ENABLED: 'true', DEEPSEEK_API_KEY: 'fake', OPENAI_API_KEY: 'other' },
   ]) assert.deepEqual(selectTutorProvider(settings), { provider: 'local' });
+});
+
+test('Claude Sonnet 5.5 answers first and only an activated DeepSeek stands behind it', () => {
+  const claude = { provider: 'anthropic', key: 'fake-anthropic', model: 'claude-sonnet-5-5' }, deepseek = { provider: 'deepseek', key: 'fake-deepseek', model: 'deepseek-flash' };
+  const settings = { TUTOR_PROVIDER: 'anthropic', ANTHROPIC_API_KEY: ' fake-anthropic ', DEEPSEEK_ENABLED: 'true', DEEPSEEK_API_KEY: 'fake-deepseek', OPENAI_API_KEY: 'fake-openai' };
+  assert.deepEqual(selectTutorProviders(settings), [claude, deepseek]);
+  assert.deepEqual(selectTutorProviders({ ...settings, DEEPSEEK_ENABLED: 'false' }), [claude]);
+  assert.deepEqual(selectTutorProviders({ ...settings, ANTHROPIC_API_KEY: '' }), [deepseek]);
+  assert.deepEqual(selectTutorProviders({ ...settings, ANTHROPIC_MODEL: ' claude-opus-5-5 ' })[0], { ...claude, model: 'claude-opus-5-5' });
+  assert.deepEqual(selectTutorProviders({ ANTHROPIC_API_KEY: 'fake-anthropic' }), [claude]);
+  assert.deepEqual(selectTutorProviders({ ...settings, TUTOR_PROVIDER: 'deepseek' }), [deepseek]);
+  assert.deepEqual(selectTutorProviders({ ...settings, TUTOR_PROVIDER: 'local' }), []);
+  assert.deepEqual(selectTutorProvider({ ...settings, ANTHROPIC_API_KEY: 'bad\nkey', DEEPSEEK_ENABLED: 'false' }), { provider: 'local' });
 });
 
 test('provider selection preserves legacy OpenAI and prioritizes only an explicitly activated DeepSeek', () => {

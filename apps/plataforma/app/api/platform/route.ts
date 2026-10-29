@@ -3,14 +3,18 @@ import { authenticateAction, bootstrap, changePassword, establishDemo, getAuth, 
 import { dispatch } from "@/lib/server/actions";
 import { ApiError, ensureSameOrigin, errorResponse, jsonResponse, sessionCookie } from "@/lib/server/security";
 import { readBounded } from "@/lib/server/storage";
+import { demoProfiles } from "@/lib/demo-profiles";
 
 export const dynamic = "force-dynamic";
 function withToken(request: Request, token: string): Request { const headers = new Headers(request.headers); headers.set("cookie", "letria_session=" + token); return new Request(request.url, { headers }); }
 async function handleGET(request: Request): Promise<Response> {
   try {
     ensureSameOrigin(request);
+    const query = new URL(request.url).searchParams, demo = query.get("demo") === "1", demoRole = demoProfiles.find(profile => profile.role === query.get("role"))?.role;
     let auth = await getAuth(request), cookie: string | undefined;
-    if (!auth && new URL(request.url).searchParams.get("demo") === "1") { const token = await establishDemo(request); cookie = sessionCookie(token, request); auth = await getAuth(withToken(request, token)); }
+    if (!auth && demo) { const token = await establishDemo(request, demoRole); cookie = sessionCookie(token, request); auth = await getAuth(withToken(request, token)); }
+    // A demonstration already open switches to the requested profile; a real account is never changed.
+    else if (auth?.isDemo && demo && demoRole && demoRole !== auth.role) { await dispatch(auth, { action: "switchRole", role: demoRole }); auth = await getAuth(request); }
     if (!auth) throw new ApiError(401, "Entre na sua conta para acessar a plataforma.", "UNAUTHENTICATED");
     return jsonResponse({ ok: true, data: await bootstrap(auth) }, 200, cookie);
   } catch (error) { return errorResponse(error); }

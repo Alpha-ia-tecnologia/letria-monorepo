@@ -1,6 +1,6 @@
 # Letria no Easypanel
 
-A implantação escolhida usa **um único serviço da plataforma**, com **DeepSeek para a conversa** e **OpenAI Marin para a voz da Lumi**. O PostgreSQL existente continua sendo usado. O serviço Qwen fica preservado como alternativa, descrita ao final; ele não precisa ser implantado neste percurso.
+A implantação escolhida usa **um único serviço da plataforma**, com **Claude Sonnet 5.5 para a conversa (DeepSeek como reserva)** e **OpenAI Marin para a voz da Lumi**. O PostgreSQL existente continua sendo usado. O serviço Qwen fica preservado como alternativa, descrita ao final; ele não precisa ser implantado neste percurso.
 
 Este guia descreve a configuração e as verificações no destino. Preparar arquivos ou publicar o código no GitHub não executa o deploy no Easypanel nem confirma o funcionamento do domínio e das integrações.
 
@@ -43,7 +43,9 @@ DATABASE_DRIVER=postgres
 DATABASE_SCHEMA=letria
 DATABASE_URL=SUBSTITUA_PELA_URL_POSTGRESQL_PRIVADA_EXISTENTE
 
-TUTOR_PROVIDER=deepseek
+TUTOR_PROVIDER=anthropic
+ANTHROPIC_API_KEY=SUBSTITUA_PELA_CHAVE_PRIVADA_ANTHROPIC
+ANTHROPIC_MODEL=claude-sonnet-5-5
 DEEPSEEK_ENABLED=true
 DEEPSEEK_API_KEY=SUBSTITUA_PELA_CHAVE_PRIVADA_DEEPSEEK
 DEEPSEEK_MODEL=deepseek-flash
@@ -55,7 +57,7 @@ OPENAI_TTS_VOICE=marin
 
 Os marcadores acima não são valores prontos para uso. Para mais de um domínio público, separe os hosts exatos por vírgula. Atualize essa lista quando trocar o domínio.
 
-A conversa e a voz são configurações independentes: `TUTOR_PROVIDER=deepseek` preserva o chat atual; `TTS_PROVIDER=openai` usa Marin na narração. A integração de voz usa `gpt-4o-mini-tts`; `OPENAI_MODEL` não muda esse modelo. As variáveis `QWEN_TTS_*`, modelos locais, serviço Python e GPU não são necessários neste percurso.
+A conversa e a voz são configurações independentes. Com `TUTOR_PROVIDER=anthropic`, a Lumi responde com o Claude Sonnet 5.5 (`claude-sonnet-5-5`); se ele estiver fora do ar, demorar mais de 10 segundos ou devolver uma resposta incompleta, a DeepSeek ativada responde no lugar, e sem nenhuma das duas a Lumi usa respostas locais. Uma recusa de segurança do Claude não passa para a DeepSeek: a criança recebe a resposta local. `TUTOR_PROVIDER=deepseek` mantém só a DeepSeek; `TTS_PROVIDER=openai` usa Marin na narração. A integração de voz usa `gpt-4o-mini-tts`; `OPENAI_MODEL` não muda esse modelo. As variáveis `QWEN_TTS_*`, modelos locais, serviço Python e GPU não são necessários neste percurso.
 
 As chaves permanecem no servidor. Não acrescente `ARG` para senhas ou chaves nos Dockerfiles: o Easypanel também fornece variáveis de ambiente como argumentos de build, que não constituem armazenamento seguro de segredos. [Referência: Dockerfile no Easypanel](https://easypanel.io/docs/builders#dockerfile).
 

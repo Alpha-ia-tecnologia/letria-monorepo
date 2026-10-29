@@ -818,6 +818,20 @@ test('explicit demo requests never replace an authenticated real school session'
   assert.deepEqual(await authTableCounts(), before);
 });
 
+test('demo profile links open the chosen role and never change a real account', async () => {
+  const opened = await GET(new Request('https://letria.test/api/platform?demo=1&role=teacher'));
+  const teacher = await opened.json();
+  assert.equal(opened.status, 200, JSON.stringify(teacher));
+  assert.equal(teacher.data.session.isDemo, true); assert.equal(teacher.data.session.role, 'teacher'); assert.equal(teacher.data.students.length, 7);
+  const cookie = opened.headers.get('set-cookie').split(';')[0];
+  const switched = await (await GET(new Request('https://letria.test/api/platform?demo=1&role=guardian', { headers: { cookie } }))).json();
+  assert.equal(switched.data.session.role, 'guardian'); assert.equal(switched.data.session.institutionId, teacher.data.session.institutionId);
+  assert.equal((await (await GET(new Request('https://letria.test/api/platform?demo=1&role=owner'))).json()).data.session.role, 'student');
+  const registered = await action('', { action: 'register', name: 'Admin', email: 'perfil@example.test', password: 'Senha-segura-2026', institutionName: 'Escola real' });
+  const kept = await (await GET(new Request('https://letria.test/api/platform?demo=1&role=teacher', { headers: { cookie: registered.cookie } }))).json();
+  assert.deepEqual(kept.data.session, registered.data.session);
+});
+
 test('logout revokes the token, clears its cookie and does not create another demonstration', async () => {
   const session = await start(), before = await authTableCounts();
   const logoutRequest = () => new Request('https://letria.test/api/platform', { method: 'POST', headers: { cookie: session.cookie, 'Content-Type': 'application/json', Origin: 'https://letria.test' }, body: JSON.stringify({ action: 'logout' }) });
@@ -990,6 +1004,52 @@ test('DeepSeek propagates cancellation and observes the bounded provider timeout
   assert.equal(requestedTimeout, 15000);
 });
 
+
+function configureClaude(t, extra = {}) {
+  const fields = ['TUTOR_PROVIDER', 'ANTHROPIC_API_KEY', 'ANTHROPIC_MODEL', 'DEEPSEEK_ENABLED', 'DEEPSEEK_API_KEY', 'DEEPSEEK_MODEL'];
+  const previous = Object.fromEntries(fields.map(field => [field, globalThis.__letriaTestEnv[field]]));
+  Object.assign(globalThis.__letriaTestEnv, { TUTOR_PROVIDER: 'anthropic', ANTHROPIC_API_KEY: 'fake-anthropic-test-key', DEEPSEEK_ENABLED: 'true', DEEPSEEK_API_KEY: 'fake-deepseek-test-key' }, extra);
+  t.after(() => { for (const field of fields) { if (previous[field] === undefined) delete globalThis.__letriaTestEnv[field]; else globalThis.__letriaTestEnv[field] = previous[field]; } });
+}
+const claudeResponse = (text = 'Que som tem a primeira letra?', stop_reason = 'end_turn') => Response.json({ id: 'msg_test', type: 'message', role: 'assistant', model: 'claude-sonnet-5-5', content: [{ type: 'thinking', thinking: '', signature: 'sig' }, { type: 'text', text }], stop_reason, stop_sequence: null, stop_details: stop_reason === 'refusal' ? { type: 'refusal', category: null, explanation: null } : null, usage: { input_tokens: 10, output_tokens: 5 } });
+
+test('Claude Sonnet 5.5 answers the Lumi with private credentials, bounded context and server-side refusal fallback', async t => {
+  configureClaude(t);
+  const session = await start(), activity = activities[0], question = activity.questions[0], requests = [];
+  t.mock.method(globalThis, 'fetch', async (url, options) => { requests.push({ url: String(url), headers: new Headers(options.headers), body: JSON.parse(options.body) }); return claudeResponse(); });
+  assert.deepEqual(await (await tutorStatus(new Request('https://letria.test/api/tutor', { headers: { cookie: session.cookie } }))).json(), { ok: true, mode: 'ai', provider: 'anthropic' });
+  const result = await (await askTutor(tutorRequest(session.cookie, { message: 'Me ajuda?', activityId: activity.id, questionId: question.id, history: [{ role: 'assistant', content: 'Oi!' }] }))).json();
+  assert.deepEqual(result, { ok: true, reply: 'Que som tem a primeira letra?', mode: 'ai', provider: 'anthropic' });
+  assert.equal(requests.length, 1);
+  const [sent] = requests;
+  assert.match(sent.url, /^https:\/\/api\.anthropic\.com\/v1\/messages/);
+  assert.match(sent.headers.get('authorization') ?? sent.headers.get('x-api-key'), /fake-anthropic-test-key/);
+  assert.match(sent.headers.get('anthropic-beta'), /server-side-fallback-2026-07-01/);
+  assert.equal(sent.body.model, 'claude-sonnet-5-5'); assert.equal(sent.body.fallbacks, 'default'); assert.deepEqual(sent.body.output_config, { effort: 'low' });
+  assert.match(sent.body.system, /Lumi/);
+  assert.deepEqual(sent.body.messages.map(item => item.role), ['user', 'assistant', 'user']);
+  const serialized = JSON.stringify(sent.body);
+  assert.equal(serialized.includes(question.explanation), false);
+  assert.equal(serialized.includes(session.data.session.userId), false);
+});
+
+test('Lumi falls back from Claude to DeepSeek on outage or unfinished replies, but never after a safety decline', async t => {
+  configureClaude(t);
+  const session = await start();
+  let claude = () => claudeResponse(), urls = [];
+  t.mock.method(globalThis, 'fetch', async url => { urls.push(String(url)); return String(url).includes('anthropic') ? claude() : deepSeekResponse('Pista da reserva.'); });
+  for (const failure of [() => Response.json({ type: 'error', error: { type: 'overloaded_error', message: 'Overloaded' } }, { status: 529 }), () => claudeResponse('Pela metade', 'max_tokens'), () => claudeResponse('<think>x</think>'), () => { throw new TypeError('network down'); }]) {
+    claude = failure; urls = [];
+    const result = await (await askTutor(tutorRequest(session.cookie, { message: 'Uma pista?' }))).json();
+    assert.deepEqual(result, { ok: true, reply: 'Pista da reserva.', mode: 'ai', provider: 'deepseek' });
+    assert.equal(urls.filter(url => url.includes('anthropic')).length, 1);
+    assert.equal(urls.filter(url => url.includes('deepseek')).length, 1);
+  }
+  claude = () => claudeResponse('', 'refusal'); urls = [];
+  const declined = await (await askTutor(tutorRequest(session.cookie, { message: 'O que é uma vogal?' }))).json();
+  assert.equal(declined.provider, 'local'); assert.equal(declined.reason, 'unavailable'); assert.match(declined.reply, /A, E, I, O e U/);
+  assert.deepEqual(urls.filter(url => url.includes('deepseek')), []);
+});
 
 test('Dora forwards conversation and reading profiles with natural and calm paces without altering narration', async t => {
   configureKokoro(t, { OPENAI_API_KEY: 'unused-private-provider-key' });

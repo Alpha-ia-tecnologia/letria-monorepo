@@ -6,10 +6,19 @@ import { localTutorReply, type TutorContext, type TutorMessage } from '@/lib/tut
 import { fetchActivity, getAuth, rateLimit } from '@/lib/server/platform';
 import { ApiError, ensureSameOrigin, errorResponse, jsonResponse, valueString } from '@/lib/server/security';
 import { readBounded } from '@/lib/server/storage';
-import { selectTutorProvider, tutorProviderRequest, tutorProviderReply, readTutorProviderResponse, type TutorEnvironment } from '@/lib/server/tutor-provider';
+import { anthropicTutorReply, selectTutorProvider, selectTutorProviders, tutorProviderRequest, tutorProviderReply, readTutorProviderResponse, type RemoteTutorConfiguration, type TutorEnvironment } from '@/lib/server/tutor-provider';
 
 export const dynamic = 'force-dynamic';
 const config = () => selectTutorProvider(env as unknown as TutorEnvironment);
+async function askProvider(configuration: RemoteTutorConfiguration, message: string, history: TutorMessage[], context: TutorContext, signal: AbortSignal): Promise<string | 'refused' | null> {
+  if (configuration.provider === 'anthropic') return anthropicTutorReply(configuration, message, history, context, signal);
+  const providerRequest = tutorProviderRequest(configuration, message, history, context);
+  const response = await fetch(providerRequest.url, {
+    method: 'POST', headers: { Authorization: 'Bearer ' + configuration.key, 'Content-Type': 'application/json' },
+    body: JSON.stringify(providerRequest.body), redirect: 'manual', signal,
+  });
+  return tutorProviderReply(configuration.provider, await readTutorProviderResponse(response, signal));
+}
 async function handleGET(request: Request) {
   try {
     ensureSameOrigin(request);
@@ -53,21 +62,20 @@ async function handlePOST(request: Request) {
     const fallback = (reason: 'unconfigured' | 'unavailable') => jsonResponse({ ok: true, reply: localTutorReply(message, context), mode: 'local', provider: 'local', reason });
     const prepared = preparedTutorReply(message);
     if (prepared) return jsonResponse({ ok: true, reply: prepared, mode: 'local', provider: 'local', prepared: true });
-    const configuration = config();
-    if (configuration.provider === 'local') return fallback('unconfigured');
-    try {
-      request.signal.throwIfAborted();
-      const providerRequest = tutorProviderRequest(configuration, message, history, context);
-      const signal = AbortSignal.any([request.signal, AbortSignal.timeout(15000)]);
-      const response = await fetch(providerRequest.url, {
-        method: 'POST', headers: { Authorization: 'Bearer ' + configuration.key, 'Content-Type': 'application/json' },
-        body: JSON.stringify(providerRequest.body), redirect: 'manual', signal,
-      });
-      const result = await readTutorProviderResponse(response, signal);
-      const reply = tutorProviderReply(configuration.provider, result);
-      if (!reply) return fallback('unavailable');
-      return jsonResponse({ ok: true, reply, mode: 'ai', provider: configuration.provider });
-    } catch { return fallback('unavailable'); }
+    const chain = selectTutorProviders(env as unknown as TutorEnvironment);
+    if (!chain.length) return fallback('unconfigured');
+    for (const [index, configuration] of chain.entries()) {
+      try {
+        request.signal.throwIfAborted();
+        // A provider with a fallback behind it gets a shorter deadline, so the next one still has time to answer.
+        const signal = AbortSignal.any([request.signal, AbortSignal.timeout(index < chain.length - 1 ? 10000 : 15000)]);
+        const reply = await askProvider(configuration, message, history, context, signal);
+        // A safety decline is final: it never moves on to a less restricted provider.
+        if (reply === 'refused') break;
+        if (reply) return jsonResponse({ ok: true, reply, mode: 'ai', provider: configuration.provider });
+      } catch { if (request.signal.aborted) break; }
+    }
+    return fallback('unavailable');
   } catch (error) { return errorResponse(error); }
 }
 

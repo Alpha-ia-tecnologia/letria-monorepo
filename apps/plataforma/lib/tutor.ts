@@ -2,7 +2,7 @@ import { preparedTutorReply } from './speech-content';
 import type { Activity, Question } from './content';
 export interface TutorContext { activity?: Activity; question?: Question; topic?: 'computational' }
 export interface TutorMessage { role: 'user' | 'assistant'; content: string }
-export type TutorProvider = 'deepseek' | 'openai' | 'local';
+export type TutorProvider = 'anthropic' | 'deepseek' | 'openai' | 'local';
 export interface TutorReply { ok: true; reply: string; mode: 'ai' | 'local'; provider?: TutorProvider; reason?: 'unconfigured' | 'unavailable' }
 
 export function localTutorReply(message: string, context: TutorContext = {}): string {

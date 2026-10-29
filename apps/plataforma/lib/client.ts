@@ -1,4 +1,4 @@
-import type { Submission, PlatformAction, PlatformData, ApiResult, Answers } from './types';
+import type { Submission, PlatformAction, PlatformData, ApiResult, Answers, Role } from './types';
 import type { Activity, Question } from './content';
 import { deriveStudentProgress, type StudentProgress } from './pedagogy';
 
@@ -131,8 +131,9 @@ export const clearGameDraft = (owner: string, activityId: string) =>
 export class ApiClientError extends Error {
   constructor(message: string, public readonly code?: string) { super(message); this.name = 'ApiClientError'; }
 }
-export async function api(action?: PlatformAction, options?: { demo?: boolean }): Promise<ApiResult> {
-  const response = await fetch(!action && options?.demo ? '/api/platform?demo=1' : '/api/platform', {
+export async function api(action?: PlatformAction, options?: { demo?: boolean; role?: Role }): Promise<ApiResult> {
+  const demo = !action && options?.demo ? '?demo=1' + (options.role ? '&role=' + options.role : '') : '';
+  const response = await fetch('/api/platform' + demo, {
     method: action ? 'POST' : 'GET',
     headers: action ? { 'Content-Type': 'application/json' } : undefined,
     body: action ? JSON.stringify(action) : undefined,

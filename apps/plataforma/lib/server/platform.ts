@@ -37,7 +37,7 @@ async function newSession(userId: string, role: Role): Promise<string> {
   await db().prepare("INSERT INTO sessions (token_hash,user_id,role,expires_at,settings) VALUES (?,?,?,?,?)").bind(await digest(token), userId, role, new Date(Date.now() + 7 * 86400000).toISOString(), JSON.stringify(defaults)).run();
   return token;
 }
-export async function establishDemo(request: Request): Promise<string> {
+export async function establishDemo(request: Request, role: Role = "student"): Promise<string> {
   await rateLimit(request, "demo", "", 60);
   const institutionId = uid(), userId = uid(), classroomId = uid(), studentIds = Array.from({ length: 7 }, uid), stamp = now();
   const statements = [
@@ -64,7 +64,7 @@ export async function establishDemo(request: Request): Promise<string> {
   statements.push(db().prepare("INSERT INTO notifications (id,institution_id,student_id,title,text,read,created_at) VALUES (?,?,NULL,?,?,0,?)").bind(uid(), institutionId, "Sua aventura começa aqui!", "Este espaço usa alunos fictícios. Explore os perfis e experimente as atividades.", stamp));
   statements.push(db().prepare("INSERT INTO notes (id,institution_id,student_id,text,type,author,created_at) VALUES (?,?,?,?,?,?,?)").bind(uid(), institutionId, studentIds[2], "Exemplo fictício: retomar a associação entre letras e sons com apoio visual, em uma sessão curta.", "intervention", "Prof. Marina · fictícia", stamp));
   await db().batch(statements);
-  return newSession(userId, "student");
+  return newSession(userId, role);
 }
 export async function authenticateAction(request: Request, body: Record<string, unknown>, previous: Auth | null): Promise<string | null> {
   const action = body.action;
